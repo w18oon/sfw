@@ -78,7 +78,7 @@
     'normal' => $rootDir . '/lib/fonts/DejaVuSerif',
   ),
   'sarabun' => array(
-    'normal' => $fontDir . '/sarabun_normal_e2d52e487586f9e40c0c11545790ca47',
-    'bold' => $fontDir . '/sarabun_bold_5f9974d886e79e8243c09d8b9128d597',
+    'normal' => $fontDir . '/sarabun_normal_aa1028a42ded9cef3b71089717860831',
+    'bold' => $fontDir . '/sarabun_bold_2b17a742286b65264f439b6ee8d441bd',
   ),
 ) ?>

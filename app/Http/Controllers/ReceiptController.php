@@ -9,7 +9,6 @@ use Dompdf\Dompdf;
 use Dompdf\FontMetrics; 
 use Dompdf\Options;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class ReceiptController extends Controller
 {
@@ -114,13 +113,13 @@ class ReceiptController extends Controller
         $options->set('enable_font_subsetting', false); 
 
         $name = "$member->firstname $member->lastname";
-        $name_length = strlen($name) + 18;
+        $name_length = strlen($name) + 30;
 
-        $id_card_no_length = strlen($member->id_card_no) + 18;
+        $id_card_no_length = strlen($member->id_card_no) + 30;
 
-        $province_length = strlen($member->province) + 18;
+        $province_length = strlen($member->province) + 30;
 
-        $mobile_length = strlen($member->mobile) + 18;
+        $mobile_length = strlen($member->mobile) + 30;
 
         $dompdf = new Dompdf($options); 
         $html = view('pdf.receipt', [
@@ -158,15 +157,10 @@ class ReceiptController extends Controller
         
         $canvas->set_opacity(0.2); 
         
-        $canvas->text(50, 600, $text, $font, 30, [0, 0, 0], 0.0, 0.0, -45); 
+        $canvas->text(50, 600, $text, $font, 44, [0, 0, 0], 0.0, 0.0, -45); 
         
         // Output the generated PDF (1 = download and 0 = preview) 
-        // $dompdf->stream($receipt, array("Attachment" => 0));
-        $output = $dompdf->output();
-        return new Response($output, 200, array(
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' =>  'inline; filename="'.$receipt.'"',
-        ));
+        $dompdf->stream($receipt, array("Attachment" => 0));
     }
 
     /**
