@@ -158,7 +158,7 @@ class ReceiptController extends Controller
         
         $canvas->set_opacity(0.2); 
         
-        $canvas->text(50, 600, $text, $font, 30, null, null, null, -45); 
+        $canvas->text(50, 600, $text, $font, 30, [0, 0, 0], 0.0, 0.0, -45); 
         
         // Output the generated PDF (1 = download and 0 = preview) 
         // $dompdf->stream($receipt, array("Attachment" => 0));
