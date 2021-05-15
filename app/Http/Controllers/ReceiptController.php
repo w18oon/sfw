@@ -9,6 +9,7 @@ use Dompdf\Dompdf;
 use Dompdf\FontMetrics; 
 use Dompdf\Options;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ReceiptController extends Controller
 {
@@ -160,7 +161,12 @@ class ReceiptController extends Controller
         $canvas->text(50, 600, $text, $font, 30, null, null, null, -45); 
         
         // Output the generated PDF (1 = download and 0 = preview) 
-        $dompdf->stream($receipt, array("Attachment" => 0));
+        // $dompdf->stream($receipt, array("Attachment" => 0));
+        $output = $dompdf->output();
+        return new Response($output, 200, array(
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' =>  'inline; filename="'.$receipt.'"',
+        ));
     }
 
     /**
