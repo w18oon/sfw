@@ -78,7 +78,7 @@
             <tr>
                 <td></td>
                 <td class="text-center"><strong>รวม</strong></td>
-                <td class="text-right">2,5000</td>
+                <td class="text-right">2,500</td>
             </tr>
         </tbody>
     </table>
