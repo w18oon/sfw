@@ -20,6 +20,12 @@
             font-weight: bold;
             src: url("{{ storage_path('fonts/THSarabunNew Bold.ttf') }}") format('truetype');
         }
+        @font-face {
+            font-family: 'Sarabun';
+            font-style: normal;
+            font-weight: bold;
+            src: url("{{ storage_path('fonts/THSarabunNew Bold.ttf') }}") format('truetype');
+        }
         html { margin: 30px; }
         body { font-family: 'Sarabun', sans-serif; font-size: 16pt; line-height: normal; }
         table { width: 100%; }
@@ -37,13 +43,13 @@
     <table>
         <tbody>
             <tr>
-                <td style="width: 20%; vertical-align: bottom;">เลมที่ {{ Str::padLeft($book, 3, 0) }}</td>
+                <td style="width: 20%; vertical-align: bottom;">เล่มที่{{ Str::padLeft($book, 3, 0) }}</td>
                 <td style="width: 60%; text-align: center;"><img style="width: 200px;" src="{{ public_path('logo.png') }}"/></td>
                 <td style="width: 20%; vertical-align: bottom;">เลขที่ {{ $receipt_no . '/' . $yy }}</td>
             </tr>
             <tr>
                 <td></td>
-                <td style="text-align: center">ใบเสร็จรับเงิน</td>
+                <td style="text-align: center"><u>ใบเสร็จรับเงิน</u></td>
                 <td></td>
             </tr>
         </tbody>
@@ -80,41 +86,37 @@
     <table>
         <tbody>
             <tr>
-                <td class="text-right" style="width: 10%">ลงชื่อ</td>
-                <td>{{ Str::padBoth('..', 40, '.') }} ผู้จ่ายเงิน</td>
-                <td class="text-right" style="width: 10%">ลงชื่อ</td>
-                <td> {{ Str::padBoth('..', 40, '.') }} ผู้ตรวจสอบ</td>
+                <td>ลงชื่อ{{ Str::padBoth('..', 40, '.') }} ผู้จ่ายเงิน</td>
+                <td style="width: 10%"></td>
+                <td>ลงชื่อ{{ Str::padBoth('..', 40, '.') }} ผู้ตรวจสอบ</td>
             </tr>
             <tr>
+                <td>({{ Str::padBoth('..', 66, '.') }})</td>
                 <td></td>
-                <td>({{ Str::padBoth('..', 38, '.') }})</td>
+                <td>({{ Str::padBoth('..', 66, '.') }})</td>
+            </tr>
+            <tr>
+                <td>สมาชิกเลขที่{{ Str::padBoth('..', 45, '.') }}</td>
                 <td></td>
-                <td>({{ Str::padBoth('..', 38, '.') }})</td>
+                <td>เหรัญญิกจังหวัด{{ Str::padBoth('..', 45, '.') }}</td>
             </tr>
             <tr>
-                <td class="text-right">สมาชิกเลขที่</td>
-                <td>{{ Str::padBoth('..', 40, '.') }}</td>
-                <td class="text-right">เหรัญญิกจังหวัด</td>
-                <td>{{ Str::padBoth('..', 40, '.') }}</td>
+                <td colspan="3"><br></td>
             </tr>
             <tr>
-                <td colspan="4"><br></td>
-            </tr>
-            <tr>
-                <td class="text-right">ลงชื่อ</td>
-                <td>{{ Str::padBoth('..', 40, '.') }} ผู้ตรวจสอบ</td>
-                <td class="text-right">ลงชื่อ</td>
-                <td>{{ Str::padBoth('..', 40, '.') }} ผู้รับเงิน</td>
-            </tr>
-            <tr>
+                <td>ลงชื่อ{{ Str::padBoth('..', 40, '.') }} ผู้ตรวจสอบ</td>
                 <td></td>
-                <td>(นายนรากร ทานา)</td>
-                <td></td>
-                <td>(นายณัชภณ วงส์วิเศษ)</td>
+                <td>ลงชื่อ{{ Str::padBoth('..', 40, '.') }} ผู้รับเงิน</td>
             </tr>
             <tr>
-                <td colspan="2" class="text-center">เจ้าหน้าที่การเงินกองทุนอิสระสวัสดิการสงเคราะห์<br>สัจจะออมทรัพย์เพื่อสวัสดิการสังคม</td>
-                <td colspan="2" class="text-center">ประธานกองทุนอิสระสวัสดิการสงเคราะห์<br>สัจจะออมทรัพย์เพื่อสวัสดิการสังคม</td>
+                <td style="padding-left: 30pt;">(นายนรากร ทานา)</td>
+                <td></td>
+                <td style="padding-left: 30pt;">(นายณัชภณ วงส์วิเศษ)</td>
+            </tr>
+            <tr>
+                <td>เจ้าหน้าที่การเงินกองทุนอิสระสวัสดิการสงเคราะห์<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;สัจจะออมทรัพย์เพื่อสวัสดิการสังคม</td>
+                <td></td>
+                <td>ประธานกองทุนอิสระสวัสดิการสงเคราะห์<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;สัจจะออมทรัพย์เพื่อสวัสดิการสังคม</td>
             </tr>
         </tbody>
     </table>
