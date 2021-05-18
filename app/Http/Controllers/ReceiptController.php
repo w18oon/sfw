@@ -67,7 +67,7 @@ class ReceiptController extends Controller
         ];
         $member = Member::find($id);
         if(!$member->receipt) {
-            $config = Config::where('type', 'receipt_no')->where('name', $member->province)->first();
+            $config = Config::where('type', 'receipt_no')->where('name', $member->receipt_province)->first();
 
             if($config) {
                 $no = $config->value;
@@ -77,12 +77,12 @@ class ReceiptController extends Controller
                 $no = 1;
                 $config = new Config();
                 $config->type = 'receipt_no';
-                $config->name = $member->province;
+                $config->name = $member->receipt_province;
                 $config->value = 1;
                 $config->save();
             }
 
-            $abbr_en = Province::where('name_th', $member->province)->first()->abbr_en;
+            $abbr_en = Province::where('name_th', $member->receipt_province)->first()->abbr_en;
 
             $book = floor($no/100) + 1;
 
@@ -117,7 +117,7 @@ class ReceiptController extends Controller
 
         $id_card_no_length = strlen($member->id_card_no) + 30;
 
-        $province_length = strlen($member->province) + 30;
+        $province_length = strlen($member->receipt_province) + 30;
 
         $mobile_length = strlen($member->mobile) + 30;
 
