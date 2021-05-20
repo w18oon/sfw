@@ -70,8 +70,8 @@ class ReceiptController extends Controller
             $config = Config::where('type', 'receipt_no')->where('name', $member->receipt_province)->first();
 
             if($config) {
-                $no = $config->value;
-                $config->value = $config->value + 1;
+                $no = $config->value + 1;
+                $config->value = $no;
                 $config->save();
             } else {
                 $no = 1;
