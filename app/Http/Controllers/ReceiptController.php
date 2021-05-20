@@ -78,7 +78,7 @@ class ReceiptController extends Controller
                 $config = new Config();
                 $config->type = 'receipt_no';
                 $config->name = $member->receipt_province;
-                $config->value = 1;
+                $config->value = $no;
                 $config->save();
             }
 
