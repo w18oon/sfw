@@ -34,10 +34,10 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('form') }}">ฟอร์มข้อมูล</a>
+                            <a class="nav-link" href="{{ url('register-form') }}">สมัครสมาชิก</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('members') }}">ข้อมูลสมาชิก</a>
+                            <a class="nav-link" href="{{ url('/') }}">ค้นหาข้อมูลสมาชิก</a>
                         </li>
                     </ul>
 
