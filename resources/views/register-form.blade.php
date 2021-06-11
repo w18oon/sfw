@@ -9,7 +9,8 @@
                     <h3>สมัครสมาชิก</h3>
                 </div>
                 <div class="card-body">
-                    <form>
+                    <form method="POST" action="{{ route('member.store') }}">
+                        @csrf
                         <h4 class="mb-3">ข้อมูลส่วนตัว</h4>
                         <div class="form-row">
                             <div class="form-group col-2">
@@ -480,60 +481,74 @@
                                     <option value="นางสาว">นางสาว</option>
                                 </select>
                             </div>
-                            <div class="form-group col-3">
-                                <label for="field_1_2">ชื่อ</label>
-                                <input type="text" class="form-control" id="field_1_2" name="field_1_2">
-                            </div>
-                            <div class="form-group col-4">
-                                <label for="field_1_3">นามสกุล</label>
-                                <input type="text" class="form-control" id="field_1_3" name="field_1_3">
+                            <div class="form-group col-2">
+                                <label for="field_5_2">ชื่อ</label>
+                                <input type="text" class="form-control" id="field_5_2" name="field_5_2">
                             </div>
                             <div class="form-group col-3">
-                                <label for="field_1_4">บัตรประจำตัวประชาชนเลขที่</label>
-                                <input type="text" class="form-control" id="field_1_4" name="field_1_4">
+                                <label for="field_5_3">นามสกุล</label>
+                                <input type="text" class="form-control" id="field_5_3" name="field_5_3">
+                            </div>
+                            <div class="form-group col-3">
+                                <label for="field_5_4">บัตรประจำตัวประชาชนเลขที่</label>
+                                <input type="text" class="form-control" id="field_5_4" name="field_5_4">
+                            </div>
+                            <div class="form-group col-2">
+                                <label for="field_5_5">มีความสัมพันธ์เป็น</label>
+                                <input type="text" class="form-control" id="field_5_5" name="field_5_5">
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-2">
-                                <label for="field_4_5">เลขที่</label>
-                                <input type="text" class="form-control" id="field_4_5" name="field_4_5">
+                                <label for="field_5_6">เลขที่</label>
+                                <input type="text" class="form-control" id="field_5_6" name="field_5_6">
                             </div>
                             <div class="form-group col-2">
-                                <label for="field_4_6">หมู่ที่</label>
-                                <input type="text" class="form-control" id="field_4_6" name="field_4_6">
+                                <label for="field_5_7">หมู่ที่</label>
+                                <input type="text" class="form-control" id="field_5_7" name="field_5_7">
                             </div>
                             <div class="form-group col-3">
-                                <label for="field_4_7">ตรอก/ซอย</label>
-                                <input type="text" class="form-control" id="field_4_7" name="field_4_7">
+                                <label for="field_5_8">ตรอก/ซอย</label>
+                                <input type="text" class="form-control" id="field_5_8" name="field_5_8">
                             </div>
                             <div class="form-group col-5">
-                                <label for="field_4_8">ถนน</label>
-                                <input type="text" class="form-control" id="field_4_8" name="field_4_8">
+                                <label for="field_5_9">ถนน</label>
+                                <input type="text" class="form-control" id="field_5_9" name="field_5_9">
                             </div>
                         </div>
                         <div class="form-row">
                             <div class="form-group col-4">
-                                <label for="field_4_9">ตำบล/แขวง</label>
-                                <input type="text" class="form-control" id="field_4_9" name="field_4_9">
+                                <label for="field_5_10">ตำบล/แขวง</label>
+                                <input type="text" class="form-control" id="field_5_10" name="field_5_10">
                             </div>
                             <div class="form-group col-4">
-                                <label for="field_4_10">อำเภอ/เขต</label>
-                                <input type="text" class="form-control" id="field_4_10" name="field_4_10">
+                                <label for="field_5_11">อำเภอ/เขต</label>
+                                <input type="text" class="form-control" id="field_5_11" name="field_5_11">
                             </div>
                             <div class="form-group col-2">
-                                <label for="field_4_11">จังหวัด</label>
-                                <select class="form-control" id="field_4_11" name="field_4_11">
+                                <label for="field_5_12">จังหวัด</label>
+                                <select class="form-control" id="field_5_12" name="field_5_12">
                                     @foreach ($provinces as $province)
                                     <option value="{{ $province->name_th }}">{{ $province->name_th }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="form-group col-2">
-                                <label for="field_4_12">รหัสไปรษณีย์</label>
-                                <input type="text" class="form-control" id="field_4_12" name="field_4_12">
+                                <label for="field_5_13">รหัสไปรษณีย์</label>
+                                <input type="text" class="form-control" id="field_5_13" name="field_5_13">
                             </div>
                         </div>
-                        <button type="button" class="btn btn-primary">บันทึกข้อมูล</button>
+                        <div class="form-row">
+                            <div class="form-group col-3">
+                                <label for="field_5_14">โทรศัพท์</label>
+                                <input type="text" class="form-control" id="field_5_14" name="field_5_14">
+                            </div>
+                            <div class="form-group col-3">
+                                <label for="field_5_15">โทรสาร</label>
+                                <input type="text" class="form-control" id="field_5_15" name="field_5_15">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">บันทึกข้อมูล</button>
                     </form>
                 </div>
             </div>
