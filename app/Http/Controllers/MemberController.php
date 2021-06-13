@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Member;
+use App\Models\Province;
+use App\Models\Config;
 
 class MemberController extends Controller
 {
@@ -14,7 +16,10 @@ class MemberController extends Controller
      */
     public function index()
     {
-        //
+        $members = Member::paginate(20);
+        return view('members.index', [
+            'members' => $members,
+        ]);
     }
 
     /**
@@ -35,7 +40,8 @@ class MemberController extends Controller
      */
     public function store(Request $request)
     {
-        $member = Member::create($request->only('field_1_1',
+        $member = Member::create($request->only('receipt_province', 
+        'field_1_1',
         'field_1_2',
         'field_1_3',
         'field_1_4',
@@ -124,7 +130,8 @@ class MemberController extends Controller
         'field_5_13',
         'field_5_14',
         'field_5_15'));
-        return response()->json($member);
+        return response()->json($member->id);
+        // return redirect()->route('register-form')->with('success','บันทึกข้อมูลเรียบร้อย');
     }
 
     /**

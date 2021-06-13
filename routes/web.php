@@ -25,10 +25,9 @@ Route::get('/register-form', function () {
 Route::get('/', [App\Http\Controllers\SearchController::class, 'index']);
 Route::post('/search', [App\Http\Controllers\SearchController::class, 'index']);
 Route::get('/receipt/{id}', [App\Http\Controllers\ReceiptController::class, 'show']);
+Route::get('/contract/{id}', App\Http\Controllers\ContractController::class);
 
 Route::resource('member', App\Http\Controllers\MemberController::class);
-
-
 
 Auth::routes();
 

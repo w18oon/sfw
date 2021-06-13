@@ -9,25 +9,37 @@
                     <h3>สมัครสมาชิก</h3>
                 </div>
                 <div class="card-body">
+                    @if(session('success'))
+                    <div class="alert alert-success alert-dismissible mt-3 fade show" role="alert">
+                        <strong>Success!</strong> {{ session('success') }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    @endif
                     <form method="POST" action="{{ route('member.store') }}">
                         @csrf
                         <h4 class="mb-3">ข้อมูลส่วนตัว</h4>
                         <div class="form-row">
                             <div class="form-group col-2">
                                 <label for="field_1_1">คำนำหน้า</label>
-                                <select class="form-control" id="field_1_1" name="field_1_1">
-                                    <option value="นาย">นาย</option>
-                                    <option value="นาง">นาง</option>
-                                    <option value="นางสาว">นางสาว</option>
-                                </select>
+                                <input type="text" class="form-control" id="field_1_1" name="field_1_1">
                             </div>
-                            <div class="form-group col-5">
+                            <div class="form-group col-4">
                                 <label for="field_1_2">ชื่อ</label>
                                 <input type="text" class="form-control" id="field_1_2" name="field_1_2">
                             </div>
-                            <div class="form-group col-5">
+                            <div class="form-group col-4">
                                 <label for="field_1_3">นามสกุล</label>
                                 <input type="text" class="form-control" id="field_1_3" name="field_1_3">
+                            </div>
+                            <div class="form-group col-2">
+                                <label for="receipt_province">จังหวัดสังกัดสมาชิก</label>
+                                <select class="form-control" id="receipt_province" name="receipt_province">
+                                    @foreach ($provinces as $province)
+                                    <option value="{{ $province->name_th }}">{{ $province->name_th }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="form-row">
@@ -149,11 +161,7 @@
                         <div class="form-row">
                             <div class="form-group col-2">
                                 <label for="field_1_17">คำนำหน้า</label>
-                                <select class="form-control" id="field_1_17" name="field_1_17">
-                                    <option value="นาย">นาย</option>
-                                    <option value="นาง">นาง</option>
-                                    <option value="นางสาว">นางสาว</option>
-                                </select>
+                                <input type="text" class="form-control" id="field_1_17" name="field_1_17">
                             </div>
                             <div class="form-group col-3">
                                 <label for="field_1_18">ชื่อ</label>
@@ -379,11 +387,11 @@
                         <div class="form-row">
                             <div class="form-group col-12">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="field_3_1" id="field_3_1_1" value="1">
+                                    <input class="form-check-input" type="radio" name="field_3_1" id="field_3_1_1" value="เอกสารมูลหนี้สินตามความเป็นจริงทั้งในระบบและนอกระบบ">
                                     <label class="form-check-label" for="field_3_1_1">เอกสารมูลหนี้สินตามความเป็นจริงทั้งในระบบและนอกระบบ</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="field_3_1" id="field_3_1_2" value="2">
+                                    <input class="form-check-input" type="radio" name="field_3_1" id="field_3_1_2" value="เอกสารการตรวจเครดิตบูโร">
                                     <label class="form-check-label" for="field_3_1_2">เอกสารการตรวจเครดิตบูโร</label>
                                 </div>
                             </div>
@@ -475,11 +483,7 @@
                         <div class="form-row">
                             <div class="form-group col-2">
                                 <label for="field_5_1">คำนำหน้า</label>
-                                <select class="form-control" id="field_5_1" name="field_5_1">
-                                    <option value="นาย">นาย</option>
-                                    <option value="นาง">นาง</option>
-                                    <option value="นางสาว">นางสาว</option>
-                                </select>
+                                <input type="text" class="form-control" id="field_5_1" name="field_5_1">
                             </div>
                             <div class="form-group col-2">
                                 <label for="field_5_2">ชื่อ</label>

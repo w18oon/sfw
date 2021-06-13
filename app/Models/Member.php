@@ -10,6 +10,8 @@ class Member extends Model
     use HasFactory;
 
     protected $fillable = [
+        'no',
+        'receipt_province',
         'field_1_1',
         'field_1_2',
         'field_1_3',
@@ -104,5 +106,19 @@ class Member extends Model
     public function receipt()
     {
         return $this->hasOne(Receipt::class);
+    }
+
+    protected static function booted()
+    {
+        static::created(function ($member) {
+            $province = Province::where('name_th', $member->receipt_province)->first();
+            $config = Config::where('type', 'member_no')->where('name', $province->region_code)->first();
+            $no = $config->value + 1;
+            $config->value = $no;
+            $config->save();
+            $thai_year = date('Y') + 543;
+            $member->no = substr($thai_year, 2, 2) . $config->name . str_pad($no, 6, 0, STR_PAD_LEFT);
+            $member->save();
+        });
     }
 }

@@ -39,7 +39,7 @@
                                 <td><a class="btn btn-primary" href="{{ url("receipt/$member->id") }}">พิมพ์ใบเสร็จรับเงิน</a></td>
                             </tr>
                         </tbody>
-                      </table>
+                    </table>
                     @endisset
                 </div>
             </div>

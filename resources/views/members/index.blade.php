@@ -1,0 +1,43 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">{{ __('ข้อมูลสมาชิก') }}</div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">เลขที่สมาชิก</th>
+                                <th scope="col">ชื่อ</th>
+                                <th scope="col">นามสกุล</th>
+                                <th scope="col">เลขที่บัตรประจำตัวประชาชน</th>
+                                <th scope="col">แก้ไขข้อมูลล่าสุดโดย</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($members as $member)
+                            <tr>
+                                <td>{{ $member->no }}</td>
+                                <td>{{ $member->firstname }}</td>
+                                <td>{{ $member->lastname }}</td>
+                                <td>{{ $member->id_card_no }}</td>
+                                <td>{{ $member->updated_by }}</td>
+                                <td>
+                                    <a class="btn btn-primary" href="{{ url("receipt/$member->id") }}">ใบเสร็จรับเงิน</a>
+                                    <a class="btn btn-primary" href="{{ url("contract/$member->id") }}">ใบสมัครสมาชิก/สัญญา</a>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                    {{ $members->links() }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

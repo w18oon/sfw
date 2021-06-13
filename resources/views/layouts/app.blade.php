@@ -39,6 +39,11 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/') }}">ค้นหาข้อมูลสมาชิก</a>
                         </li>
+                        @auth
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('member') }}">ข้อมูลสมาชิก</a>
+                        </li>
+                        @endauth
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -50,12 +55,6 @@
                                     <a class="nav-link" href="{{ route('login') }}">{{ __('เข้าสู่ระบบ') }}</a>
                                 </li>
                             @endif
-
-                            {{-- @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif --}}
                         @else
                             <li class="nav-item">
                                 <a class="nav-link" href="#">{{ __('ผู้ใช้งาน ') . Auth::user()->name }}</a>
@@ -65,20 +64,6 @@
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                     @csrf
                                 </form>
-                            </li>
-
-
-                                {{-- <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div> --}}
                             </li>
                         @endguest
                     </ul>
