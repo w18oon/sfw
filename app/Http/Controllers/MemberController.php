@@ -14,11 +14,20 @@ class MemberController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $members = Member::paginate(20);
+    public function index(Request $request)
+    {   
+        $q = $request->input('q')? $request->input('q'): '';
+
+        $members = Member::where(function($query) use ($request) {
+            if($request->input('q')) {
+                $query->where('field_1_4', '=', $request->input('q'))->get();
+            }
+        })->paginate(20);
+
+        // $members = Member::paginate(20);
         return view('members.index', [
             'members' => $members,
+            'q' => $q,
         ]);
     }
 
