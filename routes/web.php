@@ -29,6 +29,6 @@ Route::get('/contract/{id}', App\Http\Controllers\ContractController::class);
 
 Route::resource('member', App\Http\Controllers\MemberController::class);
 
-Auth::routes();
+Auth::routes(['register' => false]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
