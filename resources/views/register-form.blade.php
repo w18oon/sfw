@@ -8,15 +8,8 @@
                 <div class="card-header">
                     <h3>สมัครสมาชิก</h3>
                 </div>
-                <div class="card-body">
-                    @if(session('success'))
-                    <div class="alert alert-success alert-dismissible mt-3 fade show" role="alert">
-                        <strong>Success!</strong> {{ session('success') }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    @endif
+                <div class="card-body" id="register-form"></div>
+                {{-- <div class="card-body">
                     <form method="POST" action="{{ route('member.store') }}">
                         @csrf
                         <h4 class="mb-3">ข้อมูลส่วนตัว</h4>
@@ -554,7 +547,7 @@
                         </div>
                         <button type="submit" class="btn btn-primary">บันทึกข้อมูล</button>
                     </form>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>

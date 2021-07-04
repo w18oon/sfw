@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {{-- <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet"> --}}
     <title>ใบสมัครสมาชิก/สัญญา</title>
     <style>
         @font-face {
@@ -34,11 +32,6 @@
         table#tbl-sign , 
         table#tbl-sign th, 
         table#tbl-sign td { border: 1px solid black; border-collapse: collapse; padding: 0 1rem; }
-
-        /* table.table-border th, 
-        table.table-border td { padding: 0 .5rem; }
-        .text-center { text-align: center; }
-        .text-right { text-align: right; } */
     </style>
 </header>
 <body>
@@ -60,8 +53,21 @@
     <p>
         <strong>1.ข้อมูลส่วนตัว</strong>
         <br/>
-        <span>ข้าพเจ้าชื่อ {{ Str::padLeft($member->field_1_1, strlen($member->field_1_1) + 20, '.') . Str::padRight($member->field_1_2, strlen($member->field_1_2) + 20, '.') }}</span>
-         นามสกุล{{Str::padBoth($member->field_1_3, strlen($member->field_1_3) + 40, '.')}}<br/>บัตรประจำตัวประชาชนเลขที่{{Str::padBoth($member->field_1_4, strlen($member->field_1_4) + 30, '.')}}<br/>บัตรข้าราชการ/บัตรพนักงานรัฐวิสาหกิจเลขที่{{Str::padBoth($member->field_1_5, strlen($member->field_1_5) + 30, '.')}}<br/>วันหมดอายุ{{Str::padBoth($member->field_1_6, strlen($member->field_1_6) + 20, '.')}} อายุ{{Str::padBoth($member->field_1_7, strlen($member->field_1_7) + 10, '.')}}ปี สัญชาติ {{Str::padBoth($member->field_1_8, strlen($member->field_1_8) + 10, '.')}} โทรศัพท์{{Str::padBoth($member->field_1_9, strlen($member->field_1_9) + 20, '.')}}<br/>เป็นบุคคลล้มละลายหรือไม่{{Str::padBoth($member->field_1_10, strlen($member->field_1_10) + 20, '.')}} คนไร้ความสามารถ{{Str::padBoth($member->field_1_11, strlen($member->field_1_11) + 20, '.')}} ทุพพลภาพถาวร{{Str::padBoth($member->field_1_12, strlen($member->field_1_12) + 20, '.')}}
+        <span>ข้าพเจ้าชื่อ {{ Str::padLeft($member->title, strlen($member->title) + 20, '.') . Str::padRight($member->firstname, strlen($member->firstname) + 20, '.') }}</span>
+        <span> นามสกุล{{Str::padBoth($member->lastname, strlen($member->lastname) + 40, '.')}}</span>
+        <br/>
+        <span>บัตรประจำตัวประชาชนเลขที่{{Str::padBoth($member->id_card_no, strlen($member->id_card_no) + 30, '.')}}</span>
+        <br/>
+        <span>บัตรข้าราชการ/บัตรพนักงานรัฐวิสาหกิจเลขที่{{Str::padBoth($member->emp_card_no, strlen($member->emp_card_no) + 30, '.')}}</span>
+        <br/>
+        <span>วันหมดอายุ{{Str::padBoth($member->exp_date, strlen($member->exp_date) + 20, '.')}}</span>
+        <span>อายุ{{Str::padBoth($member->age, strlen($member->age) + 10, '.')}}ปี</span>
+        <span>สัญชาติ {{Str::padBoth($member->nationality, strlen($member->nationality) + 10, '.')}}</span>
+        <span>โทรศัพท์{{Str::padBoth($member->tel, strlen($member->tel) + 20, '.')}}</span>
+        <br/>
+        <span>เป็นบุคคลล้มละลายหรือไม่{{Str::padBoth($member->is_bankrupt, strlen($member->is_bankrupt) + 20, '.')}}</span>
+        <span> คนไร้ความสามารถ{{Str::padBoth($member->is_incompetent_person, strlen($member->is_incompetent_person) + 20, '.')}}</span>
+        <span> ทุพพลภาพถาวร{{Str::padBoth($member->is_permanent_disability, strlen($member->is_permanent_disability) + 20, '.')}}</span>
         <br/>
         <span>คนเสมือนไร้ความสามารถ{{Str::padBoth($member->field_1_13, strlen($member->field_1_13) + 10, '.')}}</span>
         <span> สถานภาพสมรส{{Str::padBoth($member->field_1_14, strlen($member->field_1_14) + 10, '.')}}</span>

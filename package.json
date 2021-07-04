@@ -25,6 +25,8 @@
         "sass-loader": "^11.0.1"
     },
     "dependencies": {
-        "@fortawesome/fontawesome-free": "^5.15.3"
+        "@fortawesome/fontawesome-free": "^5.15.3",
+        "prop-types": "^15.7.2",
+        "sweetalert": "^2.1.2"
     }
 }
