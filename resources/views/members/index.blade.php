@@ -44,7 +44,7 @@
                                 <td>
                                     <a class="btn btn-sm btn-outline-primary" href="{{ url("receipt/$member->id") }}">ใบเสร็จรับเงิน</a>
                                     <a class="btn btn-sm btn-outline-primary" href="{{ url("contract/$member->id") }}">ใบสมัครสมาชิก/สัญญา</a>
-                                    <a class="btn btn-sm btn-outline-secondary" href="#">แก้ไขข้อมุล</a>
+                                    <a class="btn btn-sm btn-outline-secondary" href="{{ route('member.edit', $member->id) }}">แก้ไขข้อมุล</a>
                                     <a class="btn btn-sm btn-outline-danger" href="#">ลบข้อมุล</a>
                                 </td>
                             </tr>

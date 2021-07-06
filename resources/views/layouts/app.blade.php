@@ -33,15 +33,16 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
+                        @auth
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('member') }}">ข้อมูลสมาชิก</a>
+                        </li>
+                        @else
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('register-form') }}">สมัครสมาชิก</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/') }}">ค้นหาข้อมูลสมาชิก</a>
-                        </li>
-                        @auth
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url('member') }}">ข้อมูลสมาชิก</a>
                         </li>
                         @endauth
                     </ul>

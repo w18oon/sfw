@@ -3,7 +3,7 @@ import swal from 'sweetalert';
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 
-function RegisterForm() {
+function MemberForm(props) {
 
     const requireFields = [
         'title',
@@ -194,12 +194,16 @@ function RegisterForm() {
     });
 
     useEffect(() => {
-        axios.get('/api/postcodes').then(res => {
-            setPostcodes(res.data);
-            setProvinces([...new Set(res.data.map(postcode => postcode.province))].sort());
-        }).catch(error => {
-            console.log(error)
-        });
+        const data = JSON.parse(props.data);
+        setPostcodes(data.postcodes);
+        setProvinces([...new Set(data.postcodes.map(postcode => postcode.province))].sort());
+        setMember(data.member);
+        // axios.get('/api/postcodes').then(res => {
+        //     setPostcodes(res.data);
+        //     setProvinces([...new Set(res.data.map(postcode => postcode.province))].sort());
+        // }).catch(error => {
+        //     console.log(error)
+        // });
     }, []);
 
     
@@ -312,10 +316,10 @@ function RegisterForm() {
             err += 1;
         }
 
-        if (err > 0) {
-            swal('เกิดข้อผิดพลาด', 'รบกวนกรอกข้อมูลให้ครบถ้วน', "error");
-            return;
-        }
+        // if (err > 0) {
+        //     swal('เกิดข้อผิดพลาด', 'รบกวนกรอกข้อมูลให้ครบถ้วน', "error");
+        //     return;
+        // }
 
         swal({
             icon: 'info',
@@ -325,22 +329,13 @@ function RegisterForm() {
             closeOnClickOutside: false,
         });
 
-        axios.post('/api/member', member).then(res => {
+        axios.post('/member', member).then(res => {
+            console.log(res);
             if (res.status == 200) {
                 swal({
                     icon: 'success',
                     text: 'ระบบบันทึกข้อมูลเรียบร้อย',
-                    closeOnEsc: false,
-                    closeOnClickOutside: false,
-                    button: {
-                        text: "ดาวน์โหลดเอกสาร",
-                        closeModal: true,
-                    },
-                }).then(value => {
-                    if (value) {
-                        const id = res.data.member_id;
-                        window.location.href = `/contract/${id}`;
-                    }
+                    button: false,
                 });
             }
         }).catch(err => {
@@ -1299,8 +1294,9 @@ function RegisterForm() {
     );
 }
 
-export default RegisterForm;
+export default MemberForm;
 
-if (document.getElementById('register-form')) {
-    ReactDOM.render(<RegisterForm />, document.getElementById('register-form'));
+if (document.getElementById('member-form')) {
+    const data = document.getElementById('member-form').getAttribute('data');
+    ReactDOM.render(<MemberForm data={data} />, document.getElementById('member-form'));
 }

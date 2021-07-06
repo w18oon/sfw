@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Models\Province;
+// use Illuminate\Support\Facades\Hash;
+use App\Http\Controllers\MemberController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,15 +20,23 @@ use App\Models\Province;
 //     return view('welcome');
 // });
 
+// Route::get('/gen-passwd', function () {
+//     echo Hash::make('vcsSq&lBzidt');
+// });
+
 Route::get('/register-form', function () {
-    $provinces = Province::orderBy('name_th')->get();
-    return view('register-form', ['provinces' => $provinces]);
+    return view('register-form');
 });
 
 Route::get('/', [App\Http\Controllers\SearchController::class, 'index']);
 Route::post('/search', [App\Http\Controllers\SearchController::class, 'index']);
 Route::get('/receipt/{id}', [App\Http\Controllers\ReceiptController::class, 'show']);
 Route::get('/contract/{id}', App\Http\Controllers\ContractController::class);
+
+Route::group(['middleware' => 'auth'], function() {
+    Route::get('/member', [MemberController::class, 'index']);
+    Route::get('/member/{id}/edit', [MemberController::class, 'edit'])->name('member.edit');
+});
 
 // Route::resource('member', App\Http\Controllers\MemberController::class);
 

@@ -69,74 +69,74 @@
         <span> คนไร้ความสามารถ{{Str::padBoth($member->is_incompetent_person, strlen($member->is_incompetent_person) + 20, '.')}}</span>
         <span> ทุพพลภาพถาวร{{Str::padBoth($member->is_permanent_disability, strlen($member->is_permanent_disability) + 20, '.')}}</span>
         <br/>
-        <span>คนเสมือนไร้ความสามารถ{{Str::padBoth($member->field_1_13, strlen($member->field_1_13) + 10, '.')}}</span>
-        <span> สถานภาพสมรส{{Str::padBoth($member->field_1_14, strlen($member->field_1_14) + 10, '.')}}</span>
-        <span> จำนวนบุตร{{Str::padBoth($member->field_1_15, strlen($member->field_1_15) + 4, '.')}}คน</span>
-        <span> กำลังศึกษาอยู่{{Str::padBoth($member->field_1_16, strlen($member->field_1_16) + 4, '.')}}คน</span>
+        <span>คนเสมือนไร้ความสามารถ{{Str::padBoth($member->is_quasi_incompetent_person, strlen($member->is_quasi_incompetent_person) + 10, '.')}}</span>
+        <span> สถานภาพสมรส{{Str::padBoth($member->marital_status, strlen($member->marital_status) + 10, '.')}}</span>
+        <span> จำนวนบุตร{{Str::padBoth($member->number_of_children, strlen($member->number_of_children) + 4, '.')}}คน</span>
+        <span> กำลังศึกษาอยู่{{Str::padBoth($member->number_of_children_study, strlen($member->number_of_children_study) + 4, '.')}}คน</span>
         <br/>
-        <span>ชื่อ-นามสกุล คู่สมรสม {{ Str::padLeft($member->field_1_17, strlen($member->field_1_17) + 20, '.') . Str::padRight($member->field_1_18, strlen($member->field_1_18) + 20, '.') }}</span>
-        <span>นามสกุล{{Str::padBoth($member->field_1_19, strlen($member->field_1_19) + 40, '.')}}</span>
+        <span>ชื่อ-นามสกุล คู่สมรสม {{ Str::padLeft($member->spouse_title, strlen($member->spouse_title) + 20, '.') . Str::padRight($member->spouse_firstname, strlen($member->spouse_firstname) + 20, '.') }}</span>
+        <span>นามสกุล{{Str::padBoth($member->spouse_lastname, strlen($member->spouse_lastname) + 40, '.')}}</span>
         <br/>
-        <span>บัตรประจำตัวประชาชนเลขที่{{Str::padBoth($member->field_1_20, strlen($member->field_1_20) + 30, '.')}} ที่อยู่ตามทะเบียนบ้านเลขที่{{Str::padBoth($member->field_1_21, strlen($member->field_1_21) + 20, '.')}}</span>
+        <span>บัตรประจำตัวประชาชนเลขที่{{Str::padBoth($member->spouse_id_card_no, strlen($member->spouse_id_card_no) + 30, '.')}} ที่อยู่ตามทะเบียนบ้านเลขที่{{Str::padBoth($member->house_no, strlen($member->house_no) + 20, '.')}}</span>
         <br/>
-        <span>หมู่ที่{{Str::padBoth($member->field_1_22, strlen($member->field_1_22) + 10, '.')}}</span>
-        <span>ตรอก/ซอย{{Str::padBoth($member->field_1_23, strlen($member->field_1_23) + 20, '.')}}</span>
-        <span>ถนน{{Str::padBoth($member->field_1_24, strlen($member->field_1_24) + 20, '.')}}</span>
-        <span>ตำบล/แขวง{{Str::padBoth($member->field_1_25, strlen($member->field_1_25) + 20, '.')}}</span>
+        <span>หมู่ที่{{Str::padBoth($member->moo, strlen($member->moo) + 10, '.')}}</span>
+        <span>ตรอก/ซอย{{Str::padBoth($member->soi, strlen($member->soi) + 20, '.')}}</span>
+        <span>ถนน{{Str::padBoth($member->street, strlen($member->street) + 20, '.')}}</span>
+        <span>ตำบล/แขวง{{Str::padBoth($member->sub_district, strlen($member->sub_district) + 20, '.')}}</span>
         <br/>
-        <span>อำเภอ{{Str::padBoth($member->field_1_26, strlen($member->field_1_26) + 20, '.')}}</span>
-        <span>จังหวัด{{Str::padBoth($member->field_1_27, strlen($member->field_1_27) + 20, '.')}}</span>
-        <span>รหัสไปรษณีย์{{Str::padBoth($member->field_1_28, strlen($member->field_1_28) + 20, '.')}}</span>
+        <span>อำเภอ{{Str::padBoth($member->district, strlen($member->district) + 20, '.')}}</span>
+        <span>จังหวัด{{Str::padBoth($member->province, strlen($member->province) + 20, '.')}}</span>
+        <span>รหัสไปรษณีย์{{Str::padBoth($member->post_code, strlen($member->post_code) + 20, '.')}}</span>
         <br/>
-        <span>โทรศัพท์{{Str::padBoth($member->field_1_29, strlen($member->field_1_29) + 20, '.')}}</span>
-        <span>โทรสาร{{Str::padBoth($member->field_1_30, strlen($member->field_1_30) + 20, '.')}}</span>
-        <span>อีเมล{{Str::padBoth($member->field_1_31, strlen($member->field_1_31) + 20, '.')}}</span>
+        <span>โทรศัพท์{{Str::padBoth($member->tel, strlen($member->tel) + 20, '.')}}</span>
+        <span>โทรสาร{{Str::padBoth($member->fax, strlen($member->fax) + 20, '.')}}</span>
+        <span>อีเมล{{Str::padBoth($member->mail, strlen($member->mail) + 20, '.')}}</span>
         <br/>
         <strong>ที่อยู่จัดส่งเอกสาร</strong>
         <br/>
-        <span>บ้านเลขที่{{Str::padBoth($member->field_1_32, strlen($member->field_1_32) + 6, '.')}}</span>
-        <span>หมู่ที่{{Str::padBoth($member->field_1_33, strlen($member->field_1_33) + 6, '.')}}</span>
-        <span>ตรอก/ซอย{{Str::padBoth($member->field_1_34, strlen($member->field_1_34) + 8, '.')}}</span>
-        <span>ถนน{{Str::padBoth($member->field_1_35, strlen($member->field_1_35) + 8, '.')}}</span>
-        <span>ตำบล/แขวง{{Str::padBoth($member->field_1_36, strlen($member->field_1_36) + 12, '.')}}</span>
+        <span>บ้านเลขที่{{Str::padBoth($member->ship_house_no, strlen($member->ship_house_no) + 6, '.')}}</span>
+        <span>หมู่ที่{{Str::padBoth($member->ship_moo, strlen($member->ship_moo) + 6, '.')}}</span>
+        <span>ตรอก/ซอย{{Str::padBoth($member->ship_soi, strlen($member->ship_soi) + 8, '.')}}</span>
+        <span>ถนน{{Str::padBoth($member->ship_street, strlen($member->ship_street) + 8, '.')}}</span>
+        <span>ตำบล/แขวง{{Str::padBoth($member->ship_sub_district, strlen($member->ship_sub_district) + 12, '.')}}</span>
         <br/>
-        <span>อำเภอ{{Str::padBoth($member->field_1_37, strlen($member->field_1_37) + 12, '.')}}</span>
-        <span>จังหวัด{{Str::padBoth($member->field_1_38, strlen($member->field_1_38) + 12, '.')}}</span>
-        <span>รหัสไปรษณีย์{{Str::padBoth($member->field_1_39, strlen($member->field_1_39) + 12, '.')}}</span>
-        <span>โทรศัพท์{{Str::padBoth($member->field_1_40, strlen($member->field_1_40) + 12, '.')}}</span>
+        <span>อำเภอ{{Str::padBoth($member->ship_district, strlen($member->ship_district) + 12, '.')}}</span>
+        <span>จังหวัด{{Str::padBoth($member->ship_province, strlen($member->ship_province) + 12, '.')}}</span>
+        <span>รหัสไปรษณีย์{{Str::padBoth($member->ship_postcode, strlen($member->ship_postcode) + 12, '.')}}</span>
+        <span>โทรศัพท์{{Str::padBoth($member->ship_tel, strlen($member->ship_tel) + 12, '.')}}</span>
         <br/>
-        <span>Email{{Str::padBoth($member->field_1_41, strlen($member->field_1_41) + 12, '.')}}</span>
-        <span>ID Line{{Str::padBoth($member->field_1_42, strlen($member->field_1_42) + 12, '.')}}</span>
-        <span>Facebook{{Str::padBoth($member->field_1_43, strlen($member->field_1_43) + 20, '.')}}</span>
+        <span>Email{{Str::padBoth($member->ship_mail, strlen($member->ship_mail) + 12, '.')}}</span>
+        <span>ID Line{{Str::padBoth($member->ship_line, strlen($member->ship_line) + 12, '.')}}</span>
+        <span>Facebook{{Str::padBoth($member->ship_fb, strlen($member->ship_fb) + 20, '.')}}</span>
         <br/>
         <strong>ที่อยู่อาศัยปัจจุบัน</strong>
-        <span>{{Str::padBoth($member->field_1_44, strlen($member->field_1_44) + 8, '.')}}</span>
-        @if ($member->field_1_44 == 'บ้านเช่า')
-        <span>ค่าเช่า{{Str::padBoth(number_format($member->field_1_45), strlen($member->field_1_45) + 9, '.')}}บาท/เดือน</span>
-        @elseif ($member->field_1_44 == 'บ้านตนเองและผ่อนอยู่กับสถาบันการเงิน')
-        <span>ผ่อนชำระ{{Str::padBoth(number_format($member->field_1_45), strlen($member->field_1_45) + 9, '.')}}บาท/เดือน</span>
-        <span>อาศัยอยู่เป็นเวลา{{Str::padBoth($member->field_1_46, strlen($member->field_1_46) + 8, '.')}}ปี</span>
+        <span>{{Str::padBoth($member->house_type, strlen($member->house_type) + 8, '.')}}</span>
+        @if ($member->house_type == 'บ้านเช่า')
+        <span>ค่าเช่า{{Str::padBoth(number_format($member->cost_per_month), strlen($member->cost_per_month) + 9, '.')}}บาท/เดือน</span>
+        @elseif ($member->house_type == 'บ้านตนเองและผ่อนอยู่กับสถาบันการเงิน')
+        <span>ผ่อนชำระ{{Str::padBoth(number_format($member->cost_per_month), strlen($member->cost_per_month) + 9, '.')}}บาท/เดือน</span>
+        <span>อาศัยอยู่เป็นเวลา{{Str::padBoth($member->house_year, strlen($member->house_year) + 8, '.')}}ปี</span>
         @endif
     </p>
     <p>
         <strong>ระดับการศึกษาสูงสุด</strong>
-        @if ($member->field_1_47 == 'อื่นๆ')
-        <span>{{Str::padBoth($member->field_1_48, strlen($member->field_1_48) + 20, '.')}}</span>
+        @if ($member->education_level == 'อื่นๆ')
+        <span>{{Str::padBoth($member->other_education_level, strlen($member->other_education_level) + 20, '.')}}</span>
         @else
-        <span>{{Str::padBoth($member->field_1_47, strlen($member->field_1_47) + 20, '.')}}</span>
+        <span>{{Str::padBoth($member->education_level, strlen($member->education_level) + 20, '.')}}</span>
         @endif
         <br/>
         <strong>สาขาอาชีพ</strong>
-        @if ($member->field_1_47 == 'อื่นๆ')
-        <span>{{Str::padBoth($member->field_1_50, strlen($member->field_1_50) + 20, '.')}}</span>
+        @if ($member->career == 'อื่นๆ')
+        <span>{{Str::padBoth($member->other_career, strlen($member->other_career) + 20, '.')}}</span>
         @else
-        <span>{{Str::padBoth($member->field_1_49, strlen($member->field_1_49) + 20, '.')}}</span>
+        <span>{{Str::padBoth($member->career, strlen($member->career) + 20, '.')}}</span>
         @endif
     </p>
     <p>
         <strong>2.รายได้ประจำ</strong>
         <br/>
-        <span>{{ $member->field_2_1 . Str::padBoth(number_format($member->field_2_2), strlen($member->field_2_2) + 19, '.')}}บาท/เดือน</span>
+        <span>{{ $member->income_type . Str::padBoth(number_format($member->income_amount), strlen($member->income_amount) + 19, '.')}}บาท/เดือน</span>
         @if ($member->field_2_5 > 0)
             <strong>รายได้อื่นๆ (พร้อมเอกสารประกอบ เช่น ภงด.50 ทวิ เป็นต้น)</strong>
             @if($member->field_2_3 == 'อื่นๆ')
@@ -151,32 +151,32 @@
     <p>
         <strong>3.ภาระหนี้กับสถาบันการเงิน</strong>
         <br/>
-        <span>{{ $member->field_3_1 }}</span>
+        <span>{{ $member->debt_type }}</span>
     </p>
     <p>
         <strong>4.สถานทีทำงาน</strong>
         <br/>
-        <span>{{ __('ชื่อสถานที่ทำงาน') . Str::padBoth($member->field_4_1, strlen($member->field_4_1) + 20, '.')}}</span>
-        <span>{{ __('อาคาร') . Str::padBoth($member->field_4_2, strlen($member->field_4_2) + 20, '.')}}</span>
-        <span>{{ __('ชั้น') . Str::padBoth($member->field_4_3, strlen($member->field_4_3) + 10, '.')}}</span>
-        <span>{{ __('แผนก/ฝ่าย') . Str::padBoth($member->field_4_4, strlen($member->field_4_4) + 20, '.')}}</span>
+        <span>{{ __('ชื่อสถานที่ทำงาน') . Str::padBoth($member->workplace, strlen($member->workplace) + 20, '.')}}</span>
+        <span>{{ __('อาคาร') . Str::padBoth($member->building, strlen($member->building) + 20, '.')}}</span>
+        <span>{{ __('ชั้น') . Str::padBoth($member->floor, strlen($member->floor) + 10, '.')}}</span>
+        <span>{{ __('แผนก/ฝ่าย') . Str::padBoth($member->department, strlen($member->department) + 20, '.')}}</span>
         <br/>
-        <span>{{ __('เลขที่') . Str::padBoth($member->field_4_5, strlen($member->field_4_5) + 10, '.')}}</span>
-        <span>{{ __('หมู่ที่') . Str::padBoth($member->field_4_6, strlen($member->field_4_6) + 10, '.')}}</span>
-        <span>{{ __('ตรอก/ซอย') . Str::padBoth($member->field_4_7, strlen($member->field_4_7) + 10, '.')}}</span>
-        <span>{{ __('ถนน') . Str::padBoth($member->field_4_8, strlen($member->field_4_8) + 20, '.')}}</span>
-        <span>{{ __('ตำบล/แขวง') . Str::padBoth($member->field_4_9, strlen($member->field_4_9) + 20, '.')}}</span>
+        <span>{{ __('เลขที่') . Str::padBoth($member->workplace_no, strlen($member->workplace_no) + 10, '.')}}</span>
+        <span>{{ __('หมู่ที่') . Str::padBoth($member->workplace_moo, strlen($member->workplace_moo) + 10, '.')}}</span>
+        <span>{{ __('ตรอก/ซอย') . Str::padBoth($member->workplace_soi, strlen($member->workplace_soi) + 10, '.')}}</span>
+        <span>{{ __('ถนน') . Str::padBoth($member->workplace_street, strlen($member->workplace_street) + 20, '.')}}</span>
+        <span>{{ __('ตำบล/แขวง') . Str::padBoth($member->workplace_sub_district, strlen($member->workplace_sub_district) + 20, '.')}}</span>
         <br/>
-        <span>{{ __('อำเภอ/เขต') . Str::padBoth($member->field_4_10, strlen($member->field_4_10) + 20, '.')}}</span>
-        <span>{{ __('จังหวัด') . Str::padBoth($member->field_4_11, strlen($member->field_4_11) + 10, '.')}}</span>
-        <span>{{ __('รหัสไปรษณีย์') . Str::padBoth($member->field_4_12, strlen($member->field_4_12) + 10, '.')}}</span>
-        <span>{{ __('โทรศัพท์') . Str::padBoth($member->field_4_13, strlen($member->field_4_13) + 10, '.')}}</span>
+        <span>{{ __('อำเภอ/เขต') . Str::padBoth($member->workplace_district, strlen($member->workplace_district) + 20, '.')}}</span>
+        <span>{{ __('จังหวัด') . Str::padBoth($member->workplace_province, strlen($member->workplace_province) + 10, '.')}}</span>
+        <span>{{ __('รหัสไปรษณีย์') . Str::padBoth($member->workplace_postcode, strlen($member->workplace_postcode) + 10, '.')}}</span>
+        <span>{{ __('โทรศัพท์') . Str::padBoth($member->workplace_tel, strlen($member->workplace_tel) + 10, '.')}}</span>
         <br/>
-        <span>{{ __('โทรสาร') . Str::padBoth($member->field_4_14, strlen($member->field_4_14) + 10, '.')}}</span>
-        <span>{{ __('อายุงานปัจจุบัน') . Str::padBoth($member->field_4_15, strlen($member->field_4_15) + 10, '.')}}</span>
-        <span>{{ __('ชื่อตำแหน่งงาน') . Str::padBoth($member->field_4_16, strlen($member->field_4_16) + 20, '.')}}</span>
+        <span>{{ __('โทรสาร') . Str::padBoth($member->workplace_fax, strlen($member->workplace_fax) + 10, '.')}}</span>
+        <span>{{ __('อายุงานปัจจุบัน') . Str::padBoth($member->work_exp, strlen($member->work_exp) + 10, '.')}}</span>
+        <span>{{ __('ชื่อตำแหน่งงาน') . Str::padBoth($member->job_position, strlen($member->job_position) + 20, '.')}}</span>
         <br/>
-        <span>{{ __('กรณีที่ผู้มีรายได้ประจำ อายุงานไม่ถึง 6 เดือน โปรดระบุชื่อสถานที่ทำงานเดิม') . Str::padBoth($member->field_4_17, strlen($member->field_4_17) + 20, '.')}}</span>
+        <span>{{ __('กรณีที่ผู้มีรายได้ประจำ อายุงานไม่ถึง 6 เดือน โปรดระบุชื่อสถานที่ทำงานเดิม') . Str::padBoth($member->old_workplace, strlen($member->old_workplace) + 20, '.')}}</span>
         <br/>
     </p>
     <p>
@@ -230,23 +230,23 @@
             <strong>15. กรณีที่ข้าพเจ้าถึงแก่ความตายในระหว่างที่เป็นสมาชิกกองทุนอิสระฯ</strong> ข้าพเจ้าขอแสดงเจตนารมย์ให้กองทุนอิสระฯ จ่ายเงินฌาปนกิจสงเคราะห์ 50,000 บาท และหรือผลประโยชน์อย่างอื่นที่ข้าพเจ้าพึงได้รับตามสิทธิของการเป็นสมาชิกกองทุนอิสระฯ ให้แก่ผู้รับโอนผลประโยชน์ของข้าพเจ้า ดังต่อไปนี้
         </span>
         <br/>
-        <span>{{ __('ชื่อ') . Str::padLeft($member->field_5_1, strlen($member->field_5_1) + 5, '.') . Str::padRight($member->field_5_2, strlen($member->field_5_2) + 5, '.') }}</span>
-        <span>{{ __('นามสกุล') . Str::padBoth($member->field_5_3, strlen($member->field_5_3) + 10, '.')}}</span>
-        <span>{{ __('บัตรประจำตัวประชาชนเลขที่') . Str::padBoth($member->field_5_4, strlen($member->field_5_4) + 10, '.')}}</span>
+        <span>{{ __('ชื่อ') . Str::padLeft($member->benef_title, strlen($member->benef_title) + 5, '.') . Str::padRight($member->benef_firstname, strlen($member->benef_firstname) + 5, '.') }}</span>
+        <span>{{ __('นามสกุล') . Str::padBoth($member->benef_lastname, strlen($member->benef_lastname) + 10, '.')}}</span>
+        <span>{{ __('บัตรประจำตัวประชาชนเลขที่') . Str::padBoth($member->benef_id_card_no, strlen($member->benef_id_card_no) + 10, '.')}}</span>
         <br/>
-        <span>{{ __('มีความสัมพันธ์เป็น') . Str::padBoth($member->field_5_5, strlen($member->field_5_5) + 10, '.')}}</span>
-        <span>{{ __('เลขที่') . Str::padBoth($member->field_5_6, strlen($member->field_5_6) + 10, '.')}}</span>
-        <span>{{ __('หมู่ที่') . Str::padBoth($member->field_5_7, strlen($member->field_5_7) + 10, '.')}}</span>
-        <span>{{ __('ตรอก/ซอย') . Str::padBoth($member->field_5_8, strlen($member->field_5_8) + 10, '.')}}</span>
+        <span>{{ __('มีความสัมพันธ์เป็น') . Str::padBoth($member->benef_relationship, strlen($member->benef_relationship) + 10, '.')}}</span>
+        <span>{{ __('เลขที่') . Str::padBoth($member->benef_house_no, strlen($member->benef_house_no) + 10, '.')}}</span>
+        <span>{{ __('หมู่ที่') . Str::padBoth($member->benef_moo, strlen($member->benef_moo) + 10, '.')}}</span>
+        <span>{{ __('ตรอก/ซอย') . Str::padBoth($member->benef_soi, strlen($member->benef_soi) + 10, '.')}}</span>
         <br/>
-        <span>{{ __('ถนน') . Str::padBoth($member->field_5_9, strlen($member->field_5_9) + 10, '.')}}</span>
-        <span>{{ __('ตำบล/แขวง') . Str::padBoth($member->field_5_10, strlen($member->field_5_10) + 10, '.')}}</span>
-        <span>{{ __('อำเภอ') . Str::padBoth($member->field_5_11, strlen($member->field_5_11) + 20, '.')}}</span>
-        <span>{{ __('จังหวัด') . Str::padBoth($member->field_5_12, strlen($member->field_5_12) + 20, '.')}}</span>
+        <span>{{ __('ถนน') . Str::padBoth($member->benef_street, strlen($member->benef_street) + 10, '.')}}</span>
+        <span>{{ __('ตำบล/แขวง') . Str::padBoth($member->benef_sub_district, strlen($member->benef_sub_district) + 10, '.')}}</span>
+        <span>{{ __('อำเภอ') . Str::padBoth($member->benef_district, strlen($member->benef_district) + 20, '.')}}</span>
+        <span>{{ __('จังหวัด') . Str::padBoth($member->benef_province, strlen($member->benef_province) + 20, '.')}}</span>
         <br/>
-        <span>{{ __('รหัสไปรษณีย์') . Str::padBoth($member->field_5_13, strlen($member->field_5_13) + 20, '.')}}</span>
-        <span>{{ __('โทรศัพท์') . Str::padBoth($member->field_5_14, strlen($member->field_5_14) + 20, '.')}}</span>
-        <span>{{ __('E-mail') . Str::padBoth($member->field_5_15, strlen($member->field_5_15) + 20, '.')}}</span>
+        <span>{{ __('รหัสไปรษณีย์') . Str::padBoth($member->benef_postcode, strlen($member->benef_postcode) + 20, '.')}}</span>
+        <span>{{ __('โทรศัพท์') . Str::padBoth($member->benef_tel, strlen($member->benef_tel) + 20, '.')}}</span>
+        <span>{{ __('E-mail') . Str::padBoth($member->benef_fax, strlen($member->benef_fax) + 20, '.')}}</span>
     </p>
     <p>ข้าพเจ้าได้อ่านข้อความทั้งหมดจนเป็นที่เข้าใจเป็นอย่างดีแล้ว และขอรับรองว่าข้อความทั้งหมดที่ข้าฯ ได้ระบุไว้ ในใบสมัครหรือสัญญาฉบับนี้  เป็นข้อมูลจริงทุกประการ และข้าฯยินยอมให้กองทุนอิสระฯ ตลอดจนตัวแทนกองทุนอิสระฯ  และเจ้าหนี้ที่เข้าร่วมโครงการช่วยเหลือแก้ไขหนี้สินแบบปลอดดอกเบี้ยนี้ดำเนินการตรวจสอบข้อมูล ขอข้อมูลและเปิดเผยข้อมูล ตลอดจนใช้ข้อมูลเกี่ยวกับภาระหนี้หลักประกัน  และหรือการได้รับสินเชื่อของข้าพเจ้าที่มีอยู่กับสถาบันการเงินสมาชิกหรือนิติบุคคลอื่น ที่ได้ถูกรวบรวมไว้ที่บริษัทข้อมูลเครดิตแห่งชาติจำกัดหรือบริษัทข้อมูลเครดิตใดๆ ตามพระราชบัญญัติการประกอบธุรกิจข้อมูลเครดิตที่จะมีขึ้นต่อไปในภายหน้าได้ทั้งสิ้น ทั้งนี้ไม่ว่าจะเป็นภาระหนี้  และ/หรือวงเงินสินเชื่อที่ข้าพเจ้าเคยมีในอดีต  และ/หรือที่มีอยู่ในปัจจุบันตลอดจนที่จะมีขึ้นในภายหน้าโดยไม่ต้องคำนึงว่าข้าพเจ้าจะได้รับอนุมัติให้เข้าร่วมโครงการหรือไม่ก็ตาม โดยข้าฯ จะไม่นำเอกสารหรือบันทึกข้อความใดๆ ที่เกี่ยวข้องไปฟ้องร้อง  เรียกร้อง  ค่าเสียหายใดๆ ได้ ทั้งตามประมวลกฎหมายแพ่งและพาณิชย์  หรือ ประมวลกฎหมายอาญา  หรือตามกฎหมายอื่นๆ ทุกกรณี หรือไม่ติดใจเรียกร้อง หรือเอาความใดๆ กับกองทุนอิสระฯ ตลอดจนผู้มีหน้าที่ดำเนินการแทนกองทุนอิสระฯ ไม่ทางแพ่ง หรืออาญา หรือกฎหมายอื่นใด</p>
     <p>ทั้งนี้ หากข้าฯได้รับการแก้ไขหนี้สินตามโครงการนี้ด้วยการซื้อหนี้สินเสร็จสิ้น อันทรัพย์สินใดๆ ของข้าฯที่ค้ำประกันไว้กับสถาบันการเงิน หรือเจ้าหนี้ของข้าฯไว้ ข้าฯตกลงยินยอมให้กองทุนอิสระฯ นำหลักทรัพย์ดังกล่าวมาใช้เป็นหลักค้ำประกัน หนี้สินตามสัญญาฉบับนี้ จนกว่าจะชำระหนี้สินให้กับกองทุนอิสระฯ เสร็จสิ้น โดยไม่มีเงื่อนไขแต่อย่างใด และยินยอมปฏิบัติตามเงื่อนไขทุกประการ</p>
