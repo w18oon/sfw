@@ -345,14 +345,18 @@ function MemberForm(props) {
             closeOnClickOutside: false,
         });
 
-        axios.post(`/member/${member.id}`, member).then(res => {
+        axios.put(`/api/member/${member.id}`, member).then(res => {
             console.log(res);
             if (res.status == 200) {
+                console.log(res.data);
                 swal({
                     icon: 'success',
                     text: 'ระบบบันทึกข้อมูลเรียบร้อย',
-                    button: false,
-                });
+                }).then(value => {
+                    if (value) {
+                        window.location.href = `/member`;
+                    }
+                });;
             }
         }).catch(err => {
             console.log(err)

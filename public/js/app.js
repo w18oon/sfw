@@ -2237,15 +2237,20 @@ function MemberForm(props) {
       closeOnEsc: false,
       closeOnClickOutside: false
     });
-    axios__WEBPACK_IMPORTED_MODULE_0___default().post("/member/".concat(member.id), member).then(function (res) {
+    axios__WEBPACK_IMPORTED_MODULE_0___default().put("/api/member/".concat(member.id), member).then(function (res) {
       console.log(res);
 
       if (res.status == 200) {
+        console.log(res.data);
         sweetalert__WEBPACK_IMPORTED_MODULE_1___default()({
           icon: 'success',
-          text: 'ระบบบันทึกข้อมูลเรียบร้อย',
-          button: false
+          text: 'ระบบบันทึกข้อมูลเรียบร้อย'
+        }).then(function (value) {
+          if (value) {
+            window.location.href = "/member";
+          }
         });
+        ;
       }
     })["catch"](function (err) {
       console.log(err);
