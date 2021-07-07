@@ -1971,7 +1971,6 @@ function MemberForm(props) {
   var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)({
     member: [],
     ship: [],
-    bener: [],
     workplace: [],
     benef: []
   }),
@@ -1982,7 +1981,6 @@ function MemberForm(props) {
   var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)({
     member: [],
     ship: [],
-    bener: [],
     workplace: [],
     benef: []
   }),
@@ -2121,12 +2119,29 @@ function MemberForm(props) {
     setProvinces(_toConsumableArray(new Set(data.postcodes.map(function (postcode) {
       return postcode.province;
     }))).sort());
-    setMember(data.member); // axios.get('/api/postcodes').then(res => {
-    //     setPostcodes(res.data);
-    //     setProvinces([...new Set(res.data.map(postcode => postcode.province))].sort());
-    // }).catch(error => {
-    //     console.log(error)
-    // });
+    setMember(data.member);
+    ['member', 'ship', 'workplace', 'benef'].map(function (addr) {
+      var prefixName = addr == 'member' ? '' : "".concat(addr, "_");
+
+      if (data.member["".concat(prefixName, "province")] != '') {
+        var districtFilter = data.postcodes.filter(function (postcode) {
+          return postcode.province == data.member["".concat(prefixName, "province")];
+        });
+        setDistricts(function (prevState) {
+          return _objectSpread(_objectSpread({}, prevState), {}, _defineProperty({}, addr, _toConsumableArray(new Set(districtFilter.map(function (district) {
+            return district.district;
+          }))).sort()));
+        });
+        var subDistrictFilter = data.postcodes.filter(function (postcode) {
+          return postcode.province == data.member["".concat(prefixName, "province")] && postcode.district == data.member["".concat(prefixName, "district")];
+        });
+        setSubDistricts(function (prevState) {
+          return _objectSpread(_objectSpread({}, prevState), {}, _defineProperty({}, addr, _toConsumableArray(new Set(subDistrictFilter.map(function (subDistrict) {
+            return subDistrict.sub_district;
+          }))).sort()));
+        });
+      }
+    });
   }, []);
 
   function handleInputChange(event) {
@@ -2174,12 +2189,12 @@ function MemberForm(props) {
   }
 
   function handleSubDistrictChange(event, addrType, selectedProvince, selectedDistrict, inputPostcode) {
-    var _objectSpread9;
+    var _objectSpread11;
 
     var postcodeFilter = postcodes.filter(function (postcode) {
       return postcode.province == selectedProvince && postcode.district == selectedDistrict && postcode.sub_district == event.target.value;
     })[0];
-    setMember(_objectSpread(_objectSpread({}, member), {}, (_objectSpread9 = {}, _defineProperty(_objectSpread9, event.target.name, event.target.value), _defineProperty(_objectSpread9, inputPostcode, postcodeFilter.postcode), _objectSpread9)));
+    setMember(_objectSpread(_objectSpread({}, member), {}, (_objectSpread11 = {}, _defineProperty(_objectSpread11, event.target.name, event.target.value), _defineProperty(_objectSpread11, inputPostcode, postcodeFilter.postcode), _objectSpread11)));
   }
 
   function handleHouseTypeChange(event) {
@@ -2193,9 +2208,9 @@ function MemberForm(props) {
   }
 
   function handleSelectChange(event, otherValue, inputName) {
-    var _objectSpread11;
+    var _objectSpread13;
 
-    setMember(_objectSpread(_objectSpread({}, member), {}, (_objectSpread11 = {}, _defineProperty(_objectSpread11, event.target.name, event.target.value), _defineProperty(_objectSpread11, inputName, event.target.value != otherValue ? '' : member[inputName]), _objectSpread11)));
+    setMember(_objectSpread(_objectSpread({}, member), {}, (_objectSpread13 = {}, _defineProperty(_objectSpread13, event.target.name, event.target.value), _defineProperty(_objectSpread13, inputName, event.target.value != otherValue ? '' : member[inputName]), _objectSpread13)));
     setDisabledInput(_objectSpread(_objectSpread({}, disabledInput), {}, _defineProperty({}, inputName, event.target.value == otherValue ? false : true)));
   }
 
@@ -2206,15 +2221,14 @@ function MemberForm(props) {
       if (!member[field]) {
         err += 1;
       }
-    });
-
-    if (className.id_card_no != 'is-valid' && className.benef_id_card_no != 'is-valid') {
-      err += 1;
-    } // if (err > 0) {
-    //     swal('เกิดข้อผิดพลาด', 'รบกวนกรอกข้อมูลให้ครบถ้วน', "error");
-    //     return;
+    }); // if (className.id_card_no != 'is-valid' && className.benef_id_card_no != 'is-valid') {
+    //     err += 1;
     // }
 
+    if (err > 0) {
+      sweetalert__WEBPACK_IMPORTED_MODULE_1___default()('เกิดข้อผิดพลาด', 'รบกวนกรอกข้อมูลให้ครบถ้วน', "error");
+      return;
+    }
 
     sweetalert__WEBPACK_IMPORTED_MODULE_1___default()({
       icon: 'info',
@@ -2223,7 +2237,7 @@ function MemberForm(props) {
       closeOnEsc: false,
       closeOnClickOutside: false
     });
-    axios__WEBPACK_IMPORTED_MODULE_0___default().post('/member', member).then(function (res) {
+    axios__WEBPACK_IMPORTED_MODULE_0___default().post("/member/".concat(member.id), member).then(function (res) {
       console.log(res);
 
       if (res.status == 200) {
@@ -2255,7 +2269,7 @@ function MemberForm(props) {
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("select", {
           className: "form-control",
           name: "receipt_province",
-          value: member.receipt_province,
+          value: member.receipt_province || '',
           onChange: handleInputChange,
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("option", {
             children: "\u0E40\u0E25\u0E37\u0E2D\u0E01"
@@ -2281,7 +2295,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "title",
           name: "title",
-          value: member.title,
+          value: member.title || '',
           onChange: function onChange(e) {
             return handleSelectChange(e, 'อื่นๆ', 'other_title');
           },
@@ -2302,7 +2316,7 @@ function MemberForm(props) {
           type: "text",
           className: "form-control",
           name: "other_title",
-          value: member.other_title,
+          value: member.other_title || '',
           onChange: handleInputChange,
           disabled: disabledInput.other_title
         })]
@@ -2318,7 +2332,7 @@ function MemberForm(props) {
           type: "text",
           className: "form-control",
           name: "firstname",
-          value: member.firstname,
+          value: member.firstname || '',
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -2333,7 +2347,7 @@ function MemberForm(props) {
           type: "text",
           className: "form-control",
           name: "lastname",
-          value: member.lastname,
+          value: member.lastname || '',
           onChange: handleInputChange
         })]
       })]
@@ -2453,7 +2467,8 @@ function MemberForm(props) {
               id: "is_bankrupt_1",
               name: "is_bankrupt",
               value: "\u0E40\u0E1B\u0E47\u0E19",
-              onChange: handleInputChange
+              onChange: handleInputChange,
+              checked: member.is_bankrupt == 'เป็น'
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
               className: "form-check-label",
               htmlFor: "is_bankrupt_1",
@@ -2467,7 +2482,8 @@ function MemberForm(props) {
               id: "is_bankrupt_2",
               name: "is_bankrupt",
               value: "\u0E44\u0E21\u0E48\u0E40\u0E1B\u0E47\u0E19",
-              onChange: handleInputChange
+              onChange: handleInputChange,
+              checked: member.is_bankrupt == 'ไม่เป็น'
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
               className: "form-check-label",
               htmlFor: "is_bankrupt_2",
@@ -2492,7 +2508,8 @@ function MemberForm(props) {
               id: "is_incompetent_person_1",
               name: "is_incompetent_person",
               value: "\u0E43\u0E0A\u0E48",
-              onChange: handleInputChange
+              onChange: handleInputChange,
+              checked: member.is_incompetent_person == 'ใช่'
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
               className: "form-check-label",
               htmlFor: "is_incompetent_person_1",
@@ -2506,7 +2523,8 @@ function MemberForm(props) {
               id: "is_incompetent_person_2",
               name: "is_incompetent_person",
               value: "\u0E44\u0E21\u0E48\u0E43\u0E0A\u0E48",
-              onChange: handleInputChange
+              onChange: handleInputChange,
+              checked: member.is_incompetent_person == 'ไม่ใช่'
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
               className: "form-check-label",
               htmlFor: "is_incompetent_person_2",
@@ -2532,7 +2550,8 @@ function MemberForm(props) {
               id: "is_permanent_disability_1",
               name: "is_permanent_disability",
               value: "\u0E43\u0E0A\u0E48",
-              onChange: handleInputChange
+              onChange: handleInputChange,
+              checked: member.is_permanent_disability == 'ใช่'
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
               className: "form-check-label",
               htmlFor: "is_permanent_disability_1",
@@ -2546,7 +2565,8 @@ function MemberForm(props) {
               id: "is_permanent_disability_2",
               name: "is_permanent_disability",
               value: "\u0E44\u0E21\u0E48\u0E43\u0E0A\u0E48",
-              onChange: handleInputChange
+              onChange: handleInputChange,
+              checked: member.is_permanent_disability == 'ไม่ใช่'
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
               className: "form-check-label",
               htmlFor: "is_permanent_disability_2",
@@ -2572,7 +2592,8 @@ function MemberForm(props) {
               id: "is_quasi_incompetent_person_1",
               name: "is_quasi_incompetent_person",
               value: "\u0E43\u0E0A\u0E48",
-              onChange: handleInputChange
+              onChange: handleInputChange,
+              checked: member.is_quasi_incompetent_person == 'ใช่'
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
               className: "form-check-label",
               htmlFor: "is_quasi_incompetent_person_1",
@@ -2586,7 +2607,8 @@ function MemberForm(props) {
               id: "is_quasi_incompetent_person_2",
               name: "is_quasi_incompetent_person",
               value: "\u0E44\u0E21\u0E48\u0E43\u0E0A\u0E48",
-              onChange: handleInputChange
+              onChange: handleInputChange,
+              checked: member.is_quasi_incompetent_person == 'ไม่ใช่'
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
               className: "form-check-label",
               htmlFor: "is_quasi_incompetent_person_2",
@@ -2604,79 +2626,26 @@ function MemberForm(props) {
             className: "text-danger",
             children: "*"
           })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
           className: "form-group",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
-            className: "form-check form-check-inline",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("input", {
-              className: "form-check-input",
-              type: "radio",
-              id: "marital_status_1",
-              name: "marital_status",
-              value: "\u0E42\u0E2A\u0E14",
-              onChange: handleInputChange
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
-              className: "form-check-label",
-              htmlFor: "marital_status_1",
-              children: "\u0E42\u0E2A\u0E14"
-            })]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
-            className: "form-check form-check-inline",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("input", {
-              className: "form-check-input",
-              type: "radio",
-              id: "marital_status_2",
-              name: "marital_status",
-              value: "\u0E2B\u0E22\u0E48\u0E32",
-              onChange: handleInputChange
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
-              className: "form-check-label",
-              htmlFor: "marital_status_2",
-              children: "\u0E2B\u0E22\u0E48\u0E32"
-            })]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
-            className: "form-check form-check-inline",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("input", {
-              className: "form-check-input",
-              type: "radio",
-              id: "marital_status_3",
-              name: "marital_status",
-              value: "\u0E2A\u0E21\u0E23\u0E2A\u0E08\u0E14\u0E17\u0E30\u0E40\u0E1A\u0E35\u0E22\u0E19",
-              onChange: handleInputChange
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
-              className: "form-check-label",
-              htmlFor: "marital_status_3",
-              children: "\u0E2A\u0E21\u0E23\u0E2A\u0E08\u0E14\u0E17\u0E30\u0E40\u0E1A\u0E35\u0E22\u0E19"
-            })]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
-            className: "form-check form-check-inline",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("input", {
-              className: "form-check-input",
-              type: "radio",
-              id: "marital_status_4",
-              name: "marital_status",
-              value: "\u0E2A\u0E21\u0E23\u0E2A\u0E44\u0E21\u0E48\u0E08\u0E14\u0E17\u0E30\u0E40\u0E1A\u0E35\u0E22\u0E19",
-              onChange: handleInputChange
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
-              className: "form-check-label",
-              htmlFor: "marital_status_4",
-              children: "\u0E2A\u0E21\u0E23\u0E2A\u0E44\u0E21\u0E48\u0E08\u0E14\u0E17\u0E30\u0E40\u0E1A\u0E35\u0E22\u0E19"
-            })]
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
-            className: "form-check form-check-inline",
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("input", {
-              className: "form-check-input",
-              type: "radio",
-              id: "marital_status_5",
-              name: "marital_status",
-              value: "\u0E2B\u0E21\u0E49\u0E32\u0E22",
-              onChange: handleInputChange
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
-              className: "form-check-label",
-              htmlFor: "marital_status_5",
-              children: "\u0E2B\u0E21\u0E49\u0E32\u0E22"
-            })]
-          })]
+          children: ['โสด', 'หย่า', 'สมรสจดทะเบียน', 'สมรสไม่จดทะเบียน', 'หม้าย'].map(function (element, index) {
+            return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
+              className: "form-check form-check-inline",
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("input", {
+                className: "form-check-input",
+                type: "radio",
+                id: "marital_status_".concat(index),
+                name: "marital_status",
+                value: element,
+                onChange: handleInputChange,
+                checked: member.marital_status == element
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
+                className: "form-check-label",
+                htmlFor: "marital_status_".concat(index),
+                children: element
+              })]
+            }, index);
+          })
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
         className: "form-group col-2",
@@ -2691,7 +2660,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "number_of_children",
           name: "number_of_children",
-          value: member.number_of_children,
+          value: member.number_of_children || 0,
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -2707,7 +2676,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "number_of_children_study",
           name: "number_of_children_study",
-          value: member.number_of_children_study,
+          value: member.number_of_children_study || 0,
           onChange: handleInputChange
         })]
       })]
@@ -2724,7 +2693,7 @@ function MemberForm(props) {
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("select", {
           className: "form-control",
           name: "spouse_title",
-          value: member.spouse_title,
+          value: member.spouse_title || '',
           onChange: function onChange(e) {
             return handleSelectChange(e, 'อื่นๆ', 'other_spouse_title');
           },
@@ -2747,7 +2716,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "other_spouse_title",
           name: "other_spouse_title",
-          value: member.other_spouse_title,
+          value: member.other_spouse_title || '',
           onChange: handleInputChange,
           disabled: disabledInput.other_spouse_title
         })]
@@ -2761,7 +2730,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "spouse_firstname",
           name: "spouse_firstname",
-          value: member.spouse_firstname,
+          value: member.spouse_firstname || '',
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -2774,7 +2743,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "spouse_lastname",
           name: "spouse_lastname",
-          value: member.spouse_lastname,
+          value: member.spouse_lastname || '',
           onChange: handleInputChange
         })]
       })]
@@ -2789,7 +2758,7 @@ function MemberForm(props) {
           type: "text",
           className: "form-control ".concat(className.spouse_id_card_no),
           name: "spouse_id_card_no",
-          value: member.spouse_id_card_no,
+          value: member.spouse_id_card_no || '',
           onChange: handleIdChange
         })]
       })
@@ -2808,7 +2777,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "house_no",
           name: "house_no",
-          value: member.house_no,
+          value: member.house_no || '',
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -2821,7 +2790,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "moo",
           name: "moo",
-          value: member.moo,
+          value: member.moo || '',
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -2834,7 +2803,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "soi",
           name: "soi",
-          value: member.soi,
+          value: member.soi || '',
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -2847,7 +2816,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "street",
           name: "street",
-          value: member.street,
+          value: member.street || '',
           onChange: handleInputChange
         })]
       })]
@@ -2865,7 +2834,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "sub_district",
           name: "sub_district",
-          value: member.sub_district,
+          value: member.sub_district || '',
           onChange: function onChange(e) {
             return handleSubDistrictChange(e, 'member', member.province, member.district, 'post_code');
           },
@@ -2890,7 +2859,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "district",
           name: "district",
-          value: member.district,
+          value: member.district || '',
           onChange: function onChange(e) {
             return handleDistrictChange(e, 'member', member.province);
           },
@@ -2915,7 +2884,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "province",
           name: "province",
-          value: member.province,
+          value: member.province || '',
           onChange: function onChange(e) {
             return handleProvinceChange(e, 'member');
           },
@@ -2941,7 +2910,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "postcode",
           name: "post_code",
-          value: member.post_code,
+          value: member.post_code || '',
           onChange: handleInputChange,
           disabled: true
         })]
@@ -2961,7 +2930,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "tel",
           name: "tel",
-          value: member.tel,
+          value: member.tel || '',
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -2977,7 +2946,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "fax",
           name: "fax",
-          value: member.fax,
+          value: member.fax || '',
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -2993,7 +2962,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "mail",
           name: "mail",
-          value: member.mail,
+          value: member.mail || '',
           onChange: handleInputChange
         })]
       })]
@@ -3012,7 +2981,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "ship_house_no",
           name: "ship_house_no",
-          value: member.ship_house_no,
+          value: member.ship_house_no || '',
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -3025,7 +2994,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "ship_moo",
           name: "ship_moo",
-          value: member.ship_moo,
+          value: member.ship_moo || '',
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -3038,7 +3007,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "ship_soi",
           name: "ship_soi",
-          value: member.ship_soi,
+          value: member.ship_soi || '',
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -3051,7 +3020,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "ship_street",
           name: "ship_street",
-          value: member.ship_street,
+          value: member.ship_street || '',
           onChange: handleInputChange
         })]
       })]
@@ -3069,7 +3038,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "ship_sub_district",
           name: "ship_sub_district",
-          value: member.ship_sub_district,
+          value: member.ship_sub_district || '',
           onChange: function onChange(e) {
             return handleSubDistrictChange(e, 'ship', member.ship_province, member.ship_district, 'ship_postcode');
           },
@@ -3094,7 +3063,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "ship_district",
           name: "ship_district",
-          value: member.ship_district,
+          value: member.ship_district || '',
           onChange: function onChange(e) {
             return handleDistrictChange(e, 'ship', member.ship_province);
           },
@@ -3119,7 +3088,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "ship_province",
           name: "ship_province",
-          value: member.ship_province,
+          value: member.ship_province || '',
           onChange: function onChange(e) {
             return handleProvinceChange(e, 'ship');
           },
@@ -3164,7 +3133,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "ship_tel",
           name: "ship_tel",
-          value: member.ship_tel,
+          value: member.ship_tel || '',
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -3180,7 +3149,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "ship_mail",
           name: "ship_mail",
-          value: member.ship_mail,
+          value: member.ship_mail || '',
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -3196,7 +3165,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "ship_line",
           name: "ship_line",
-          value: member.ship_line,
+          value: member.ship_line || '',
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -3212,7 +3181,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "ship_fb",
           name: "ship_fb",
-          value: member.ship_fb,
+          value: member.ship_fb || '',
           onChange: handleInputChange
         })]
       })]
@@ -3230,7 +3199,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "house_type",
           name: "house_type",
-          value: member.house_type,
+          value: member.house_type || '',
           onChange: handleHouseTypeChange,
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("option", {
             children: "\u0E40\u0E25\u0E37\u0E2D\u0E01"
@@ -3251,7 +3220,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "cost_per_month",
           name: "cost_per_month",
-          value: member.cost_per_month,
+          value: member.cost_per_month || '',
           onChange: handleInputChange,
           disabled: disabledCostPerMonth
         })]
@@ -3265,7 +3234,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "house_year",
           name: "house_year",
-          value: member.house_year,
+          value: member.house_year || '',
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -3280,7 +3249,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "education_level",
           name: "education_level",
-          value: member.education_level,
+          value: member.education_level || '',
           onChange: function onChange(e) {
             return handleSelectChange(e, 'อื่นๆ', 'other_education_level');
           },
@@ -3303,7 +3272,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "other_education_level",
           name: "other_education_level",
-          value: member.other_education_level,
+          value: member.other_education_level || '',
           onChange: handleInputChange,
           disabled: disabledInput.other_education_level
         })]
@@ -3322,7 +3291,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "career",
           name: "career",
-          value: member.career,
+          value: member.career || '',
           onChange: function onChange(e) {
             return handleSelectChange(e, 'อื่นๆ', 'other_career');
           },
@@ -3345,7 +3314,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "other_career",
           name: "other_career",
-          value: member.other_career,
+          value: member.other_career || '',
           onChange: handleInputChange,
           disabled: disabledInput.other_career
         })]
@@ -3367,7 +3336,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "income_type",
           name: "income_type",
-          value: member.income_type,
+          value: member.income_type || '',
           onChange: handleInputChange,
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("option", {
             children: "\u0E40\u0E25\u0E37\u0E2D\u0E01"
@@ -3389,7 +3358,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "income_amount",
           name: "income_amount",
-          value: member.income_amount,
+          value: member.income_amount || '',
           onChange: handleInputChange
         })]
       })]
@@ -3404,7 +3373,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "other_income_type",
           name: "other_income_type",
-          value: member.other_income_type,
+          value: member.other_income_type || '',
           onChange: function onChange(e) {
             return handleSelectChange(e, 'อื่นๆ', 'other_income');
           },
@@ -3431,7 +3400,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "other_income",
           name: "other_income",
-          value: member.other_income,
+          value: member.other_income || '',
           onChange: handleInputChange,
           disabled: disabledInput.other_income
         })]
@@ -3445,7 +3414,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "other_income_amount",
           name: "other_income",
-          value: member.other_income_name,
+          value: member.other_income_name || '',
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -3458,7 +3427,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "source_other_income",
           name: "source_other_income",
-          value: member.source_other_income,
+          value: member.source_other_income || '',
           onChange: handleInputChange
         })]
       })]
@@ -3477,7 +3446,8 @@ function MemberForm(props) {
             name: "debt_type",
             id: "debt_1",
             value: "\u0E40\u0E2D\u0E01\u0E2A\u0E32\u0E23\u0E21\u0E39\u0E25\u0E2B\u0E19\u0E35\u0E49\u0E2A\u0E34\u0E19\u0E15\u0E32\u0E21\u0E04\u0E27\u0E32\u0E21\u0E40\u0E1B\u0E47\u0E19\u0E08\u0E23\u0E34\u0E07\u0E17\u0E31\u0E49\u0E07\u0E43\u0E19\u0E23\u0E30\u0E1A\u0E1A\u0E41\u0E25\u0E30\u0E19\u0E2D\u0E01\u0E23\u0E30\u0E1A\u0E1A",
-            onChange: handleInputChange
+            onChange: handleInputChange,
+            checked: member.debt_type == 'เอกสารมูลหนี้สินตามความเป็นจริงทั้งในระบบและนอกระบบ'
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
             className: "form-check-label",
             htmlFor: "debt_1",
@@ -3491,7 +3461,8 @@ function MemberForm(props) {
             name: "debt_type",
             id: "debt_2",
             value: "\u0E40\u0E2D\u0E01\u0E2A\u0E32\u0E23\u0E01\u0E32\u0E23\u0E15\u0E23\u0E27\u0E08\u0E40\u0E04\u0E23\u0E14\u0E34\u0E15\u0E1A\u0E39\u0E42\u0E23",
-            onChange: handleInputChange
+            onChange: handleInputChange,
+            checked: member.debt_type == 'เอกสารการตรวจเครดิตบูโร'
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
             className: "form-check-label",
             htmlFor: "debt_2",
@@ -3514,7 +3485,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "workplace",
           name: "workplace",
-          value: member.workplace,
+          value: member.workplace || '',
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -3527,7 +3498,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "building",
           name: "building",
-          value: member.building,
+          value: member.building || '',
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -3540,7 +3511,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "floor",
           name: "floor",
-          value: member.floor,
+          value: member.floor || '',
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -3553,7 +3524,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "department",
           name: "department",
-          value: member.department,
+          value: member.department || '',
           onChange: handleInputChange
         })]
       })]
@@ -3569,7 +3540,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "workplace_no",
           name: "workplace_no",
-          value: member.workplace_no,
+          value: member.workplace_no || '',
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -3582,7 +3553,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "workplace_moo",
           name: "workplace_moo",
-          value: member.workplace_moo,
+          value: member.workplace_moo || '',
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -3595,7 +3566,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "workplace_soi",
           name: "workplace_soi",
-          value: member.workplace_soi,
+          value: member.workplace_soi || '',
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -3608,7 +3579,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "workplace_street",
           name: "workplace_street",
-          value: member.workplace_street,
+          value: member.workplace_street || '',
           onChange: handleInputChange
         })]
       })]
@@ -3626,7 +3597,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "workplace_sub_district",
           name: "workplace_sub_district",
-          value: member.workplace_sub_district,
+          value: member.workplace_sub_district || '',
           onChange: function onChange(e) {
             return handleSubDistrictChange(e, 'workplace', member.workplace_province, member.workplace_district, 'workplace_postcode');
           },
@@ -3651,7 +3622,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "workplace_district",
           name: "workplace_district",
-          value: member.workplace_district,
+          value: member.workplace_district || '',
           onChange: function onChange(e) {
             return handleDistrictChange(e, 'workplace', member.workplace_province);
           },
@@ -3676,7 +3647,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "workplace_province",
           name: "workplace_province",
-          value: member.workplace_province,
+          value: member.workplace_province || '',
           onChange: function onChange(e) {
             return handleProvinceChange(e, 'workplace');
           },
@@ -3721,7 +3692,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "workplace_tel",
           name: "workplace_tel",
-          value: member.workplace_tel,
+          value: member.workplace_tel || '',
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -3737,7 +3708,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "workplace_fax",
           name: "workplace_fax",
-          value: member.workplace_fax,
+          value: member.workplace_fax || '',
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -3753,7 +3724,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "work_exp",
           name: "work_exp",
-          value: member.work_exp,
+          value: member.work_exp || '',
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -3769,7 +3740,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "job_position",
           name: "job_position",
-          value: member.job_position,
+          value: member.job_position || '',
           onChange: handleInputChange
         })]
       })]
@@ -3785,7 +3756,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "old_workplace",
           name: "old_workplace",
-          value: member.old_workplace,
+          value: member.old_workplace || '',
           onChange: handleInputChange
         })]
       })
@@ -3806,7 +3777,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "benef_title",
           name: "benef_title",
-          value: member.benef_title,
+          value: member.benef_title || '',
           onChange: function onChange(e) {
             return handleSelectChange(e, 'อื่นๆ', 'benef_other_title');
           },
@@ -3829,7 +3800,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "benef_other_title",
           name: "benef_other_title",
-          value: member.benef_other_title,
+          value: member.benef_other_title || '',
           onChange: handleInputChange,
           disabled: disabledInput.benef_other_title
         })]
@@ -3846,7 +3817,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "benef_firstname",
           name: "benef_firstname",
-          value: member.benef_firstname,
+          value: member.benef_firstname || '',
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -3862,7 +3833,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "benef_lastname",
           name: "benef_lastname",
-          value: member.benef_lastname,
+          value: member.benef_lastname || '',
           onChange: handleInputChange
         })]
       })]
@@ -3881,7 +3852,7 @@ function MemberForm(props) {
           className: "form-control ".concat(className.benef_id_card_no),
           id: "benef_id_card_no",
           name: "benef_id_card_no",
-          value: member.benef_id_card_no,
+          value: member.benef_id_card_no || '',
           onChange: handleIdChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -3894,7 +3865,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "benef_relationship",
           name: "benef_relationship",
-          value: member.relationship,
+          value: member.relationship || '',
           onChange: handleInputChange
         })]
       })]
@@ -3910,7 +3881,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "benef_house_no",
           name: "benef_house_no",
-          value: member.benef_house_no,
+          value: member.benef_house_no || '',
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -3923,7 +3894,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "benef_moo",
           name: "benef_moo",
-          value: member.benef_moo,
+          value: member.benef_moo || '',
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -3936,7 +3907,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "benef_soi",
           name: "benef_soi",
-          value: member.benef_soi,
+          value: member.benef_soi || '',
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -3949,7 +3920,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "benef_street",
           name: "benef_street",
-          value: member.benef_street,
+          value: member.benef_street || '',
           onChange: handleInputChange
         })]
       })]
@@ -3967,7 +3938,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "benef_sub_district",
           name: "benef_sub_district",
-          value: member.benef_sub_district,
+          value: member.benef_sub_district || '',
           onChange: function onChange(e) {
             return handleSubDistrictChange(e, 'benef', member.benef_province, member.benef_district, 'benef_postcode');
           },
@@ -3992,7 +3963,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "benef_district",
           name: "benef_district",
-          value: member.benef_district,
+          value: member.benef_district || '',
           onChange: function onChange(e) {
             return handleDistrictChange(e, 'benef', member.benef_province);
           },
@@ -4017,7 +3988,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "benef_province",
           name: "benef_province",
-          value: member.benef_province,
+          value: member.benef_province || '',
           onChange: function onChange(e) {
             return handleProvinceChange(e, 'benef');
           },
@@ -4062,7 +4033,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "benef_tel",
           name: "benef_tel",
-          value: member.benef_tel,
+          value: member.benef_tel || '',
           onChange: handleInputChange
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
@@ -4075,7 +4046,7 @@ function MemberForm(props) {
           className: "form-control",
           id: "benef_fax",
           name: "benef_fax",
-          value: member.benef_fax,
+          value: member.benef_fax || '',
           onChange: handleInputChange
         })]
       })]

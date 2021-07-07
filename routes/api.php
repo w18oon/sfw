@@ -16,6 +16,7 @@ use App\Models\Postcode;
 */
 
 Route::post('/member', [App\Http\Controllers\MemberController::class, 'store']);
+Route::put('/member/{id}', [App\Http\Controllers\MemberController::class, 'update']);
 
 Route::get('/postcodes', function () {
     $postcodes = Postcode::orderBy('province')->get();
