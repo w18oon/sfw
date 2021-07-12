@@ -46,10 +46,6 @@ const RegisterForm = (props) => {
         'career',
         'income_type',
         'income_amount',
-        'debt_type_1', 
-        'debt_type_2', 
-        'debt_type_3', 
-        'debt_type_4', 
         'workplace_no',
         'workplace_province',
         'workplace_district',
@@ -435,7 +431,7 @@ const RegisterForm = (props) => {
     return (
         <form onSubmit={handleSubmitForm}>
             <Modal backdrop="static" keyboard={false} show={show} size="lg" onHide={handleClose}>
-                <Modal.Header>
+                <Modal.Header style={{ display: "flex", justifyContent: "center", alignItems: "center", }}>
                     <Modal.Title>เจตนารมณ์และพันธกรณีระหว่างกองทุนอิสระฯ กับสมาชิก</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -562,7 +558,7 @@ const RegisterForm = (props) => {
                 <div className="form-group col-1">
                     <label htmlFor="nationality">สัญชาติ <span className="text-danger">*</span></label>
                     <input type="text" 
-                        className={`form-control ${errors.includes('age')? 'is-invalid': ''}`}  
+                        className={`form-control ${errors.includes('nationality')? 'is-invalid': ''}`}  
                         id="nationality" 
                         name="nationality" 
                         value={member.nationality || ''} 
@@ -1059,7 +1055,7 @@ const RegisterForm = (props) => {
             <div className="form-row">
                 <div className="form-group col-3">
                     <label htmlFor="career">สาขาอาชีพ <span className="text-danger">*</span></label>
-                    <select className={`custom-select ${errors.includes('education_level')? 'is-invalid': ''}`} 
+                    <select className={`custom-select ${errors.includes('career')? 'is-invalid': ''}`} 
                         id="career" 
                         name="career" 
                         value={member.career || ''} 
@@ -1149,43 +1145,57 @@ const RegisterForm = (props) => {
                 </div>
             </div>
             <h4 className="mb-3">ภาระหนี้กับสถาบันการเงิน/บริษัท/หนี้นอกระบบ</h4>
-            <div className="form-row">
-                <div className="form-group col-3">
-                    <label htmlFor="debt_type_1">หนี้สินในระบบแบบถูกกฏหมาย (บาท) <span className="text-danger">*</span></label>
+            <h5 className="mb-3">1.หนี้สินในระบบแบบถูกกฏหมาย</h5>
+            <div className="form-group row">
+                <label htmlFor="staticEmail" className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
+                <div className="col-4">
                     <input type="number" 
-                        className={`form-control ${errors.includes('debt_type_1')? 'is-invalid': ''}`}
+                        className="form-control"
                         id="debt_type_1" 
                         name="debt_type_1" 
                         value={member.debt_type_1 || ''} 
                         onChange={handleInputChange}/>
                 </div>
-                <div className="form-group col-3">
-                    <label htmlFor="debt_type_2">หนี้สินนอกระบบแบบถูกกฏหมาย (บาท) <span className="text-danger">*</span></label>
+                <label className="col-2 col-form-label">บาท</label>
+            </div>
+            <h5 className="mb-3">2.หนี้สินนอกระบบแบบถูกกฏหมาย</h5>
+            <div className="form-group row">
+                <label htmlFor="staticEmail" className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
+                <div className="col-4">
                     <input type="number" 
-                        className={`form-control ${errors.includes('debt_type_2')? 'is-invalid': ''}`}
+                        className="form-control"
                         id="debt_type_2" 
                         name="debt_type_2" 
                         value={member.debt_type_2 || ''} 
                         onChange={handleInputChange}/>
                 </div>
-                <div className="form-group col-3">
-                    <label htmlFor="debt_type_3">หนี้สินนอกระบบแบบผิดกฏหมาย (บาท) <span className="text-danger">*</span></label>
+                <label className="col-2 col-form-label">บาท</label>
+            </div>
+            <h5 className="mb-3">3.หนี้สินนอกระบบแบบผิดกฏหมาย</h5>
+            <div className="form-group row">
+                <label htmlFor="staticEmail" className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
+                <div className="col-4">
                     <input type="number" 
-                        className={`form-control ${errors.includes('debt_type_3')? 'is-invalid': ''}`}
+                        className="form-control"
                         id="debt_type_3" 
                         name="debt_type_3" 
                         value={member.debt_type_3 || ''} 
                         onChange={handleInputChange}/>
                 </div>
-                <div className="form-group col-3">
-                    <label htmlFor="debt_type_4">หนี้สินแบบสหกรณ์ (บาท) <span className="text-danger">*</span></label>
+                <label className="col-2 col-form-label">บาท</label>
+            </div>
+            <h5 className="mb-3">4.หนี้สินแบบสหกรณ์</h5>
+            <div className="form-group row">
+                <label htmlFor="staticEmail" className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
+                <div className="col-4">
                     <input type="number" 
-                        className={`form-control ${errors.includes('debt_type_4')? 'is-invalid': ''}`}
+                        className="form-control"
                         id="debt_type_4" 
                         name="debt_type_4" 
                         value={member.debt_type_4 || ''} 
                         onChange={handleInputChange}/>
                 </div>
+                <label className="col-2 col-form-label">บาท</label>
             </div>
             <h4 className="mb-3">สถานทีทำงาน</h4>
             <div className="form-row">

@@ -7556,7 +7556,7 @@ var RegisterForm = function RegisterForm(props) {
       selectedDate = _useState6[0],
       setSelectedDate = _useState6[1];
 
-  var requireFields = ['receipt_province', 'title', 'firstname', 'lastname', 'id_card_no', 'exp_date', 'age', 'nationality', 'mobile', 'marital_status', 'house_no', 'province', 'district', 'sub_district', 'tel', 'ship_house_no', 'ship_province', 'ship_sub_district', 'ship_district', 'ship_tel', 'house_type', 'education_level', 'career', 'income_type', 'income_amount', 'debt_type_1', 'debt_type_2', 'debt_type_3', 'debt_type_4', 'workplace_no', 'workplace_province', 'workplace_district', 'workplace_sub_district', 'workplace_tel', 'benef_title', 'benef_firstname', 'benef_lastname', 'benef_id_card_no', 'benef_house_no', 'benef_province', 'benef_sub_district', 'benef_district'];
+  var requireFields = ['receipt_province', 'title', 'firstname', 'lastname', 'id_card_no', 'exp_date', 'age', 'nationality', 'mobile', 'marital_status', 'house_no', 'province', 'district', 'sub_district', 'tel', 'ship_house_no', 'ship_province', 'ship_sub_district', 'ship_district', 'ship_tel', 'house_type', 'education_level', 'career', 'income_type', 'income_amount', 'workplace_no', 'workplace_province', 'workplace_district', 'workplace_sub_district', 'workplace_tel', 'benef_title', 'benef_firstname', 'benef_lastname', 'benef_id_card_no', 'benef_house_no', 'benef_province', 'benef_sub_district', 'benef_district'];
 
   var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)([]),
       _useState8 = _slicedToArray(_useState7, 2),
@@ -7954,6 +7954,11 @@ var RegisterForm = function RegisterForm(props) {
       size: "lg",
       onHide: handleClose,
       children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_10__.default.Header, {
+        style: {
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center"
+        },
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(react_bootstrap__WEBPACK_IMPORTED_MODULE_10__.default.Title, {
           children: "\u0E40\u0E08\u0E15\u0E19\u0E32\u0E23\u0E21\u0E13\u0E4C\u0E41\u0E25\u0E30\u0E1E\u0E31\u0E19\u0E18\u0E01\u0E23\u0E13\u0E35\u0E23\u0E30\u0E2B\u0E27\u0E48\u0E32\u0E07\u0E01\u0E2D\u0E07\u0E17\u0E38\u0E19\u0E2D\u0E34\u0E2A\u0E23\u0E30\u0E2F \u0E01\u0E31\u0E1A\u0E2A\u0E21\u0E32\u0E0A\u0E34\u0E01"
         })
@@ -8166,7 +8171,7 @@ var RegisterForm = function RegisterForm(props) {
           })]
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("input", {
           type: "text",
-          className: "form-control ".concat(errors.includes('age') ? 'is-invalid' : ''),
+          className: "form-control ".concat(errors.includes('nationality') ? 'is-invalid' : ''),
           id: "nationality",
           name: "nationality",
           value: member.nationality || '',
@@ -9014,7 +9019,7 @@ var RegisterForm = function RegisterForm(props) {
             children: "*"
           })]
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("select", {
-          className: "custom-select ".concat(errors.includes('education_level') ? 'is-invalid' : ''),
+          className: "custom-select ".concat(errors.includes('career') ? 'is-invalid' : ''),
           id: "career",
           name: "career",
           value: member.career || '',
@@ -9163,72 +9168,97 @@ var RegisterForm = function RegisterForm(props) {
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("h4", {
       className: "mb-3",
       children: "\u0E20\u0E32\u0E23\u0E30\u0E2B\u0E19\u0E35\u0E49\u0E01\u0E31\u0E1A\u0E2A\u0E16\u0E32\u0E1A\u0E31\u0E19\u0E01\u0E32\u0E23\u0E40\u0E07\u0E34\u0E19/\u0E1A\u0E23\u0E34\u0E29\u0E31\u0E17/\u0E2B\u0E19\u0E35\u0E49\u0E19\u0E2D\u0E01\u0E23\u0E30\u0E1A\u0E1A"
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("h5", {
+      className: "mb-3",
+      children: "1.\u0E2B\u0E19\u0E35\u0E49\u0E2A\u0E34\u0E19\u0E43\u0E19\u0E23\u0E30\u0E1A\u0E1A\u0E41\u0E1A\u0E1A\u0E16\u0E39\u0E01\u0E01\u0E0F\u0E2B\u0E21\u0E32\u0E22"
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
-      className: "form-row",
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
-        className: "form-group col-3",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("label", {
-          htmlFor: "debt_type_1",
-          children: ["\u0E2B\u0E19\u0E35\u0E49\u0E2A\u0E34\u0E19\u0E43\u0E19\u0E23\u0E30\u0E1A\u0E1A\u0E41\u0E1A\u0E1A\u0E16\u0E39\u0E01\u0E01\u0E0F\u0E2B\u0E21\u0E32\u0E22 (\u0E1A\u0E32\u0E17) ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("span", {
-            className: "text-danger",
-            children: "*"
-          })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("input", {
+      className: "form-group row",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("label", {
+        htmlFor: "staticEmail",
+        className: "col-2 col-form-label",
+        children: "\u0E40\u0E1B\u0E47\u0E19\u0E2B\u0E19\u0E35\u0E49\u0E04\u0E07\u0E40\u0E2B\u0E25\u0E37\u0E2D"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("div", {
+        className: "col-4",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("input", {
           type: "number",
-          className: "form-control ".concat(errors.includes('debt_type_1') ? 'is-invalid' : ''),
+          className: "form-control",
           id: "debt_type_1",
           name: "debt_type_1",
           value: member.debt_type_1 || '',
           onChange: handleInputChange
-        })]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
-        className: "form-group col-3",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("label", {
-          htmlFor: "debt_type_2",
-          children: ["\u0E2B\u0E19\u0E35\u0E49\u0E2A\u0E34\u0E19\u0E19\u0E2D\u0E01\u0E23\u0E30\u0E1A\u0E1A\u0E41\u0E1A\u0E1A\u0E16\u0E39\u0E01\u0E01\u0E0F\u0E2B\u0E21\u0E32\u0E22 (\u0E1A\u0E32\u0E17) ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("span", {
-            className: "text-danger",
-            children: "*"
-          })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("input", {
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("label", {
+        className: "col-2 col-form-label",
+        children: "\u0E1A\u0E32\u0E17"
+      })]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("h5", {
+      className: "mb-3",
+      children: "2.\u0E2B\u0E19\u0E35\u0E49\u0E2A\u0E34\u0E19\u0E19\u0E2D\u0E01\u0E23\u0E30\u0E1A\u0E1A\u0E41\u0E1A\u0E1A\u0E16\u0E39\u0E01\u0E01\u0E0F\u0E2B\u0E21\u0E32\u0E22"
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
+      className: "form-group row",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("label", {
+        htmlFor: "staticEmail",
+        className: "col-2 col-form-label",
+        children: "\u0E40\u0E1B\u0E47\u0E19\u0E2B\u0E19\u0E35\u0E49\u0E04\u0E07\u0E40\u0E2B\u0E25\u0E37\u0E2D"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("div", {
+        className: "col-4",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("input", {
           type: "number",
-          className: "form-control ".concat(errors.includes('debt_type_2') ? 'is-invalid' : ''),
+          className: "form-control",
           id: "debt_type_2",
           name: "debt_type_2",
           value: member.debt_type_2 || '',
           onChange: handleInputChange
-        })]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
-        className: "form-group col-3",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("label", {
-          htmlFor: "debt_type_3",
-          children: ["\u0E2B\u0E19\u0E35\u0E49\u0E2A\u0E34\u0E19\u0E19\u0E2D\u0E01\u0E23\u0E30\u0E1A\u0E1A\u0E41\u0E1A\u0E1A\u0E1C\u0E34\u0E14\u0E01\u0E0F\u0E2B\u0E21\u0E32\u0E22 (\u0E1A\u0E32\u0E17) ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("span", {
-            className: "text-danger",
-            children: "*"
-          })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("input", {
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("label", {
+        className: "col-2 col-form-label",
+        children: "\u0E1A\u0E32\u0E17"
+      })]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("h5", {
+      className: "mb-3",
+      children: "3.\u0E2B\u0E19\u0E35\u0E49\u0E2A\u0E34\u0E19\u0E19\u0E2D\u0E01\u0E23\u0E30\u0E1A\u0E1A\u0E41\u0E1A\u0E1A\u0E1C\u0E34\u0E14\u0E01\u0E0F\u0E2B\u0E21\u0E32\u0E22"
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
+      className: "form-group row",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("label", {
+        htmlFor: "staticEmail",
+        className: "col-2 col-form-label",
+        children: "\u0E40\u0E1B\u0E47\u0E19\u0E2B\u0E19\u0E35\u0E49\u0E04\u0E07\u0E40\u0E2B\u0E25\u0E37\u0E2D"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("div", {
+        className: "col-4",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("input", {
           type: "number",
-          className: "form-control ".concat(errors.includes('debt_type_3') ? 'is-invalid' : ''),
+          className: "form-control",
           id: "debt_type_3",
           name: "debt_type_3",
           value: member.debt_type_3 || '',
           onChange: handleInputChange
-        })]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
-        className: "form-group col-3",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("label", {
-          htmlFor: "debt_type_4",
-          children: ["\u0E2B\u0E19\u0E35\u0E49\u0E2A\u0E34\u0E19\u0E41\u0E1A\u0E1A\u0E2A\u0E2B\u0E01\u0E23\u0E13\u0E4C (\u0E1A\u0E32\u0E17) ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("span", {
-            className: "text-danger",
-            children: "*"
-          })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("input", {
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("label", {
+        className: "col-2 col-form-label",
+        children: "\u0E1A\u0E32\u0E17"
+      })]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("h5", {
+      className: "mb-3",
+      children: "4.\u0E2B\u0E19\u0E35\u0E49\u0E2A\u0E34\u0E19\u0E41\u0E1A\u0E1A\u0E2A\u0E2B\u0E01\u0E23\u0E13\u0E4C"
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
+      className: "form-group row",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("label", {
+        htmlFor: "staticEmail",
+        className: "col-2 col-form-label",
+        children: "\u0E40\u0E1B\u0E47\u0E19\u0E2B\u0E19\u0E35\u0E49\u0E04\u0E07\u0E40\u0E2B\u0E25\u0E37\u0E2D"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("div", {
+        className: "col-4",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("input", {
           type: "number",
-          className: "form-control ".concat(errors.includes('debt_type_4') ? 'is-invalid' : ''),
+          className: "form-control",
           id: "debt_type_4",
           name: "debt_type_4",
           value: member.debt_type_4 || '',
           onChange: handleInputChange
-        })]
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("label", {
+        className: "col-2 col-form-label",
+        children: "\u0E1A\u0E32\u0E17"
       })]
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("h4", {
       className: "mb-3",
