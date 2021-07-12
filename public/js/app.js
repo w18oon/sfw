@@ -7741,6 +7741,19 @@ var RegisterForm = function RegisterForm(props) {
     }
   };
 
+  var handleInputNumberChange = function handleInputNumberChange(event) {
+    var _event$target = event.target,
+        value = _event$target.value,
+        maxLength = _event$target.maxLength;
+    setMember(_objectSpread(_objectSpread({}, member), {}, _defineProperty({}, event.target.name, value.slice(0, maxLength))));
+
+    if (event.target.value != '') {
+      setErrors(errors.filter(function (e) {
+        return e != event.target.name;
+      }));
+    }
+  };
+
   var handleIdChange = function handleIdChange(event) {
     var id = event.target.value;
 
@@ -7832,12 +7845,12 @@ var RegisterForm = function RegisterForm(props) {
   };
 
   var handleSubDistrictChange = function handleSubDistrictChange(event, addrType, selectedProvince, selectedDistrict, inputPostcode) {
-    var _objectSpread8;
+    var _objectSpread9;
 
     var postcodeFilter = postcodes.filter(function (postcode) {
       return postcode.province == selectedProvince && postcode.district == selectedDistrict && postcode.sub_district == event.target.value;
     })[0];
-    setMember(_objectSpread(_objectSpread({}, member), {}, (_objectSpread8 = {}, _defineProperty(_objectSpread8, event.target.name, event.target.value), _defineProperty(_objectSpread8, inputPostcode, postcodeFilter.postcode), _objectSpread8)));
+    setMember(_objectSpread(_objectSpread({}, member), {}, (_objectSpread9 = {}, _defineProperty(_objectSpread9, event.target.name, event.target.value), _defineProperty(_objectSpread9, inputPostcode, postcodeFilter.postcode), _objectSpread9)));
 
     if (event.target.value != '') {
       setErrors(errors.filter(function (e) {
@@ -7857,9 +7870,9 @@ var RegisterForm = function RegisterForm(props) {
   };
 
   var handleSelectChange = function handleSelectChange(event, otherValue, inputName) {
-    var _objectSpread10;
+    var _objectSpread11;
 
-    setMember(_objectSpread(_objectSpread({}, member), {}, (_objectSpread10 = {}, _defineProperty(_objectSpread10, event.target.name, event.target.value), _defineProperty(_objectSpread10, inputName, event.target.value != otherValue ? '' : member[inputName]), _objectSpread10)));
+    setMember(_objectSpread(_objectSpread({}, member), {}, (_objectSpread11 = {}, _defineProperty(_objectSpread11, event.target.name, event.target.value), _defineProperty(_objectSpread11, inputName, event.target.value != otherValue ? '' : member[inputName]), _objectSpread11)));
     setDisabledInput(_objectSpread(_objectSpread({}, disabledInput), {}, _defineProperty({}, inputName, event.target.value == otherValue ? false : true)));
 
     if (event.target.value != '') {
@@ -8167,15 +8180,15 @@ var RegisterForm = function RegisterForm(props) {
             className: "text-danger",
             children: "*"
           })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("input", _defineProperty({
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("input", {
           type: "number",
           className: "form-control ".concat(errors.includes('mobile') ? 'is-invalid' : ''),
           id: "mobile",
           name: "mobile",
           value: member.mobile || '',
           maxLength: "10",
-          onChange: handleInputChange
-        }, "maxLength", "10"))]
+          onChange: handleInputNumberChange
+        })]
       })]
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
       className: "form-row",
@@ -8657,7 +8670,7 @@ var RegisterForm = function RegisterForm(props) {
           id: "tel",
           name: "tel",
           value: member.tel || '',
-          onChange: handleInputChange,
+          onChange: handleInputNumberChange,
           maxLength: "10"
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
@@ -8855,7 +8868,7 @@ var RegisterForm = function RegisterForm(props) {
           id: "ship_tel",
           name: "ship_tel",
           value: member.ship_tel || '',
-          onChange: handleInputChange,
+          onChange: handleInputNumberChange,
           maxLength: "10"
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
@@ -9440,7 +9453,7 @@ var RegisterForm = function RegisterForm(props) {
           id: "workplace_tel",
           name: "workplace_tel",
           value: member.workplace_tel || '',
-          onChange: handleInputChange,
+          onChange: handleInputNumberChange,
           maxLength: "10"
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
@@ -9777,7 +9790,7 @@ var RegisterForm = function RegisterForm(props) {
           id: "benef_tel",
           name: "benef_tel",
           value: member.benef_tel || '',
-          onChange: handleInputChange,
+          onChange: handleInputNumberChange,
           maxLength: "10"
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {

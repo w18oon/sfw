@@ -226,6 +226,16 @@ const RegisterForm = (props) => {
         }
     }
 
+    const handleInputNumberChange = (event) => {
+        const { value, maxLength } = event.target;
+
+        setMember({...member, [event.target.name]: value.slice(0, maxLength)});
+
+        if (event.target.value != '') {
+            setErrors(errors.filter(e => e != event.target.name));
+        }
+    }
+
     const handleIdChange = (event) => {
         let id = event.target.value;
         if (id != '') {
@@ -569,8 +579,7 @@ const RegisterForm = (props) => {
                         name="mobile" 
                         value={member.mobile || ''} 
                         maxLength="10"
-                        onChange={handleInputChange}
-                        maxLength="10"/>
+                        onChange={handleInputNumberChange}/>
                     {/* <div className="invalid-feedback">กรุณากรอกข้อมูลให้ครบถ้วน</div> */}
                 </div>
             </div>
@@ -843,7 +852,7 @@ const RegisterForm = (props) => {
                         id="tel" 
                         name="tel" 
                         value={member.tel || ''} 
-                        onChange={handleInputChange}
+                        onChange={handleInputNumberChange}
                         maxLength="10"/>
                 </div>
                 <div className="form-group col-2">
@@ -961,7 +970,7 @@ const RegisterForm = (props) => {
                         id="ship_tel" 
                         name="ship_tel" 
                         value={member.ship_tel || ''} 
-                        onChange={handleInputChange}
+                        onChange={handleInputNumberChange}
                         maxLength="10"/>
                 </div>
                 <div className="form-group col-3">
@@ -1314,7 +1323,7 @@ const RegisterForm = (props) => {
                         id="workplace_tel"
                         name="workplace_tel" 
                         value={member.workplace_tel || ''} 
-                        onChange={handleInputChange}
+                        onChange={handleInputNumberChange}
                         maxLength="10"/>
                 </div>
                 <div className="form-group col-2">
@@ -1517,7 +1526,7 @@ const RegisterForm = (props) => {
                         id="benef_tel" 
                         name="benef_tel" 
                         value={member.benef_tel || ''} 
-                        onChange={handleInputChange}
+                        onChange={handleInputNumberChange}
                         maxLength="10"/>
                 </div>
                 <div className="form-group col-2">
