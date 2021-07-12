@@ -7551,28 +7551,22 @@ var RegisterForm = function RegisterForm(props) {
       errors = _useState4[0],
       setErrors = _useState4[1];
 
-  var requireFields = ['receipt_province', 'title', 'firstname', 'lastname', 'id_card_no', 'exp_date', 'age', 'nationality', 'mobile', 'marital_status', 'house_no', 'province', 'district', 'sub_district', 'tel', 'ship_house_no', 'ship_province', 'ship_sub_district', 'ship_district', 'ship_tel', 'house_type', 'education_level', 'career', 'income_type', 'income_amount', 'debt_type_1', 'debt_type_2', 'debt_type_3', 'debt_type_4', 'workplace_no', 'workplace_province', 'workplace_district', 'workplace_sub_district', 'workplace_tel', 'work_exp', 'job_position', 'benef_title', 'benef_firstname', 'benef_lastname', 'benef_id_card_no', 'benef_house_no', 'benef_province', 'benef_sub_district', 'benef_district'];
-
-  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)([]),
+  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(''),
       _useState6 = _slicedToArray(_useState5, 2),
-      postcodes = _useState6[0],
-      setPostcodes = _useState6[1];
+      selectedDate = _useState6[0],
+      setSelectedDate = _useState6[1];
+
+  var requireFields = ['receipt_province', 'title', 'firstname', 'lastname', 'id_card_no', 'exp_date', 'age', 'nationality', 'mobile', 'marital_status', 'house_no', 'province', 'district', 'sub_district', 'tel', 'ship_house_no', 'ship_province', 'ship_sub_district', 'ship_district', 'ship_tel', 'house_type', 'education_level', 'career', 'income_type', 'income_amount', 'debt_type_1', 'debt_type_2', 'debt_type_3', 'debt_type_4', 'workplace_no', 'workplace_province', 'workplace_district', 'workplace_sub_district', 'workplace_tel', 'work_exp', 'job_position', 'benef_title', 'benef_firstname', 'benef_lastname', 'benef_id_card_no', 'benef_house_no', 'benef_province', 'benef_sub_district', 'benef_district'];
 
   var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)([]),
       _useState8 = _slicedToArray(_useState7, 2),
-      provinces = _useState8[0],
-      setProvinces = _useState8[1];
+      postcodes = _useState8[0],
+      setPostcodes = _useState8[1];
 
-  var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)({
-    member: [],
-    ship: [],
-    bener: [],
-    workplace: [],
-    benef: []
-  }),
+  var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)([]),
       _useState10 = _slicedToArray(_useState9, 2),
-      districts = _useState10[0],
-      setDistricts = _useState10[1];
+      provinces = _useState10[0],
+      setProvinces = _useState10[1];
 
   var _useState11 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)({
     member: [],
@@ -7582,15 +7576,26 @@ var RegisterForm = function RegisterForm(props) {
     benef: []
   }),
       _useState12 = _slicedToArray(_useState11, 2),
-      subDistricts = _useState12[0],
-      setSubDistricts = _useState12[1];
+      districts = _useState12[0],
+      setDistricts = _useState12[1];
 
-  var _useState13 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(true),
+  var _useState13 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)({
+    member: [],
+    ship: [],
+    bener: [],
+    workplace: [],
+    benef: []
+  }),
       _useState14 = _slicedToArray(_useState13, 2),
-      disabledCostPerMonth = _useState14[0],
-      setDisabledCostPerMonth = _useState14[1];
+      subDistricts = _useState14[0],
+      setSubDistricts = _useState14[1];
 
-  var _useState15 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)({
+  var _useState15 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(true),
+      _useState16 = _slicedToArray(_useState15, 2),
+      disabledCostPerMonth = _useState16[0],
+      setDisabledCostPerMonth = _useState16[1];
+
+  var _useState17 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)({
     other_title: true,
     other_spouse_title: true,
     other_education_level: true,
@@ -7598,11 +7603,11 @@ var RegisterForm = function RegisterForm(props) {
     other_income: true,
     benef_other_title: true
   }),
-      _useState16 = _slicedToArray(_useState15, 2),
-      disabledInput = _useState16[0],
-      setDisabledInput = _useState16[1];
+      _useState18 = _slicedToArray(_useState17, 2),
+      disabledInput = _useState18[0],
+      setDisabledInput = _useState18[1];
 
-  var _useState17 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)({
+  var _useState19 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)({
     title: '',
     other_title: '',
     firstname: '',
@@ -7700,9 +7705,9 @@ var RegisterForm = function RegisterForm(props) {
     benef_tel: '',
     benef_fax: ''
   }),
-      _useState18 = _slicedToArray(_useState17, 2),
-      member = _useState18[0],
-      setMember = _useState18[1];
+      _useState20 = _slicedToArray(_useState19, 2),
+      member = _useState20[0],
+      setMember = _useState20[1];
 
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(function () {
     if (props.postcodes) {
@@ -7775,12 +7780,15 @@ var RegisterForm = function RegisterForm(props) {
     setMember(_objectSpread(_objectSpread({}, member), {}, _defineProperty({}, event.target.name, event.target.value)));
   };
 
-  var handleDatePckerChange = function handleDatePckerChange(date) {
+  var handleDatePickerChange = function handleDatePickerChange(date) {
+    setSelectedDate(date);
+    var selectedDate = new Date(date);
+    var expDate = "".concat(selectedDate.getDate(), "/").concat(selectedDate.getMonth() + 1, "/").concat(selectedDate.getFullYear());
     setMember(_objectSpread(_objectSpread({}, member), {}, {
-      exp_date: date
+      exp_date: expDate
     }));
 
-    if (jquery__WEBPACK_IMPORTED_MODULE_8__.event.target.value != '') {
+    if (date != '') {
       setErrors(errors.filter(function (e) {
         return e != 'exp_date';
       }));
@@ -8107,9 +8115,9 @@ var RegisterForm = function RegisterForm(props) {
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)((react_datepicker__WEBPACK_IMPORTED_MODULE_4___default()), {
           dateFormat: "dd/MM/yyyy",
           locale: "th",
-          selected: member.exp_date,
+          selected: selectedDate,
           onChange: function onChange(date) {
-            return handleDatePckerChange(date);
+            return handleDatePickerChange(date);
           },
           minDate: new Date(),
           peekNextMonth: true,

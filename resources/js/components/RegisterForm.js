@@ -18,6 +18,8 @@ const RegisterForm = (props) => {
 
     const [errors, setErrors] = useState([]);
 
+    const [selectedDate, setSelectedDate] = useState('');
+
     const requireFields = [
         'receipt_province',
         'title',
@@ -258,10 +260,16 @@ const RegisterForm = (props) => {
         });
     }
 
-    const handleDatePckerChange = (date) => {
-        setMember({...member, exp_date: date });
+    const handleDatePickerChange = (date) => {
 
-        if (event.target.value != '') {
+        setSelectedDate(date);
+
+        const selectedDate = new Date(date);
+        const expDate = `${selectedDate.getDate()}/${selectedDate.getMonth() + 1}/${selectedDate.getFullYear()}`;
+
+        setMember({...member, exp_date: expDate });
+
+        if (date != '') {
             setErrors(errors.filter(e => e != 'exp_date'));
         }
     }
@@ -523,8 +531,8 @@ const RegisterForm = (props) => {
                     <label htmlFor="exp_date">วันหมดอายุ <span className="text-danger">*</span></label>
                     <DatePicker dateFormat="dd/MM/yyyy" 
                         locale="th" 
-                        selected={member.exp_date} 
-                        onChange={(date) => handleDatePckerChange(date)}
+                        selected={selectedDate} 
+                        onChange={(date) => handleDatePickerChange(date)}
                         minDate={new Date()}
                         peekNextMonth
                         showMonthDropdown
