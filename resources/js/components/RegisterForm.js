@@ -55,8 +55,6 @@ const RegisterForm = (props) => {
         'workplace_district',
         'workplace_sub_district',
         'workplace_tel',
-        'work_exp',
-        'job_position',
         'benef_title',
         'benef_firstname',
         'benef_lastname',
@@ -1336,18 +1334,18 @@ const RegisterForm = (props) => {
                         onChange={handleInputChange}/>
                 </div>
                 <div className="form-group col-2">
-                    <label htmlFor="work_exp">อายุงานปัจจุบัน (ปี/เดือน) <span className="text-danger">*</span></label>
+                    <label htmlFor="work_exp">อายุงานปัจจุบัน (ปี/เดือน)</label>
                     <input type="text" 
-                        className={`form-control ${errors.includes('work_exp')? 'is-invalid': ''}`} 
+                        className="form-control"
                         id="work_exp"
                         name="work_exp" 
                         value={member.work_exp || ''} 
                         onChange={handleInputChange}/>
                 </div>
                 <div className="form-group col-6">
-                    <label htmlFor="job_position">ชื่อตำแหน่งงาน <span className="text-danger">*</span></label>
+                    <label htmlFor="job_position">ชื่อตำแหน่งงาน</label>
                     <input type="text" 
-                        className={`form-control ${errors.includes('job_position')? 'is-invalid': ''}`} 
+                        className="form-control"
                         id="job_position"
                         name="job_position" 
                         value={member.job_position || ''} 

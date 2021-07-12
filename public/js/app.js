@@ -7556,7 +7556,7 @@ var RegisterForm = function RegisterForm(props) {
       selectedDate = _useState6[0],
       setSelectedDate = _useState6[1];
 
-  var requireFields = ['receipt_province', 'title', 'firstname', 'lastname', 'id_card_no', 'exp_date', 'age', 'nationality', 'mobile', 'marital_status', 'house_no', 'province', 'district', 'sub_district', 'tel', 'ship_house_no', 'ship_province', 'ship_sub_district', 'ship_district', 'ship_tel', 'house_type', 'education_level', 'career', 'income_type', 'income_amount', 'debt_type_1', 'debt_type_2', 'debt_type_3', 'debt_type_4', 'workplace_no', 'workplace_province', 'workplace_district', 'workplace_sub_district', 'workplace_tel', 'work_exp', 'job_position', 'benef_title', 'benef_firstname', 'benef_lastname', 'benef_id_card_no', 'benef_house_no', 'benef_province', 'benef_sub_district', 'benef_district'];
+  var requireFields = ['receipt_province', 'title', 'firstname', 'lastname', 'id_card_no', 'exp_date', 'age', 'nationality', 'mobile', 'marital_status', 'house_no', 'province', 'district', 'sub_district', 'tel', 'ship_house_no', 'ship_province', 'ship_sub_district', 'ship_district', 'ship_tel', 'house_type', 'education_level', 'career', 'income_type', 'income_amount', 'debt_type_1', 'debt_type_2', 'debt_type_3', 'debt_type_4', 'workplace_no', 'workplace_province', 'workplace_district', 'workplace_sub_district', 'workplace_tel', 'benef_title', 'benef_firstname', 'benef_lastname', 'benef_id_card_no', 'benef_house_no', 'benef_province', 'benef_sub_district', 'benef_district'];
 
   var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)([]),
       _useState8 = _slicedToArray(_useState7, 2),
@@ -9471,15 +9471,12 @@ var RegisterForm = function RegisterForm(props) {
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
         className: "form-group col-2",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("label", {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("label", {
           htmlFor: "work_exp",
-          children: ["\u0E2D\u0E32\u0E22\u0E38\u0E07\u0E32\u0E19\u0E1B\u0E31\u0E08\u0E08\u0E38\u0E1A\u0E31\u0E19 (\u0E1B\u0E35/\u0E40\u0E14\u0E37\u0E2D\u0E19) ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("span", {
-            className: "text-danger",
-            children: "*"
-          })]
+          children: "\u0E2D\u0E32\u0E22\u0E38\u0E07\u0E32\u0E19\u0E1B\u0E31\u0E08\u0E08\u0E38\u0E1A\u0E31\u0E19 (\u0E1B\u0E35/\u0E40\u0E14\u0E37\u0E2D\u0E19)"
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("input", {
           type: "text",
-          className: "form-control ".concat(errors.includes('work_exp') ? 'is-invalid' : ''),
+          className: "form-control",
           id: "work_exp",
           name: "work_exp",
           value: member.work_exp || '',
@@ -9487,15 +9484,12 @@ var RegisterForm = function RegisterForm(props) {
         })]
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("div", {
         className: "form-group col-6",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("label", {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("label", {
           htmlFor: "job_position",
-          children: ["\u0E0A\u0E37\u0E48\u0E2D\u0E15\u0E33\u0E41\u0E2B\u0E19\u0E48\u0E07\u0E07\u0E32\u0E19 ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("span", {
-            className: "text-danger",
-            children: "*"
-          })]
+          children: "\u0E0A\u0E37\u0E48\u0E2D\u0E15\u0E33\u0E41\u0E2B\u0E19\u0E48\u0E07\u0E07\u0E32\u0E19"
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("input", {
           type: "text",
-          className: "form-control ".concat(errors.includes('job_position') ? 'is-invalid' : ''),
+          className: "form-control",
           id: "job_position",
           name: "job_position",
           value: member.job_position || '',
