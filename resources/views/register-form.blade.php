@@ -8,7 +8,7 @@
                 <div class="card-header">
                     <h3>สมัครสมาชิก</h3>
                 </div>
-                <div class="card-body" id="register-form"></div>
+                <div class="card-body" id="register-form" data-postcodes="{{ json_encode($postcodes) }}" data-member=""></div>
             </div>
         </div>
     </div>

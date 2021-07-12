@@ -1,9 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Models\Province;
-// use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\MemberController;
+use App\Models\Postcode;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,7 +24,9 @@ use App\Http\Controllers\MemberController;
 // });
 
 Route::get('/register-form', function () {
-    return view('register-form');
+    return view('register-form',[
+        'postcodes' => Postcode::orderBy('province')->get(),
+    ]);
 });
 
 Route::get('/', [App\Http\Controllers\SearchController::class, 'index']);
