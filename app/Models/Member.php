@@ -115,8 +115,12 @@ class Member extends Model
         return $this->hasOne(Receipt::class);
     }
 
-    // protected static function booted()
-    // {
+    protected static function booted()
+    {
+        static::updated(function($member) {
+            $member->updated_by = 'aaa';
+            $member->save();
+        });
     //     static::created(function ($member) {
     //         $province = Province::where('name_th', $member->receipt_province)->first();
     //         $config = Config::where('type', 'member_no')->where('name', $province->region_code)->first();
@@ -127,5 +131,5 @@ class Member extends Model
     //         $member->no = substr($thai_year, 2, 2) . $config->name . str_pad($no, 6, 0, STR_PAD_LEFT);
     //         $member->save();
     //     });
-    // }
+    }
 }

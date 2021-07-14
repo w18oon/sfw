@@ -16,7 +16,8 @@ use App\Models\Postcode;
 |
 */
 
-// Route::get('/', function () {
+// Route::get('/test-auth', function () {
+//     echo auth()->user()->name;
 //     return view('welcome');
 // });
 
