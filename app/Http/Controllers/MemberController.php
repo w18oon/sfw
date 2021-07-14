@@ -15,7 +15,7 @@ class MemberController extends Controller
 
         $members = Member::where(function($query) use ($request) {
             if($request->input('q')) {
-                $query->where('field_1_4', '=', $request->input('q'))->get();
+                $query->where('id_card_no', '=', $request->input('q'))->get();
             }
         })->paginate(20);
 
@@ -144,10 +144,8 @@ class MemberController extends Controller
     public function edit($id)
     {
         return view('members.edit', [
-            'props' => [
-                'postcodes' => Postcode::orderBy('province')->get(),
-                'member' => Member::find($id),
-            ]
+            'postcodes' => Postcode::orderBy('province')->get(),
+            'member' => Member::find($id),
         ]);
     }
 
@@ -162,34 +160,16 @@ class MemberController extends Controller
     {
         $member = Member::find($id);
         $member->update($request->only('title',
+        'other_title',
         'firstname',
         'lastname',
-        'house_no',
-        'moo',
-        'street',
-        'sub_district',
-        'district',
-        'province',
-        'post_code',
-        'id_card_no',
-        'mobile',
-        'career',
-        'debt_in_credit_bureau',
-        'debt_out_credit_bureau',
-        'informal_debt',
-        'total',
-        'saving_per_month',
-        'remarks',
         'receipt_province',
-        'status',
-        'updated_by',
-        'other_title',
-        'soi',
-        'other_career',
+        'id_card_no',
         'emp_card_no',
         'exp_date',
         'age',
         'nationality',
+        'mobile',
         'is_bankrupt',
         'is_incompetent_person',
         'is_permanent_disability',
@@ -198,10 +178,18 @@ class MemberController extends Controller
         'number_of_children',
         'number_of_children_study',
         'spouse_title',
+        'other_spouse_title',
         'spouse_firstname',
         'spouse_lastname',
         'spouse_id_card_no',
-        'other_spouse_title',
+        'house_no',
+        'moo',
+        'soi',
+        'street',
+        'sub_district',
+        'district',
+        'province',
+        'post_code',
         'tel',
         'fax',
         'mail',
@@ -222,13 +210,18 @@ class MemberController extends Controller
         'house_year',
         'education_level',
         'other_education_level',
+        'career',
+        'other_career',
         'income_type',
         'income_amount',
         'other_income_type',
         'other_income',
         'other_income_amount',
         'source_other_income',
-        'debt_type',
+        'debt_type_1',
+        'debt_type_2',
+        'debt_type_3',
+        'debt_type_4',
         'workplace',
         'building',
         'floor',
@@ -273,6 +266,9 @@ class MemberController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $member = Member::find($id);
+        $member_no = $member->no;
+        $member->delete();
+        return redirect()->route('member.index')->with('success', "ลบข้อมูลสมาชิกเลขที่ $member_no เรียบร้อยแล้วครับ");
     }
 }

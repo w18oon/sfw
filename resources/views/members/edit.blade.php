@@ -8,7 +8,8 @@
                 <div class="card-header">
                     <h3>แก้ไขข้อมูลสมัครสมาชิก</h3>
                 </div>
-                <div class="card-body" id="member-form" data="{{ json_encode($props) }}"></div>
+                {{-- <div class="card-body" id="member-form" data="{{ json_encode($props) }}"></div> --}}
+                <div class="card-body" id="register-form" data-postcodes="{{ json_encode($postcodes) }}" data-member="{{ json_encode($member) }}"></div>
             </div>
         </div>
     </div>

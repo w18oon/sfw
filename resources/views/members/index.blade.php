@@ -22,6 +22,14 @@
                     </div>
                 </div>
                 <div class="card-body">
+                    @if(session('success'))
+                        <div class="alert alert-success alert-dismissible mt-3 fade show" role="alert">
+                            <strong>Success!</strong> {{ session('success') }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    @endif
                     <table class="table">
                         <thead>
                             <tr>
@@ -45,7 +53,22 @@
                                     <a class="btn btn-sm btn-outline-primary" href="{{ url("receipt/$member->id") }}">ใบเสร็จรับเงิน</a>
                                     <a class="btn btn-sm btn-outline-primary" href="{{ url("contract/$member->id") }}">ใบสมัครสมาชิก/สัญญา</a>
                                     <a class="btn btn-sm btn-outline-secondary" href="{{ route('member.edit', $member->id) }}">แก้ไขข้อมุล</a>
-                                    <a class="btn btn-sm btn-outline-danger" href="#">ลบข้อมุล</a>
+                                    <form id="{{$member->id}}" action="{{ route('member.delete', $member->id) }}" style="display: inline;" method="post">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="button" 
+                                            class="btn btn-sm btn-outline-danger" 
+                                            onclick="swal('คุณต้องการลบข้อมูลรายการนี้หรือไม่', {
+                                                buttons: {
+                                                    cancel: 'ยกเลิก',
+                                                    confirm: 'ยืนยัน'
+                                                }
+                                            }).then(value => {
+                                                if (value) {
+                                                    document.getElementById(`{{$member->id}}`).submit();
+                                                }
+                                            });">ลบข้อมุล</button>
+                                    </form>
                                 </td>
                             </tr>
                             @endforeach

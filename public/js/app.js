@@ -5282,6 +5282,7 @@ try {
 
 
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+window.swal = __webpack_require__(/*! sweetalert */ "./node_modules/sweetalert/dist/sweetalert.min.js");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
@@ -7710,8 +7711,10 @@ var RegisterForm = function RegisterForm(props) {
       setMember = _useState20[1];
 
   (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(function () {
+    var propsPostcodes = '';
+
     if (props.postcodes) {
-      var propsPostcodes = JSON.parse(props.postcodes);
+      propsPostcodes = JSON.parse(props.postcodes);
       setPostcodes(propsPostcodes);
       setProvinces(_toConsumableArray(new Set(propsPostcodes.map(function (postcode) {
         return postcode.province;
@@ -7722,6 +7725,28 @@ var RegisterForm = function RegisterForm(props) {
       var propsMember = JSON.parse(props.member);
       setMember(propsMember);
       setShow(false);
+      ['member', 'ship', 'workplace', 'benef'].map(function (addr) {
+        var prefixName = addr == 'member' ? '' : "".concat(addr, "_");
+
+        if (propsMember["".concat(prefixName, "province")] != '') {
+          var districtFilter = propsPostcodes.filter(function (postcode) {
+            return postcode.province == propsMember["".concat(prefixName, "province")];
+          });
+          setDistricts(function (prevState) {
+            return _objectSpread(_objectSpread({}, prevState), {}, _defineProperty({}, addr, _toConsumableArray(new Set(districtFilter.map(function (district) {
+              return district.district;
+            }))).sort()));
+          });
+          var subDistrictFilter = propsPostcodes.filter(function (postcode) {
+            return postcode.province == propsMember["".concat(prefixName, "province")] && postcode.district == propsMember["".concat(prefixName, "district")];
+          });
+          setSubDistricts(function (prevState) {
+            return _objectSpread(_objectSpread({}, prevState), {}, _defineProperty({}, addr, _toConsumableArray(new Set(subDistrictFilter.map(function (subDistrict) {
+              return subDistrict.sub_district;
+            }))).sort()));
+          });
+        }
+      });
     } // axios.get('/api/postcodes').then(res => {
     //     setPostcodes(res.data);
     //     setProvinces([...new Set(res.data.map(postcode => postcode.province))].sort());
@@ -7845,12 +7870,12 @@ var RegisterForm = function RegisterForm(props) {
   };
 
   var handleSubDistrictChange = function handleSubDistrictChange(event, addrType, selectedProvince, selectedDistrict, inputPostcode) {
-    var _objectSpread9;
+    var _objectSpread11;
 
     var postcodeFilter = postcodes.filter(function (postcode) {
       return postcode.province == selectedProvince && postcode.district == selectedDistrict && postcode.sub_district == event.target.value;
     })[0];
-    setMember(_objectSpread(_objectSpread({}, member), {}, (_objectSpread9 = {}, _defineProperty(_objectSpread9, event.target.name, event.target.value), _defineProperty(_objectSpread9, inputPostcode, postcodeFilter.postcode), _objectSpread9)));
+    setMember(_objectSpread(_objectSpread({}, member), {}, (_objectSpread11 = {}, _defineProperty(_objectSpread11, event.target.name, event.target.value), _defineProperty(_objectSpread11, inputPostcode, postcodeFilter.postcode), _objectSpread11)));
 
     if (event.target.value != '') {
       setErrors(errors.filter(function (e) {
@@ -7867,12 +7892,18 @@ var RegisterForm = function RegisterForm(props) {
     }
 
     setMember(_objectSpread(_objectSpread({}, member), {}, _defineProperty({}, event.target.name, event.target.value)));
+
+    if (event.target.value != '') {
+      setErrors(errors.filter(function (e) {
+        return e != event.target.name;
+      }));
+    }
   };
 
   var handleSelectChange = function handleSelectChange(event, otherValue, inputName) {
-    var _objectSpread11;
+    var _objectSpread13;
 
-    setMember(_objectSpread(_objectSpread({}, member), {}, (_objectSpread11 = {}, _defineProperty(_objectSpread11, event.target.name, event.target.value), _defineProperty(_objectSpread11, inputName, event.target.value != otherValue ? '' : member[inputName]), _objectSpread11)));
+    setMember(_objectSpread(_objectSpread({}, member), {}, (_objectSpread13 = {}, _defineProperty(_objectSpread13, event.target.name, event.target.value), _defineProperty(_objectSpread13, inputName, event.target.value != otherValue ? '' : member[inputName]), _objectSpread13)));
     setDisabledInput(_objectSpread(_objectSpread({}, disabledInput), {}, _defineProperty({}, inputName, event.target.value == otherValue ? false : true)));
 
     if (event.target.value != '') {
@@ -7917,32 +7948,56 @@ var RegisterForm = function RegisterForm(props) {
       closeOnEsc: false,
       closeOnClickOutside: false
     });
-    axios__WEBPACK_IMPORTED_MODULE_0___default().post('/api/member', member).then(function (response) {
-      if (response.status == 200) {
-        if (response.data.error) {
-          var errMsg = response.data.error.errorInfo;
-          sweetalert__WEBPACK_IMPORTED_MODULE_1___default()('เกิดข้อผิดพลาด', errMsg.toString(), 'error');
-        } else {
+
+    if (!member.id) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default().post('/api/member', member).then(function (response) {
+        if (response.status == 200) {
+          if (response.data.error) {
+            var errMsg = response.data.error.errorInfo;
+            sweetalert__WEBPACK_IMPORTED_MODULE_1___default()('เกิดข้อผิดพลาด', errMsg.toString(), 'error');
+          } else {
+            sweetalert__WEBPACK_IMPORTED_MODULE_1___default()({
+              icon: 'success',
+              text: 'ระบบบันทึกข้อมูลเรียบร้อย',
+              closeOnEsc: false,
+              closeOnClickOutside: false,
+              button: {
+                text: "ดาวน์โหลดเอกสาร",
+                closeModal: true
+              }
+            }).then(function (value) {
+              if (value) {
+                var id = response.data.member_id;
+                window.location.href = "/contract/".concat(id);
+              }
+            });
+          }
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    } else {
+      axios__WEBPACK_IMPORTED_MODULE_0___default().put("/api/member/".concat(member.id), member).then(function (res) {
+        console.log(res);
+
+        if (res.status == 200) {
+          console.log(res.data);
           sweetalert__WEBPACK_IMPORTED_MODULE_1___default()({
             icon: 'success',
             text: 'ระบบบันทึกข้อมูลเรียบร้อย',
             closeOnEsc: false,
-            closeOnClickOutside: false,
-            button: {
-              text: "ดาวน์โหลดเอกสาร",
-              closeModal: true
-            }
+            closeOnClickOutside: false
           }).then(function (value) {
             if (value) {
-              var id = response.data.member_id;
-              window.location.href = "/contract/".concat(id);
+              window.location.href = "/member";
             }
           });
+          ;
         }
-      }
-    })["catch"](function (error) {
-      console.log(error);
-    });
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    }
   };
 
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)("form", {

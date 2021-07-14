@@ -192,8 +192,9 @@ const RegisterForm = (props) => {
     });
 
     useEffect(() => {
+        let propsPostcodes = '';
         if (props.postcodes) {
-            const propsPostcodes = JSON.parse(props.postcodes);
+            propsPostcodes = JSON.parse(props.postcodes);
             setPostcodes(propsPostcodes);
             setProvinces([...new Set(propsPostcodes.map(postcode => postcode.province))].sort());
         }
@@ -202,6 +203,30 @@ const RegisterForm = (props) => {
             const propsMember = JSON.parse(props.member);
             setMember(propsMember);
             setShow(false);
+
+            ['member', 'ship', 'workplace', 'benef'].map(addr => {
+                const prefixName = (addr == 'member')? '': `${addr}_`;
+    
+                if (propsMember[`${prefixName}province`] != '') {
+                    let districtFilter = propsPostcodes.filter(postcode => postcode.province == propsMember[`${prefixName}province`]);
+            
+                    setDistricts(prevState => {
+                        return {
+                            ...prevState,
+                            [addr]: [...new Set(districtFilter.map(district => district.district))].sort(),
+                        }
+                    });
+            
+                    let subDistrictFilter = propsPostcodes.filter(postcode => postcode.province == propsMember[`${prefixName}province`] && postcode.district == propsMember[`${prefixName}district`]);
+    
+                    setSubDistricts(prevState => {
+                        return {
+                            ...prevState,
+                            [addr]: [...new Set(subDistrictFilter.map(subDistrict => subDistrict.sub_district))].sort(),
+                        }
+                    });
+                }
+            });
         }
         // axios.get('/api/postcodes').then(res => {
         //     setPostcodes(res.data);
@@ -342,6 +367,10 @@ const RegisterForm = (props) => {
             ...member,
             [event.target.name]: event.target.value
         });
+
+        if (event.target.value != '') {
+            setErrors(errors.filter(e => e != event.target.name));
+        }
     }
 
     const handleSelectChange = (event, otherValue, inputName) => {
@@ -400,32 +429,53 @@ const RegisterForm = (props) => {
             closeOnClickOutside: false,
         });
 
-        axios.post('/api/member', member).then(response => {
-            if (response.status == 200) {
-                if (response.data.error) {
-                    const errMsg = response.data.error.errorInfo;
-                    swal('เกิดข้อผิดพลาด', errMsg.toString(), 'error');
-                } else {
+        if (!member.id) {
+            axios.post('/api/member', member).then(response => {
+                if (response.status == 200) {
+                    if (response.data.error) {
+                        const errMsg = response.data.error.errorInfo;
+                        swal('เกิดข้อผิดพลาด', errMsg.toString(), 'error');
+                    } else {
+                        swal({
+                            icon: 'success',
+                            text: 'ระบบบันทึกข้อมูลเรียบร้อย',
+                            closeOnEsc: false,
+                            closeOnClickOutside: false,
+                            button: {
+                                text: "ดาวน์โหลดเอกสาร",
+                                closeModal: true,
+                            },
+                        }).then(value => {
+                            if (value) {
+                                const id = response.data.member_id;
+                                window.location.href = `/contract/${id}`;
+                            }
+                        });
+                    }
+                }
+            }).catch(error => {
+                console.log(error)
+            });
+        } else {
+            axios.put(`/api/member/${member.id}`, member).then(res => {
+                console.log(res);
+                if (res.status == 200) {
+                    console.log(res.data);
                     swal({
                         icon: 'success',
                         text: 'ระบบบันทึกข้อมูลเรียบร้อย',
                         closeOnEsc: false,
                         closeOnClickOutside: false,
-                        button: {
-                            text: "ดาวน์โหลดเอกสาร",
-                            closeModal: true,
-                        },
                     }).then(value => {
                         if (value) {
-                            const id = response.data.member_id;
-                            window.location.href = `/contract/${id}`;
+                            window.location.href = `/member`;
                         }
-                    });
+                    });;
                 }
-            }
-        }).catch(error => {
-            console.log(error)
-        });
+            }).catch(err => {
+                console.log(err)
+            });
+        }
     }
 
     return (

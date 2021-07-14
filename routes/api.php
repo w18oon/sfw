@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\Postcode;
+use App\Http\Controllers\MemberController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,8 +16,9 @@ use App\Models\Postcode;
 |
 */
 
-Route::post('/member', [App\Http\Controllers\MemberController::class, 'store']);
-Route::put('/member/{id}', [App\Http\Controllers\MemberController::class, 'update']);
+Route::post('/member', [MemberController::class, 'store']);
+Route::put('/member/{id}', [MemberController::class, 'update']);
+// Route::delete('/member/{id}', [MemberController::class, 'destroy']);
 
 Route::get('/postcodes', function () {
     $postcodes = Postcode::orderBy('province')->get();

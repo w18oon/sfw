@@ -1,5 +1,6 @@
 <?php
 
+// use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MemberController;
 use App\Models\Postcode;
@@ -20,7 +21,7 @@ use App\Models\Postcode;
 // });
 
 // Route::get('/gen-passwd', function () {
-//     echo Hash::make('vcsSq&lBzidt');
+//     echo Hash::make('P@ssw0rd!');
 // });
 
 Route::get('/register-form', function () {
@@ -35,8 +36,9 @@ Route::get('/receipt/{id}', [App\Http\Controllers\ReceiptController::class, 'sho
 Route::get('/contract/{id}', App\Http\Controllers\ContractController::class);
 
 Route::group(['middleware' => 'auth'], function() {
-    Route::get('/member', [MemberController::class, 'index']);
+    Route::get('/member', [MemberController::class, 'index'])->name('member.index');
     Route::get('/member/{id}/edit', [MemberController::class, 'edit'])->name('member.edit');
+    Route::delete('/member/{id}/delete', [MemberController::class, 'destroy'])->name('member.delete');
 });
 
 // Route::resource('member', App\Http\Controllers\MemberController::class);
