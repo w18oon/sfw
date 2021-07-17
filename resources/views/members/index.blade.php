@@ -97,7 +97,13 @@
                             @endforeach
                         </tbody>
                     </table>
-                    {{-- {!! $members->appends(['q' => $q])->render() !!} --}}
+                    {!! $members->appends([
+                        'no' => $no, 
+                        'id_card_no' => $id_card_no,
+                        'receipt_province' => $receipt_province,
+                        'date_from' => $date_from,
+                        'date_to' => $date_to,
+                        ])->render() !!}
                 </div>
             </div>
         </div>
