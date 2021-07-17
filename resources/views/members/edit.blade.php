@@ -9,7 +9,11 @@
                     <h3>แก้ไขข้อมูลสมัครสมาชิก</h3>
                 </div>
                 {{-- <div class="card-body" id="member-form" data="{{ json_encode($props) }}"></div> --}}
-                <div class="card-body" id="register-form" data-postcodes="{{ json_encode($postcodes) }}" data-member="{{ json_encode($member) }}"></div>
+                <div class="card-body" 
+                    id="register-form" 
+                    data-postcodes="{{ json_encode($postcodes) }}" 
+                    data-member="{{ json_encode($member) }}"
+                    data-updated-by="{{ $updated_by }}"></div>
             </div>
         </div>
     </div>

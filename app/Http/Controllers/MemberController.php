@@ -5,24 +5,46 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Member;
 use App\Models\Postcode;
+use App\Models\Province;
 
 class MemberController extends Controller
 {
 
     public function index(Request $request)
     {   
-        $q = $request->input('q')? $request->input('q'): '';
+        $no = $request->input('no')? $request->input('no'): '';
+        $id_card_no = $request->input('id_card_no')? $request->input('id_card_no'): '';
+        $receipt_province = $request->input('receipt_province')? $request->input('receipt_province'): '';
+        $date_from = $request->input('date_from')? $request->input('date_from'): '';
+        $date_to = $request->input('date_to')? $request->input('date_to'): '';
 
         $members = Member::where(function($query) use ($request) {
-            if($request->input('q')) {
-                $query->where('id_card_no', '=', $request->input('q'))->get();
+            if($request->input('no')) {
+                $query->where('no', '=', $request->input('no'))->get();
+            }
+            if($request->input('id_card_no')) {
+                $query->where('id_card_no', '=', $request->input('id_card_no'))->get();
+            }
+            if($request->input('receipt_province')) {
+                $query->where('receipt_province', '=', $request->input('receipt_province'))->get();
+            }
+            if($request->input('date_from')) {
+                $query->where('created_at', '>=', $request->input('date_from'))->get();
+            }
+            if($request->input('date_to')) {
+                $query->where('created_at', '<=', $request->input('date_to'))->get();
             }
         })->paginate(20);
 
         // $members = Member::paginate(20);
         return view('members.index', [
+            'provinces' => Province::orderBy('name_th')->get(),
             'members' => $members,
-            'q' => $q,
+            'no' => $no,
+            'id_card_no' => $id_card_no,
+            'receipt_province' => $receipt_province,
+            'date_from' => $date_from,
+            'date_to' => $date_to,
         ]);
     }
 
@@ -146,6 +168,7 @@ class MemberController extends Controller
         return view('members.edit', [
             'postcodes' => Postcode::orderBy('province')->get(),
             'member' => Member::find($id),
+            'updated_by' => auth()->user()->name,
         ]);
     }
 
@@ -255,7 +278,8 @@ class MemberController extends Controller
             'benef_province',
             'benef_postcode',
             'benef_tel',
-            'benef_fax'));
+            'benef_fax',
+            'updated_by'));
             // $member->updated_by = auth()->user()->name;
             // $member->save();
             return response()->json(['member' => $member]);

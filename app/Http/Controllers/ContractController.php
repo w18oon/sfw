@@ -33,15 +33,17 @@ class ContractController extends Controller
             12 => 'ธันวาคม',
         ];
 
-        $member = Member::find($id);
+        $member = Member::findOrFail($id);
 
         $created_at = explode(' ', $member->created_at);
         $date = explode('-', $created_at[0]);
         $d = $date[2];
         $m = $month_th[intval($date[1])];
         $y = $date[0] + 543;
-
         $created = "$d $m $y";
+
+        $exp_date = explode('/', $member->exp_date);
+        $exp_date_th = $exp_date[0] . ' ' . $month_th[intval($exp_date[1])] . ' ' . ($exp_date[2] + 543);
 
         $options = new Options(); 
         $options->set('font_dir', storage_path('fonts/')); 
@@ -54,6 +56,7 @@ class ContractController extends Controller
         $html = view('pdf.contract', [
             'member' => $member,
             'created' => $created,
+            'exp_date_th' => $exp_date_th
         ])->render();
         
         $dompdf->loadHTML($html);
@@ -62,11 +65,13 @@ class ContractController extends Controller
         $dompdf->add_info('Title', 'ใบสมัครสมาชิก/สัญญา');
         
         $canvas = $dompdf->getCanvas(); 
+
         $fontMetrics = new FontMetrics($canvas, $options); 
         $font = $fontMetrics->getFont('Sarabun'); 
-        $text = "SOCIAL SECURITY PRIVATE FUND FOR SOCIAL WELFARE"; 
-        $canvas->set_opacity(0.2); 
-        $canvas->text(50, 600, $text, $font, 44, [0, 0, 0], 0.0, 0.0, -45); 
+        // $canvas->set_opacity(.2); 
+        $canvas->page_text(60, 600, 'SOCIAL SECURITY PRIVATE FUND FOR SOCIAL WELFARE', $font, 44, [.8,.8,.8], 0.0, 0.0, -45); 
+        $canvas->page_text(560, 300, 'โปรดอ่านเอกสารโดยละเอียดก่อนกรอกข้อมูลและลงนาม', $font, 14, [1,0,0], 0.0, 0.0, 90); 
+        // $canvas->text(40, 500, $text, $font, 44, [0, 0, 0], 0.0, 0.0, -45); 
         
         // Output the generated PDF (1 = download and 0 = preview) 
         $dompdf->stream('ใบสมัครสมาชิก/สัญญา', array("Attachment" => 0));

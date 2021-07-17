@@ -15,3 +15,7 @@ require('./bootstrap');
 // require('./components/Example');
 require('./components/RegisterForm');
 require('./components/MemberForm');
+
+$('.datepicker').datepicker({
+    dateFormat: 'yy-mm-dd'
+});

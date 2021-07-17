@@ -228,6 +228,14 @@ const RegisterForm = (props) => {
                 }
             });
         }
+        if(props.updatedBy) {
+            setMember(prevState => {
+                return {
+                    ...prevState,
+                    updated_by: props.updatedBy
+                }
+            });
+        }
         // axios.get('/api/postcodes').then(res => {
         //     setPostcodes(res.data);
         //     setProvinces([...new Set(res.data.map(postcode => postcode.province))].sort());
@@ -1607,5 +1615,6 @@ export default RegisterForm;
 if (document.getElementById('register-form')) {
     const postcodes = document.getElementById('register-form').getAttribute('data-postcodes');
     const member = document.getElementById('register-form').getAttribute('data-member');
-    ReactDOM.render(<RegisterForm postcodes={postcodes} member={member}/>, document.getElementById('register-form'));
+    const updatedBy = document.getElementById('register-form').getAttribute('data-updated-by');
+    ReactDOM.render(<RegisterForm postcodes={postcodes} member={member} updatedBy={updatedBy}/>, document.getElementById('register-form'));
 }

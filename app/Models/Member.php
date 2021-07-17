@@ -108,28 +108,11 @@ class Member extends Model
         'benef_postcode',
         'benef_tel',
         'benef_fax',
+        'updated_by',
     ];
 
     public function receipt()
     {
         return $this->hasOne(Receipt::class);
     }
-
-    // protected static function booted()
-    // {
-    //     static::updated(function($member) {
-    //         $member->updated_by = 'aaa';
-    //         $member->save();
-    //     });
-    //     static::created(function ($member) {
-    //         $province = Province::where('name_th', $member->receipt_province)->first();
-    //         $config = Config::where('type', 'member_no')->where('name', $province->region_code)->first();
-    //         $no = $config->value + 1;
-    //         $config->value = $no;
-    //         $config->save();
-    //         $thai_year = date('Y') + 543;
-    //         $member->no = substr($thai_year, 2, 2) . $config->name . str_pad($no, 6, 0, STR_PAD_LEFT);
-    //         $member->save();
-    //     });
-    // }
 }

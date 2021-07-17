@@ -21,7 +21,7 @@
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-dark bg-primary shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
@@ -39,10 +39,22 @@
                         </li>
                         @else
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('register-form') }}">สมัครสมาชิก</a>
+                            <a class="nav-link" href="{{ url('/') }}">หน้าแรก</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url('/') }}">ค้นหาข้อมูลสมาชิก</a>
+                            <a class="nav-link" href="#">รายละเอียดโครงการ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/register-form') }}">สมัครเข้าร่วมโครงการ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ asset('application-form.pdf') }}">ดาวน์โหลดใบสมัคร</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('/search') }}">ออกใบเสร็จ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">ติดต่อเรา</a>
                         </li>
                         @endauth
                     </ul>
