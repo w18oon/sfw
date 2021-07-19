@@ -54,10 +54,9 @@
     </table>
     <strong>1.ข้อมูลส่วนตัว</strong>
     <br/>
-    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ __('ข้าพเจ้าชื่อ') . Str::padLeft($member->title, 40, '.') . Str::padRight($member->firstname, 40, '.') }}</span>
-    <span> นามสกุล{{Str::padBoth($member->lastname, 80, '.')}}</span>
+    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __('ข้าพเจ้าชื่อ') . Str::padBoth($member_name, $member_name_len, '.') . __('นามสกุล') .Str::padBoth($member->lastname, $member_lastname_len, '.')}}</span>
     <br/>
-    <span>{{__('บัตรประจำตัวประชาชนเลขที่').Str::padBoth($member->id_card_no, 66, '.').__('บัตรข้าราชการ/บัตรพนักงานรัฐวิสาหกิจ')}}</span>
+    <span>{{__('บัตรประจำตัวประชาชนเลขที่').Str::padBoth($member->id_card_no, 60, '.').__('บัตรข้าราชการ/บัตรพนักงานรัฐวิสาหกิจ')}}</span>
     <br/>
     <span>{{__('เลขที่').Str::padBoth($member->emp_card_no, 30, '.').__('วันหมดอายุ').Str::padBoth($exp_date_th, 40, '.').__('อายุ').Str::padBoth($member->age, 10, '.').__('ปี สัญชาติ').Str::padBoth($member->nationality, 18, '.').__('โทรศัพท์').Str::padBoth($member->tel, 16, '.')}}</span>
     <br/>
@@ -112,9 +111,9 @@
     </table>
     <span>{{__('จำนวนบุตร ').Str::padBoth($member->number_of_children, 20, '.').__('คน กำลังศึกษาอยู่ ').Str::padBoth($member->number_of_children_study, 20, '.').__('คน')}}</span>
     <br/>
-    <span>{{__('ชื่อ-นามสกุล คู่สมรสม ').Str::padLeft($member->spouse_title, 32, '.').Str::padRight($member->spouse_firstname, 32, '.').__('นามสกุล').Str::padBoth($member->spouse_lastname, 80, '.')}}</span>
+    <span>{{__('ชื่อ-นามสกุล คู่สมรสม ').Str::padBoth($spouse['name'], $spouse['name_len'], '.').__('นามสกุล').Str::padBoth($member->spouse_lastname, $spouse['lastname_len'], '.')}}</span>
     <br/>
-    <span>{{__('บัตรประจำตัวประชาชนเลขที่').Str::padBoth($member->spouse_id_card_no, 50, '.').__('ที่อยู่ตามทะเบียนบ้านเลขที่').Str::padBoth($member->house_no, 20, '.').__('หมู่ที่').Str::padBoth($member->moo, 20, '.')}}</span>
+    <span>{{__('บัตรประจำตัวประชาชนเลขที่').Str::padBoth($member->spouse_id_card_no, 30, '.').__('ที่อยู่ตามทะเบียนบ้านเลขที่').Str::padBoth($member->house_no, 20, '.').__('หมู่ที่').Str::padBoth($member->moo, 20, '.')}}</span>
     <br/>
     <span>{{__('ตรอก/ซอย').Str::padBoth($member->soi, 50, '.').__('ถนน').Str::padBoth($member->street, 50, '.').__('ตำบล/แขวง').Str::padBoth($member->sub_district, 55, '.')}}</span>
     <br/>
@@ -344,7 +343,7 @@
     <strong>13.การคิดค่าธรรมเนียมบำรุงสมาชิกกองทุนอิสระฯ รายปีๆ ละ 2,000 บาท</strong>สมาชิกกองทุนอิสระฯ แรกเข้าตามข้อ 5 <br/>ตกลงให้ความยินยอมโดยสมัครใจที่จะชำระค่าธรรมเนียมบำรุงสมาชิกกองทุนอิสระฯ รายปี เพื่อนำมาสบทบ<br/>เป็นทุนหมุนเวียนในการใช้จ่ายในการจัดระบบสิทธิประโยชน์สวัสดิการสงเคราะห์ ให้กับสมาชิกกองทุนอิสระฯ<br/>ทั้งหมดที่มีอยู่   ตลอดจนการดำเนินการบริหารงานกองทุนอิสระฯ ต่างๆ ของกองทุนอิสระฯ ตลอดจนให้ความยินยอม<br/>ให้คณะกรรมการกองทุนอิสระฯ สามารถนำเงินดังกล่าวไปใช้ในโครงการต่างๆให้เป็นไปตามนโยบายของกองทุนอิสระฯ<br/>กำหนด โดยไม่ต้องแจ้งให้สมาชิกกองทุนอิสระฯ ทราบแต่ประการใด เพื่อเป็นประโยชน์แก่สมาชิกกองทุนอิสระฯ ทั้งมวล<br/>
     <strong>14.วิธีการชำระเงินฝากสัจจะออมทรัพย์</strong>ตามสัญญาซื้อหนี้สิน ในโครงการช่วยเหลือแก้ไขหนี้สินแบบปลอดดอกเบี้ย<br/>ที่ได้ทำสัญญาไว้กับกองทุนอิสระฯ ตามระยะเวลาที่กำหนดไว้ในสัญญา โดยต้องชำระเป็นรายเดือน ทุกวันที่ 5 ของเดือน<br/>เป็นระยะเวลา 120 เดือน ซึ่งสมาชิกกองทุนอิสระฯ ต้องชำระเงินฝากสัจจะออมทรัพย์ ไว้กับกองทุนอิสระฯ โดยสามารถ<br/>จ่ายเป็นเงินสดหรือโอนเข้าบัญชีที่กองทุนอิสระฯ ตามที่กำหนดไว้ โดยผู้สมัครใจเข้าเป็นสมาชิกกองทุนอิสระฯ<br/>ทุกคนจะต้องส่งเงินฝากสัจจะออมทรัพย์งวดแรก จำนวนเงินตามข้อ 11.3. โดยถือว่าเงินฝากสัจจะออมทรัพย์เป็นเงินออม<br/>ระยะยาวหรือเงินฝากสัจจะออมทรัพย์ ที่เป็นการชำระหนี้สินเงินกู้ยืมคืนกองทุนอิสระฯ และสมาชิกกองทุนอิสระฯ จะได้รับ<br/>เงินที่ฝากสัจจะออมทรัพย์คืน หรือปิดบัญชีได้ต่อเมื่อครบสัญญาที่ทำไว้กับกองทุนอิสระฯ หรือการพ้นสภาพ<br/>จากการเป็นสมาชิกกองทุน อิสระฯ เท่านั้น<br/>
     <strong>15. กรณีที่ข้าพเจ้าถึงแก่ความตายในระหว่างที่เป็นสมาชิกกองทุนอิสระฯ</strong> ข้าพเจ้าขอแสดงเจตนารมย์ให้กองทุนอิสระฯ<br/> จ่ายเงินฌาปนกิจสงเคราะห์ 50,000 บาท และหรือผลประโยชน์อย่างอื่นที่ข้าพเจ้าพึงได้รับตามสิทธิของการเป็นสมาชิก<br/>กองทุนอิสระฯ ให้แก่ผู้รับโอนผลประโยชน์ของข้าพเจ้า ดังต่อไปนี้<br/>
-    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __('ชื่อ-นามสกุล') . Str::padBoth($member->benef_title . $member->benef_firstname .' '. $member->benef_lastname, 80, '.') . __('บัตรประจำตัวประชาชนเลขที่') . Str::padBoth($member->benef_id_card_no, 25, '.')}}</span><br/>
+    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __('ชื่อ-นามสกุล') . Str::padBoth($benef['name'], $benef['name_len'], '.') . __('บัตรประจำตัวประชาชนเลขที่') . Str::padBoth($member->benef_id_card_no, 17, '.')}}</span><br/>
     <span>{{ __('มีความสัมพันธ์เป็น') . Str::padBoth($member->benef_relationship, 30, '.') . __('อยู่บ้านเลขที่') . Str::padBoth($member->benef_house_no, 10, '.') . __('หมู่ที่') . Str::padBoth($member->benef_moo, 10, '.') . __('ตรอก/ซอย') . Str::padBoth($member->benef_soi, 10, '.') . __('ถนน') . Str::padBoth($member->benef_street, 40, '.')}}</span><br/>
     <span>{{ __('ตำบล/แขวง') . Str::padBoth($member->benef_sub_district, 40, '.') . __('อำเภอ') . Str::padBoth($member->benef_district, 50, '.') . __('จังหวัด') . Str::padBoth($member->benef_province, 50, '.') . __('รหัสไปรษณีย์') . Str::padBoth($member->benef_postcode, 15, '.')}}</span><br/>
     <span>{{__('โทรศัพท์') . Str::padBoth($member->benef_tel, 30, '.') . __('E-mail') . Str::padBoth($member->benef_fax, 30, '.')}}</span><br/>

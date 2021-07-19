@@ -45,6 +45,21 @@ class ContractController extends Controller
         $exp_date = explode('/', $member->exp_date);
         $exp_date_th = $exp_date[0] . ' ' . $month_th[intval($exp_date[1])] . ' ' . ($exp_date[2] + 543);
 
+        // prepaid data
+        $member_title = ($member->title == 'อื่นๆ')? $member->other_title: $member->title;
+        $member_name = $member_title . $member->firstname;
+        $member_name_len = strlen($member_name) + (40 - floor(strlen($member_name)/3));
+        $member_lastname_len = strlen($member->lastname) + (40 - floor(strlen($member->lastname)/3));
+
+        $spouse['title'] = ($member->spouse_title == 'อื่นๆ')? $member->other_spouse_title: $member->spouse_title;
+        $spouse['name'] = $spouse['title'] . $member->spouse_firstname;
+        $spouse['name_len'] = strlen($spouse['name']) + (40 - floor(strlen($spouse['name'])/3));
+        $spouse['lastname_len'] = strlen($member->spouse_lastname) + (40 - floor(strlen($member->spouse_lastname)/3));
+
+        $benef['title'] = ($member->benef_title == 'อื่นๆ')? $member->benef_other_title: $member->benef_title;
+        $benef['name'] = $benef['title'] . $member->benef_firstname . ' ' . $member->benef_lastname;
+        $benef['name_len'] = strlen($benef['name']) + (40 - floor(strlen($benef['name'])/3));
+
         $options = new Options(); 
         $options->set('font_dir', storage_path('fonts/')); 
         $options->set('font_cache', storage_path('fonts/')); 
@@ -53,8 +68,14 @@ class ContractController extends Controller
         $options->set('enable_font_subsetting', false); 
 
         $dompdf = new Dompdf($options); 
+
         $html = view('pdf.contract', [
             'member' => $member,
+            'member_name' => $member_name,
+            'member_name_len' => $member_name_len,
+            'member_lastname_len' => $member_lastname_len,
+            'spouse' => $spouse,
+            'benef' => $benef,
             'created' => $created,
             'exp_date_th' => $exp_date_th
         ])->render();

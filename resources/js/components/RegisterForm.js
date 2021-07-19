@@ -419,7 +419,7 @@ const RegisterForm = (props) => {
         }
 
         if (numberOfErrors > 0) {
-            swal('เกิดข้อผิดพลาด', 'กรุณากรอกข้อมูลให้ในช่องสีแดงครบถ้วน', 'error');
+            swal('เกิดข้อผิดพลาด', 'กรุณากรอกข้อมูลให้ครบถ้วน', 'error');
             return;
         }
 
