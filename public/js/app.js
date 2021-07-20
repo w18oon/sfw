@@ -7950,7 +7950,7 @@ var RegisterForm = function RegisterForm(props) {
     }
 
     if (numberOfErrors > 0) {
-      sweetalert__WEBPACK_IMPORTED_MODULE_1___default()('เกิดข้อผิดพลาด', 'กรุณากรอกข้อมูลให้ในช่องสีแดงครบถ้วน', 'error');
+      sweetalert__WEBPACK_IMPORTED_MODULE_1___default()('เกิดข้อผิดพลาด', 'กรุณากรอกข้อมูลให้ครบถ้วน', 'error');
       return;
     } // if (member.exp_date) {
     // const inputValue = new Date(date);
