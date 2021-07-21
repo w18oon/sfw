@@ -9007,7 +9007,7 @@ var RegisterForm = function RegisterForm(props) {
           onChange: handleHouseTypeChange,
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("option", {
             children: "\u0E40\u0E25\u0E37\u0E2D\u0E01"
-          }), ['บ้านตนเองปลอดภาระ', 'บ้านของมิดามารดา', 'บ้านของญาติ', 'บ้านพักสวัสดิการ', 'บ้านตนเองและผ่อนอยู่กับสถาบันการเงิน', 'บ้านเช่า'].map(function (option) {
+          }), ['บ้านตนเองปลอดภาระ', 'บ้านของบิดามารดา', 'บ้านของญาติ', 'บ้านพักสวัสดิการ', 'บ้านตนเองและผ่อนอยู่กับสถาบันการเงิน', 'บ้านเช่า'].map(function (option) {
             return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("option", {
               value: option,
               children: option

@@ -1062,7 +1062,7 @@ const RegisterForm = (props) => {
                         value={member.house_type || ''} 
                         onChange={handleHouseTypeChange}>
                         <option>เลือก</option>
-                        {['บ้านตนเองปลอดภาระ', 'บ้านของมิดามารดา', 'บ้านของญาติ', 'บ้านพักสวัสดิการ', 'บ้านตนเองและผ่อนอยู่กับสถาบันการเงิน', 'บ้านเช่า'].map((option) => (
+                        {['บ้านตนเองปลอดภาระ', 'บ้านของบิดามารดา', 'บ้านของญาติ', 'บ้านพักสวัสดิการ', 'บ้านตนเองและผ่อนอยู่กับสถาบันการเงิน', 'บ้านเช่า'].map((option) => (
                         <option key={option} value={option}>{option}</option>
                         ))}
                     </select>
