@@ -24,11 +24,11 @@
             font-weight: bold;
             src: url("{{ storage_path('fonts/THSarabunNew Bold.ttf') }}") format('truetype');
         }
-        html { margin: 1cm 1.5cm 1.5cm; }
-        body { font-family: 'Sarabun', sans-serif; font-size: 16pt; line-height: normal;  }
+        html { margin: 1.5cm; }
+        body { font-family: 'Sarabun', sans-serif; font-size: 16pt; line-height: 100%;  }
         table { width: 100%; margin: 0; }
         th, td { padding: 0; }
-        table#tbl-sign { margin: 50px 0; }
+        table#tbl-sign { margin: 25px 0; }
         table#tbl-sign , 
         table#tbl-sign th, 
         table#tbl-sign td { border: 1px solid black; border-collapse: collapse; padding: 0 1rem; }
@@ -129,7 +129,6 @@
     <br/>
     <span>{{__('Email').Str::padBoth($member->ship_mail, 50, '.').__('ID Line').Str::padBoth($member->ship_line, 50, '.').__('Facebook').Str::padBoth($member->ship_fb, 50, '.')}}</span>
     <br/>
-    <br/>
     <strong><u>{{__('ที่อยู่อาศัยปัจจุบัน')}}</u></strong>
     <br/>
     <span>
@@ -168,7 +167,7 @@
             {{__('บาท/เดือน')}}
         </label>
     </span>
-    <br/>
+    <div style="page-break-after: always;"></div>
     <strong>ระดับการศึกษาสูงสุด</strong>
     <br/>
     <input type="radio" @if($member->education_level == 'ต่ำกว่ามัธยมศึกษาตอนปลาย') checked @endif/>
@@ -239,6 +238,7 @@
             </td>
         </tr>
     </table>
+    <br/>
     <strong>2.รายได้ประจำ</strong>
     <br/>
     <input type="radio" @if($member->income_type == 'เงินเดือน/เงินบำนาญ/เงินรายได้') checked @endif/>
@@ -290,9 +290,11 @@
     <input type="radio" @if($member->other_income_type == 'อื่นๆ') checked @endif/>
     <label>{{__(' อื่นๆ').__('จำนวน').Str::padBoth($member->other_income_type == 'อื่นๆ'? number_format($member->other_income_amount): '', 40, '.').__('บาท/เดือน แหล่งที่มา ').Str::padBoth($member->source_other_income, 60, '.')}}</label>
     <br/>
+    <br/>
     <strong>3.ภาระหนี้กับสถาบันการเงิน</strong>
     <br/>
     <div style="padding-left: 22pt;">{{__('3.1.หนี้สินในระบบแบบถูกกฎหมาย เป็นหนี้คงเหลือ').Str::padBoth($member->debt_type_1? number_format($member->debt_type_1): '', 20, '.').__('บาท')}}<br/>{{__('3.2.หนี้สินนอกระบบแบบถูกกฎหมาย เป็นหนี้คงเหลือ').Str::padBoth($member->debt_type_2? number_format($member->debt_type_2): '', 20, '.').__('บาท')}}<br/>{{__('3.3.หนี้สินนอกระบบแบบผิดกฎหมาย เป็นหนี้คงเหลือ').Str::padBoth($member->debt_type_3? number_format($member->debt_type_3): '', 20, '.').__('บาท')}}<br/>{{__('3.4.หนี้สินแบบสหกรณ์ เป็นหนี้คงเหลือ').Str::padBoth($member->debt_type_4? number_format($member->debt_type_4) : '', 20, '.').__('บาท')}}</div>
+    <br/>
     <strong>4.สถานที่ทำงาน</strong>
     <br/>
     <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __('ชื่อสถานที่ทำงาน') . Str::padBoth($member->workplace, 55, '.').__('อาคาร').Str::padBoth($member->building, 45, '.').__('ชั้น') . Str::padBoth($member->floor, 35, '.')}}</span>
@@ -306,7 +308,7 @@
     <span>{{ __('โทรสาร').Str::padBoth($member->workplace_fax, 35, '.').__('อายุงานปัจจุบัน').Str::padBoth($member->work_exp, 35, '.').__('ปี ชื่อตำแหน่งงาน').Str::padBoth($member->job_position, 60, '.')}}</span>
     <br/>
     <span>{{ __('กรณีที่ผู้มีรายได้ประจำ อายุงานไม่ถึง 6 เดือน โปรดระบุชื่อสถานที่ทำงานเดิม').Str::padBoth($member->old_workplace, 70, '.')}}</span>
-    <br/>
+    <div style="page-break-after: always;"></div>
     <strong>5.คุณสมบัติของการสมัครเข้าร่วมเป็นสมาชิกกองทุนอิสระฯ</strong> ตามโครงการช่วยเหลือแก้ไขหนี้สินแบบปลอดดอกเบี้ย
     <div style="padding-left: 22pt;">5.1 เป็นบุคคลที่มีอายุตั้งแต่ 20 ปีขึ้นไป ทั้งคนไทยหรือบุคคลต่างด้าวที่ทำงานและมีที่พักอาศัยอยู่ในประเทศไทย<br/>มาเป็นระยะเวลาไม่น้อยกว่า 2 ปี<br/>5.2 เป็นผู้มีนิสัยอันดีงาม มีความรู้ ความเข้าใจ เห็นชอบด้วยหลักการ ระเบียบข้อบังคับ และการดำเนินงานบริหาร<br/>ของกองทุนอิสระฯ และสมัครใจเข้ามามีส่วนร่วมในกิจกรรมต่างๆ ของกองทุนอิสระฯ<br/>5.3 เป็นผู้ถึงพร้อมที่จะต้องปฏิบัติตามระเบียบข้อบังคับของกองทุนอิสระฯ อย่างเคร่งครัด<br/>5.4 เป็นผู้ที่คณะกรรมการกองทุนอิสระฯ ได้มีมติเห็นชอบให้เข้าร่วมเป็นสมาชิกกองทุนอิสระฯ<br/>5.5 มีความอดทนรู้จักเสียสละและเห็นแก่ประโยชน์ส่วนรวมและสมาชิกของกองทุนอิสระฯเป็นสำคัญ<br/>5.6 เป็นผู้ที่สามารถมีความตั้งมั่นในการฝากเงินสัจจะออมทรัพย์เพื่ออนาคตตัวเองและครอบครัวตามสัญญา<br/>อย่างเคร่งครัด<br/>5.7 ผู้ที่สมัครเข้าร่วมเป็นสมาชิกกองทุนอิสระฯ ในปีแรกจะต้องไม่เคยเป็นผู้ที่ค้างชำระหนี้ในกองทุนอื่นๆ<br/>หากยังค้างชำระ ให้ตัดสิทธิ์ในการได้รับการพิจารณาอนุมัติจากกองทุนอิสระฯ จนกว่าจะชำระหนี้ที่ค้างอยู่ให้เสร็จสิ้น<span style="font-weight:bold; color: red;">(ยกเว้นกรณีที่เป็นผู้สมัครรายใหม่ ที่มีความจำนงเข้าร่วมในโครงการนี้เท่านั้น)</span> ทั้งนี้ผู้สมัครที่ถูกตัดสิทธิ์<br/>เมื่อความปรากฏในภายหลังว่า ปกปิดว่าเป็นหนี้กองทุนอื่นอยู่ ผู้สมัครจะไม่ได้รับค่าสมัครแรกเข้า และค่าธรรมเนียม<br/>รายปีคืนแต่อย่างใด เว้นแต่กองทุนอิสระฯอนุญาตเป็นการเฉพาะราย โดยให้ขึ้นอยู่กับดุลพินิจของประธาน<br/>กองทุนอิสระฯ</div>
     <strong>6.การสมัครขอเข้าร่วมเป็นสมาชิกกองทุนอิสระฯ</strong> โครงการช่วยเหลือแก้ไขหนี้สินแบบปลอดดอกเบี้ย ด้วยความสมัครใจ
@@ -409,7 +411,7 @@
         <strong>2.เอกสารทางการเงิน</strong>
         <div style="padding-left: 22pt;">1. เอกสารการตรวจเครดิตบูโร<br/>2. ข้าราชการ/ลูกจ้างประจำ/ข้าราชการเกษียณอายุ: สลิปเงินเดือน ย้อนหลัง 3 เดือน<br/>3. เอกสารแสดงรายได้อื่น ๆ (ถ้ามี)</div>
     </div>
-    <div style="padding-top: 1cm; page-break-after: always;">
+    <div style="page-break-after: always;">
         <div style="text-align: center;">
             <strong>เอกสารแนบท้ายสัญญา<br/>เจตนารมณ์และพันธกรณีระหว่างกองทุนอิสระฯ กับสมาชิก</strong>
         </div>
