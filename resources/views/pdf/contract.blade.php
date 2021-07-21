@@ -129,6 +129,7 @@
     <br/>
     <span>{{__('Email').Str::padBoth($member->ship_mail, 50, '.').__('ID Line').Str::padBoth($member->ship_line, 50, '.').__('Facebook').Str::padBoth($member->ship_fb, 50, '.')}}</span>
     <br/>
+    <br/>
     <strong><u>{{__('ที่อยู่อาศัยปัจจุบัน')}}</u></strong>
     <br/>
     <span>
