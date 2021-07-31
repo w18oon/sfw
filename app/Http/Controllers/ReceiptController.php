@@ -101,8 +101,11 @@ class ReceiptController extends Controller
         // echo "Book " . $book;
         // echo "No " . $receipt_no;
 
+        $created_at = explode(' ', $member->receipt->created_at);
+        $receipt_date = explode('-', $created_at[0]);
+
         // $yy = date('Y');
-        $yy = substr(date('Y') + 543, 2);
+        $yy = substr($receipt_date[0] + 543, 2);
         $receipt = "$book-$receipt_no-$yy.pdf";
 
         $options = new Options(); 
@@ -127,9 +130,9 @@ class ReceiptController extends Controller
             'book' => $book,
             'receipt_no' => $receipt_no,
             'yy' => $yy,
-            'd' => date('d'),
-            'm' => $month_th[date('n')],
-            'y' => date('Y') + 543,
+            'd' => $receipt_date[2],
+            'm' => $month_th[intval($receipt_date[1])],
+            'y' => $receipt_date[0] + 543,
             'name' => $name,
             'name_length' => $name_length,
             'id_card_no_length' => $id_card_no_length,

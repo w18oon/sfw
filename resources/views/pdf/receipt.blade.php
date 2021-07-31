@@ -44,7 +44,7 @@
         <tbody>
             <tr>
                 <td style="width: 20%; vertical-align: bottom;">เล่มที่{{ Str::padLeft($book, 3, 0) }}</td>
-                <td style="width: 60%; text-align: center;"><img style="width: 200px;" src="{{ public_path('logo.png') }}"/></td>
+                <td style="width: 60%; text-align: center;"><img style="width: 100pt;" src="{{ public_path('logo.png') }}"/></td>
                 <td style="width: 20%; vertical-align: bottom;">เลขที่ {{ $receipt_no . '/' . $yy }}</td>
             </tr>
             <tr>
