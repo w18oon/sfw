@@ -153,9 +153,29 @@ const RegisterForm = (props) => {
         other_income_amount: '',
         source_other_income: '',
         debt_type_1: 0,
+        debt_type_1_dtl: [{
+            desc: '',
+            total_amount: 0,
+            remaining_amount: 0,
+        }],
         debt_type_2: 0,
+        debt_type_2_dtl: [{
+            desc: '',
+            total_amount: 0,
+            remaining_amount: 0,
+        }],
         debt_type_3: 0,
+        debt_type_3_dtl: [{
+            desc: '',
+            total_amount: 0,
+            remaining_amount: 0,
+        }],
         debt_type_4: 0,
+        debt_type_4_dtl: [{
+            desc: '',
+            total_amount: 0,
+            remaining_amount: 0,
+        }],
         workplace: '',
         building: '',
         floor: '',
@@ -189,6 +209,11 @@ const RegisterForm = (props) => {
         benef_postcode: '',
         benef_tel: '',
         benef_fax: '',
+        docs: [{
+            name: '',
+            desc: '',
+            original_name: '',
+        }],
     });
 
     useEffect(() => {
@@ -397,6 +422,127 @@ const RegisterForm = (props) => {
             setErrors(errors.filter(e => e != event.target.name));
         }
     }
+
+    const addDebtDtl = (event, debtType) => {
+        event.preventDefault();
+        const newDebtDtl = [...member[`debt_type_${debtType}_dtl`], {
+            desc: '',
+            total_amount: 0,
+            remaining_amount: 0,
+        }];
+
+        setMember(prevState => {
+            return {
+                ...prevState,
+                [`debt_type_${debtType}_dtl`]: newDebtDtl
+            }
+        });
+    }
+
+    const removeDebtDtl = (event, debtType, index) => {
+        event.preventDefault();
+        const newDebtDtl = [...member[`debt_type_${debtType}_dtl`]];
+        newDebtDtl.splice(index, 1);
+
+        setMember(prevState => {
+            return {
+                ...prevState,
+                [`debt_type_${debtType}_dtl`]: newDebtDtl
+            }
+        });
+
+        const remainingAmount = newDebtDtl.reduce((acc, curr) => { return acc + parseFloat(curr.remaining_amount) }, 0);
+        setMember(prevState => {
+            return {
+                ...prevState,
+                [`debt_type_${debtType}`]: remainingAmount
+            }
+        });
+    }
+
+    const handleDebtDtlChange = (event, debtType, index) => {
+        const newDebtDtl = [...member[`debt_type_${debtType}_dtl`]];
+        newDebtDtl[index][event.target.name] = event.target.value;
+
+        setMember(prevState => {
+            return {
+                ...prevState,
+                [`debt_type_${debtType}_dtl`]: newDebtDtl
+            }
+        });
+
+        if (event.target.name === 'remaining_amount') {
+            const remainingAmount = newDebtDtl.reduce((acc, curr) => { return acc + parseFloat(curr.remaining_amount) }, 0);
+            setMember(prevState => {
+                return {
+                    ...prevState,
+                    [`debt_type_${debtType}`]: remainingAmount
+                }
+            });
+        }
+    }
+
+    const addDoc = () => {
+        const newDocs = [...member.docs, {
+            name: '',
+            desc: '',
+            original_name: '',
+        }];
+
+        setMember(prevState => {
+            return {
+                ...prevState,
+                docs: newDocs
+            }
+        });
+    }
+
+    const removeDoc = (event, index) => {
+        const newDocs = [...member.docs];
+        newDocs.splice(index, 1);
+
+        setMember(prevState => {
+            return {
+                ...prevState,
+                docs: newDocs
+            }
+        });
+    }
+
+    const handleDocChange = (event, index) => {
+        const newDocs = [...member.docs];
+        newDocs[index][event.target.name] = event.target.value;
+
+        setMember(prevState => {
+            return {
+                ...prevState,
+                docs: newDocs
+            }
+        });
+    }
+
+    const handleInputFileChange = (event, index) => {
+        const newDocs = [...member.docs];
+
+        const data = new FormData();
+        data.append('document', event.target.files[0]);
+        axios.post('/api/upload-document', data).then(response => {
+            if (response.status == 200) {
+                newDocs[index].name = response.data.name;
+            }
+        }).catch(error => {
+            console.log(error)
+        });
+
+        newDocs[index].original_name = event.target.files[0].name;
+        
+        setMember(prevState => {
+            return {
+                ...prevState,
+                docs: newDocs
+            }
+        });
+    }
     
     const handleSubmitForm = (event) => {
         event.preventDefault();
@@ -423,12 +569,6 @@ const RegisterForm = (props) => {
             return;
         }
 
-        // if (member.exp_date) {
-            // const inputValue = new Date(date);
-            // const expDate = `${inputValue.getDate()}/${inputValue.getMonth() + 1}/${inputValue.getFullYear()}`;
-            // console.log(`expDate => ${expDate}`);
-        // }
-
         swal({
             icon: 'info',
             text: 'ระบบกำลังบันทึกข้อมูล',
@@ -440,6 +580,7 @@ const RegisterForm = (props) => {
         if (!member.id) {
             axios.post('/api/member', member).then(response => {
                 if (response.status == 200) {
+                    console.log(response);
                     if (response.data.error) {
                         const errMsg = response.data.error.errorInfo;
                         swal('เกิดข้อผิดพลาด', errMsg.toString(), 'error');
@@ -1211,11 +1352,61 @@ const RegisterForm = (props) => {
                         className="form-control"
                         id="debt_type_1" 
                         name="debt_type_1" 
-                        value={member.debt_type_1 || ''} 
-                        onChange={handleInputChange}/>
+                        value={member.debt_type_1 || 0} 
+                        onChange={handleInputChange}
+                        readOnly/>
                 </div>
                 <label className="col-2 col-form-label">บาท</label>
             </div>
+            <table className="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">รายการ</th>
+                        <th scope="col">จำนวนเงินที่กู้</th>
+                        <th scope="col">จำนวนหนี้คงเหลือ</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {member.debt_type_1_dtl.map((dtl,i) => (
+                    <tr key={i}>
+                        <td scope="row">{ i + 1 }</td>
+                        <td>
+                            <input type="text" 
+                                className="form-control" 
+                                name="desc"
+                                value={dtl.desc}
+                                onChange={e => handleDebtDtlChange(e, 1, i)}/>
+                        </td>
+                        <td>
+                            <input type="number" 
+                                className="form-control" 
+                                name="total_amount" 
+                                min="0" 
+                                value={dtl.total_amount}
+                                onChange={e => handleDebtDtlChange(e, 1, i)}/>
+                        </td>
+                        <td>
+                            <input type="number" 
+                                className="form-control" 
+                                name="remaining_amount" 
+                                min="0" 
+                                value={dtl.remaining_amount}
+                                onChange={e => handleDebtDtlChange(e, 1, i)}/>
+                        </td>
+                        <td>
+                            <a className="btn btn-link" onClick={e => removeDebtDtl(e, 1, i)}>ลบรายการนี้</a>
+                        </td>
+                    </tr>
+                    ))}
+                    <tr>
+                        <td colSpan="5">
+                            <a className="btn btn-link" onClick={e => addDebtDtl(e, 1)}>เพิ่มรายการ</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
             <h5 className="mb-3">2.หนี้สินนอกระบบแบบถูกกฏหมาย</h5>
             <div className="form-group row">
                 <label htmlFor="staticEmail" className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
@@ -1224,11 +1415,61 @@ const RegisterForm = (props) => {
                         className="form-control"
                         id="debt_type_2" 
                         name="debt_type_2" 
-                        value={member.debt_type_2 || ''} 
-                        onChange={handleInputChange}/>
+                        value={member.debt_type_2 || 0} 
+                        onChange={handleInputChange}
+                        disabled/>
                 </div>
                 <label className="col-2 col-form-label">บาท</label>
             </div>
+            <table className="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">รายการ</th>
+                        <th scope="col">จำนวนเงินที่กู้</th>
+                        <th scope="col">จำนวนหนี้คงเหลือ</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {member.debt_type_2_dtl.map((dtl,i) => (
+                    <tr key={i}>
+                        <td scope="row">{ i + 1 }</td>
+                        <td>
+                            <input type="text" 
+                                className="form-control" 
+                                name="desc"
+                                value={dtl.desc}
+                                onChange={e => handleDebtDtlChange(e, 2, i)}/>
+                        </td>
+                        <td>
+                            <input type="number" 
+                                className="form-control" 
+                                name="total_amount" 
+                                min="0" 
+                                value={dtl.total_amount}
+                                onChange={e => handleDebtDtlChange(e, 2, i)}/>
+                        </td>
+                        <td>
+                            <input type="number" 
+                                className="form-control" 
+                                name="remaining_amount" 
+                                min="0" 
+                                value={dtl.remaining_amount}
+                                onChange={e => handleDebtDtlChange(e, 2, i)}/>
+                        </td>
+                        <td>
+                            <a className="btn btn-link" onClick={e => removeDebtDtl(e, 2, i)}>ลบรายการนี้</a>
+                        </td>
+                    </tr>
+                    ))}
+                    <tr>
+                        <td colSpan="5">
+                            <a className="btn btn-link" onClick={e => addDebtDtl(e, 2)}>เพิ่มรายการ</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
             <h5 className="mb-3">3.หนี้สินนอกระบบแบบผิดกฏหมาย</h5>
             <div className="form-group row">
                 <label htmlFor="staticEmail" className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
@@ -1237,11 +1478,61 @@ const RegisterForm = (props) => {
                         className="form-control"
                         id="debt_type_3" 
                         name="debt_type_3" 
-                        value={member.debt_type_3 || ''} 
-                        onChange={handleInputChange}/>
+                        value={member.debt_type_3 || 0} 
+                        onChange={handleInputChange}
+                        disabled/>
                 </div>
                 <label className="col-2 col-form-label">บาท</label>
             </div>
+            <table className="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">รายการ</th>
+                        <th scope="col">จำนวนเงินที่กู้</th>
+                        <th scope="col">จำนวนหนี้คงเหลือ</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {member.debt_type_3_dtl.map((dtl,i) => (
+                    <tr key={i}>
+                        <td scope="row">{ i + 1 }</td>
+                        <td>
+                            <input type="text" 
+                                className="form-control" 
+                                name="desc"
+                                value={dtl.desc}
+                                onChange={e => handleDebtDtlChange(e, 3, i)}/>
+                        </td>
+                        <td>
+                            <input type="number" 
+                                className="form-control" 
+                                name="total_amount" 
+                                min="0" 
+                                value={dtl.total_amount}
+                                onChange={e => handleDebtDtlChange(e, 3, i)}/>
+                        </td>
+                        <td>
+                            <input type="number" 
+                                className="form-control" 
+                                name="remaining_amount" 
+                                min="0" 
+                                value={dtl.remaining_amount}
+                                onChange={e => handleDebtDtlChange(e, 3, i)}/>
+                        </td>
+                        <td>
+                            <a className="btn btn-link" onClick={e => removeDebtDtl(e, 3, i)}>ลบรายการนี้</a>
+                        </td>
+                    </tr>
+                    ))}
+                    <tr>
+                        <td colSpan="5">
+                            <a className="btn btn-link" onClick={e => addDebtDtl(e, 3)}>เพิ่มรายการ</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
             <h5 className="mb-3">4.หนี้สินแบบสหกรณ์</h5>
             <div className="form-group row">
                 <label htmlFor="staticEmail" className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
@@ -1250,11 +1541,60 @@ const RegisterForm = (props) => {
                         className="form-control"
                         id="debt_type_4" 
                         name="debt_type_4" 
-                        value={member.debt_type_4 || ''} 
+                        value={member.debt_type_4 || 0} 
                         onChange={handleInputChange}/>
                 </div>
                 <label className="col-2 col-form-label">บาท</label>
             </div>
+            <table className="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">รายการ</th>
+                        <th scope="col">จำนวนเงินที่กู้</th>
+                        <th scope="col">จำนวนหนี้คงเหลือ</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {member.debt_type_4_dtl.map((dtl,i) => (
+                    <tr key={i}>
+                        <td scope="row">{ i + 1 }</td>
+                        <td>
+                            <input type="text" 
+                                className="form-control" 
+                                name="desc"
+                                value={dtl.desc}
+                                onChange={e => handleDebtDtlChange(e, 4, i)}/>
+                        </td>
+                        <td>
+                            <input type="number" 
+                                className="form-control" 
+                                name="total_amount" 
+                                min="0" 
+                                value={dtl.total_amount}
+                                onChange={e => handleDebtDtlChange(e, 4, i)}/>
+                        </td>
+                        <td>
+                            <input type="number" 
+                                className="form-control" 
+                                name="remaining_amount" 
+                                min="0" 
+                                value={dtl.remaining_amount}
+                                onChange={e => handleDebtDtlChange(e, 4, i)}/>
+                        </td>
+                        <td>
+                            <a className="btn btn-link" onClick={e => removeDebtDtl(e, 4, i)}>ลบรายการนี้</a>
+                        </td>
+                    </tr>
+                    ))}
+                    <tr>
+                        <td colSpan="5">
+                            <a className="btn btn-link" onClick={e => addDebtDtl(e, 4)}>เพิ่มรายการ</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
             <h4 className="mb-3">สถานทีทำงาน</h4>
             <div className="form-row">
                 <div className="form-group col-4">
@@ -1605,6 +1945,39 @@ const RegisterForm = (props) => {
                         onChange={handleInputChange}/>
                 </div>
             </div>
+            <h4 className="mb-3">เอกสารประกอบ <button type="button" className="btn btn-link" onClick={addDoc}>เพิ่มเอกสารประกอบ</button></h4>
+            {member.docs.map((doc,i) => (
+            <div className="form-row" key={i}>
+                <div className="form-group col-3">
+                    <label htmlFor="benef_title">คำอธิบาย</label>
+                    <input type="text" 
+                        className="form-control" 
+                        name="desc"
+                        value={doc.desc}
+                        onChange={e => handleDocChange(e, i)}/>
+                </div>
+                <div className="form-group col-3">
+                    <label htmlFor="benef_other_title">ไฟล์แนบ</label>
+                    <div className="custom-file">
+                        <input type="file" 
+                            className="custom-file-input" 
+                            id="customFile" 
+                            onChange={e => handleInputFileChange(e, i)}/>
+                        <label className="custom-file-label" htmlFor="customFile">เลือกไฟล์</label>
+                    </div>
+                </div>
+                <div className="form-group col-3">
+                    <label htmlFor="benef_other_title">ชื่อไฟล์</label>
+                    <input type="text" 
+                        className="form-control-plaintext"
+                        value={doc.original_name}
+                        readOnly/>
+                </div>
+                <div className="form-group col-3">
+                    <button type="button" className="btn btn-link mt-3" onClick={e => removeDoc(e, i)}>ลบเอกสารประกอบ</button>
+                </div>
+            </div>
+            ))}
             <button type="submit" className="btn btn-primary">บันทึกข้อมูล</button>
         </form>
     );

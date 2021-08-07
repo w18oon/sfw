@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\Postcode;
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\UploadDocumentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +20,8 @@ use App\Http\Controllers\MemberController;
 Route::post('/member', [MemberController::class, 'store']);
 Route::put('/member/{id}', [MemberController::class, 'update']);
 // Route::delete('/member/{id}', [MemberController::class, 'destroy']);
+
+Route::post('/upload-document', UploadDocumentController::class);
 
 Route::get('/postcodes', function () {
     $postcodes = Postcode::orderBy('province')->get();

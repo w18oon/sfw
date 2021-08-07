@@ -115,4 +115,15 @@ class Member extends Model
     {
         return $this->hasOne(Receipt::class);
     }
+
+
+    public function debt()
+    {
+        return $this->hasMany(Debt::class);
+    }
+
+    public function document()
+    {
+        return $this->hasMany(Document::class);
+    }
 }

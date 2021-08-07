@@ -152,6 +152,50 @@ class MemberController extends Controller
             'benef_postcode',
             'benef_tel',
             'benef_fax'));
+
+            foreach($request->input('docs') as $doc) {
+                $member->document()->create([
+                    'name' => $doc['name'],
+                    'desc' => $doc['desc'],
+                ]);
+            }
+
+            foreach($request->input('debt_type_1_dtl') as $dtl) {
+                $member->debt()->create([
+                    'type' => 1,
+                    'desc' => $dtl['desc'],
+                    'total_amount' => $dtl['total_amount'],
+                    'remaining_amount' => $dtl['remaining_amount'],
+                ]);
+            }
+
+            foreach($request->input('debt_type_2_dtl') as $dtl) {
+                $member->debt()->create([
+                    'type' => 2,
+                    'desc' => $dtl['desc'],
+                    'total_amount' => $dtl['total_amount'],
+                    'remaining_amount' => $dtl['remaining_amount'],
+                ]);
+            }
+
+            foreach($request->input('debt_type_3_dtl') as $dtl) {
+                $member->debt()->create([
+                    'type' => 3,
+                    'desc' => $dtl['desc'],
+                    'total_amount' => $dtl['total_amount'],
+                    'remaining_amount' => $dtl['remaining_amount'],
+                ]);
+            }
+
+            foreach($request->input('debt_type_4_dtl') as $dtl) {
+                $member->debt()->create([
+                    'type' => 4,
+                    'desc' => $dtl['desc'],
+                    'total_amount' => $dtl['total_amount'],
+                    'remaining_amount' => $dtl['remaining_amount'],
+                ]);
+            }
+
             return response()->json(['member_id' => $member->id]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e]);
@@ -172,13 +216,6 @@ class MemberController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $member = Member::find($id);
@@ -288,12 +325,6 @@ class MemberController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $member = Member::find($id);

@@ -16,10 +16,11 @@ use App\Models\Postcode;
 |
 */
 
-// Route::get('/test-auth', function () {
-//     echo auth()->user()->name;
-//     return view('welcome');
-// });
+Route::get('/test', function () {
+    // echo uniqid();
+    // V4ITTTBoaSlnTYj9xXpoApUgXCNtDlCPPAtioMuA.png
+    echo '<img src="' . asset('storage/uploads/jDzFFWJV45zSdG5t6zIDFkTUk8AMUyNbjwiC3gGD.png') . '"/>';
+});
 
 // Route::get('/gen-passwd', function () {
 //     echo Hash::make('P@ssw0rd!');
