@@ -5587,6 +5587,26 @@ var RegisterForm = function RegisterForm(props) {
 
     if (props.member) {
       var propsMember = JSON.parse(props.member);
+      [1, 2, 3, 4].map(function (i) {
+        if (!propsMember["debt_type_".concat(i, "_dtl")]) {
+          propsMember = _objectSpread(_objectSpread({}, propsMember), {}, _defineProperty({}, "debt_type_".concat(i, "_dtl"), [{
+            desc: '',
+            total_amount: 0,
+            remaining_amount: 0
+          }]));
+        }
+      });
+
+      if (!propsMember.doc) {
+        propsMember = _objectSpread(_objectSpread({}, propsMember), {}, {
+          docs: [{
+            name: '',
+            desc: '',
+            original_name: ''
+          }]
+        });
+      }
+
       setMember(propsMember);
       setShow(false);
       ['member', 'ship', 'workplace', 'benef'].map(function (addr) {
@@ -5742,12 +5762,12 @@ var RegisterForm = function RegisterForm(props) {
   };
 
   var handleSubDistrictChange = function handleSubDistrictChange(event, addrType, selectedProvince, selectedDistrict, inputPostcode) {
-    var _objectSpread11;
+    var _objectSpread12;
 
     var postcodeFilter = postcodes.filter(function (postcode) {
       return postcode.province == selectedProvince && postcode.district == selectedDistrict && postcode.sub_district == event.target.value;
     })[0];
-    setMember(_objectSpread(_objectSpread({}, member), {}, (_objectSpread11 = {}, _defineProperty(_objectSpread11, event.target.name, event.target.value), _defineProperty(_objectSpread11, inputPostcode, postcodeFilter.postcode), _objectSpread11)));
+    setMember(_objectSpread(_objectSpread({}, member), {}, (_objectSpread12 = {}, _defineProperty(_objectSpread12, event.target.name, event.target.value), _defineProperty(_objectSpread12, inputPostcode, postcodeFilter.postcode), _objectSpread12)));
 
     if (event.target.value != '') {
       setErrors(errors.filter(function (e) {
@@ -5773,9 +5793,9 @@ var RegisterForm = function RegisterForm(props) {
   };
 
   var handleSelectChange = function handleSelectChange(event, otherValue, inputName) {
-    var _objectSpread13;
+    var _objectSpread14;
 
-    setMember(_objectSpread(_objectSpread({}, member), {}, (_objectSpread13 = {}, _defineProperty(_objectSpread13, event.target.name, event.target.value), _defineProperty(_objectSpread13, inputName, event.target.value != otherValue ? '' : member[inputName]), _objectSpread13)));
+    setMember(_objectSpread(_objectSpread({}, member), {}, (_objectSpread14 = {}, _defineProperty(_objectSpread14, event.target.name, event.target.value), _defineProperty(_objectSpread14, inputName, event.target.value != otherValue ? '' : member[inputName]), _objectSpread14)));
     setDisabledInput(_objectSpread(_objectSpread({}, disabledInput), {}, _defineProperty({}, inputName, event.target.value == otherValue ? false : true)));
 
     if (event.target.value != '') {

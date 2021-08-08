@@ -204,7 +204,9 @@ class MemberController extends Controller
 
     public function show($id)
     {
-        //
+        return view('members.show', [
+            'member' => Member::find($id),
+        ]);
     }
 
     public function edit($id)

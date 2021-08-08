@@ -66,6 +66,14 @@
                                 <td>{{ $member->id_card_no }}</td>
                                 <td>{{ $member->updated_by }}</td>
                                 <td>
+                                    <div class="btn-group">
+                                        <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">ดูข้อมูล</button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item" href="{{ route('member.show', $member->id) }}">ข้อมูลสมัคร</a>
+                                            <a class="dropdown-item" href="{{ url("receipt/$member->id") }}">ใบเสร็จรับเงิน</a>
+                                            <a class="dropdown-item" href="{{ url("contract/$member->id") }}">ใบสมัครสมาชิก/สัญญา</a>
+                                        </div>
+                                    </div>
                                     <a class="btn btn-sm btn-outline-secondary" href="{{ route('member.edit', $member->id) }}">แก้ไขข้อมูล</a>
                                     <form id="{{$member->id}}" action="{{ route('member.delete', $member->id) }}" style="display: inline;" method="post">
                                         @csrf
@@ -83,15 +91,6 @@
                                                 }
                                             });">ลบข้อมุล</button>
                                     </form>
-                                    <div class="dropdown">
-                                        <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">เอกสาร</button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item" href="{{ url("receipt/$member->id") }}">ใบเสร็จรับเงิน</a>
-                                            <a class="dropdown-item" href="{{ url("contract/$member->id") }}">ใบสมัครสมาชิก/สัญญา</a>
-                                            {{-- <a class="btn btn-sm btn-outline-primary" href="{{ url("receipt/$member->id") }}">ใบเสร็จรับเงิน</a>
-                                            <a class="btn btn-sm btn-outline-primary" href="{{ url("contract/$member->id") }}">ใบสมัครสมาชิก/สัญญา</a> --}}
-                                        </div>
-                                    </div>
                                 </td>
                             </tr>
                             @endforeach

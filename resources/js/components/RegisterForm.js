@@ -225,7 +225,25 @@ const RegisterForm = (props) => {
         }
 
         if (props.member) {
-            const propsMember = JSON.parse(props.member);
+            let propsMember = JSON.parse(props.member);
+            [1, 2, 3, 4].map(i => {
+                if (!propsMember[`debt_type_${i}_dtl`]) {
+                    propsMember = {...propsMember, [`debt_type_${i}_dtl`]: [{
+                        desc: '',
+                        total_amount: 0,
+                        remaining_amount: 0,
+                    }]};
+                }
+            });
+
+            if (!propsMember.doc) {
+                propsMember = {...propsMember, docs: [{
+                    name: '',
+                    desc: '',
+                    original_name: '',
+                }]};
+            }
+
             setMember(propsMember);
             setShow(false);
 

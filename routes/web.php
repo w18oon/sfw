@@ -43,6 +43,7 @@ Route::get('/contract/{id}', App\Http\Controllers\ContractController::class);
 
 Route::group(['middleware' => 'auth'], function() {
     Route::get('/member', [MemberController::class, 'index'])->name('member.index');
+    Route::get('/member/{id}', [MemberController::class, 'show'])->name('member.show');
     Route::get('/member/{id}/edit', [MemberController::class, 'edit'])->name('member.edit');
     Route::delete('/member/{id}/delete', [MemberController::class, 'destroy'])->name('member.delete');
 });
