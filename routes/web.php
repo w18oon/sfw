@@ -11,8 +11,8 @@ Route::get('/register-form', function () {
 });
 
 Route::get('/', function() {
-    // return view('home',[]);
-    echo resource_path();
+    return view('home',[]);
+    // echo resource_path();
 });
 Route::get('/search', [App\Http\Controllers\SearchController::class, 'index']);
 Route::post('/search', [App\Http\Controllers\SearchController::class, 'index']);
