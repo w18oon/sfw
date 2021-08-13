@@ -53,6 +53,7 @@
                                 <th scope="col">ชื่อ</th>
                                 <th scope="col">นามสกุล</th>
                                 <th scope="col">เลขที่บัตรประจำตัวประชาชน</th>
+                                <th scope="col">สถานะ</th>
                                 <th scope="col">แก้ไขข้อมูลล่าสุดโดย</th>
                                 <th scope="col">ดำเนินการ</th>
                             </tr>
@@ -64,14 +65,15 @@
                                 <td>{{ $member->firstname }}</td>
                                 <td>{{ $member->lastname }}</td>
                                 <td>{{ $member->id_card_no }}</td>
+                                <td>{{ $member->status }}</td>
                                 <td>{{ $member->updated_by }}</td>
                                 <td>
                                     <div class="btn-group">
                                         <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">ดูข้อมูล</button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <a class="dropdown-item" href="{{ route('member.show', $member->id) }}">ข้อมูลสมัคร</a>
-                                            <a class="dropdown-item" href="{{ url("receipt/$member->id") }}">ใบเสร็จรับเงิน</a>
-                                            <a class="dropdown-item" href="{{ url("contract/$member->id") }}">ใบสมัครสมาชิก/สัญญา</a>
+                                            <a class="dropdown-item" href="{{ url("receipt/$member->id") }}" target="_blank">ใบเสร็จรับเงิน</a>
+                                            <a class="dropdown-item" href="{{ url("contract/$member->id") }}" target="_blank">ใบสมัครสมาชิก/สัญญา</a>
                                         </div>
                                     </div>
                                     <a class="btn btn-sm btn-outline-secondary" href="{{ route('member.edit', $member->id) }}">แก้ไขข้อมูล</a>

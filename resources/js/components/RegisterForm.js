@@ -6,15 +6,16 @@ import { Modal, Button } from 'react-bootstrap';
 import DatePicker, { registerLocale, setDefaultLocale } from 'react-datepicker';
 import th from 'date-fns/locale/th';
 registerLocale('th', th);
-
 import "react-datepicker/dist/react-datepicker.css";
 import './form.css';
 import { event } from 'jquery';
 
 const RegisterForm = (props) => {
-
+    // modal
     const [show, setShow] = useState(true);
     const handleClose = () => setShow(false);
+
+    const [showConfModal, setShowConfModal] = useState(false);
 
     const [errors, setErrors] = useState([]);
 
@@ -64,6 +65,8 @@ const RegisterForm = (props) => {
     const [postcodes, setPostcodes] = useState([]);
 
     const [provinces, setProvinces] = useState([]);
+
+    const debtStatusLst = ['ปกติ', 'ได้รับหมายศาล', 'ไกล่เกลี่ย', 'บังคับคดี', 'ขายทอดตลาด', 'ล้มละลาย', 'อื่นๆ'];
 
     const [districts, setDistricts] = useState({
         member: [],
@@ -154,27 +157,75 @@ const RegisterForm = (props) => {
         source_other_income: '',
         debt_type_1: 0,
         debt_type_1_dtl: [{
-            desc: '',
-            total_amount: 0,
-            remaining_amount: 0,
+            bank_name: '',
+            bank_branch: '',
+            contact: '',
+            contract_no: '',
+            contract_date: '',
+            tmp_contract_date: '',
+            status: 'ปกติ',
+            other_status: '',
+            total_amount: '',
+            remaining_amount: '',
+            date_1: '',
+            tmp_date_1: '',
+            date_2: '',
+            tmp_date_2: '',
+            interest: '',
         }],
         debt_type_2: 0,
         debt_type_2_dtl: [{
-            desc: '',
-            total_amount: 0,
-            remaining_amount: 0,
+            bank_name: '',
+            bank_branch: '',
+            contact: '',
+            contract_no: '',
+            contract_date: '',
+            tmp_contract_date: '',
+            status: 'ปกติ',
+            other_status: '',
+            total_amount: '',
+            remaining_amount: '',
+            date_1: '',
+            tmp_date_1: '',
+            date_2: '',
+            tmp_date_2: '',
+            interest: '',
         }],
         debt_type_3: 0,
         debt_type_3_dtl: [{
-            desc: '',
-            total_amount: 0,
-            remaining_amount: 0,
+            bank_name: '',
+            bank_branch: '',
+            contact: '',
+            contract_no: '',
+            contract_date: '',
+            tmp_contract_date: '',
+            status: 'ปกติ',
+            other_status: '',
+            total_amount: '',
+            remaining_amount: '',
+            date_1: '',
+            tmp_date_1: '',
+            date_2: '',
+            tmp_date_2: '',
+            interest: '',
         }],
         debt_type_4: 0,
         debt_type_4_dtl: [{
-            desc: '',
-            total_amount: 0,
-            remaining_amount: 0,
+            bank_name: '',
+            bank_branch: '',
+            contact: '',
+            contract_no: '',
+            contract_date: '',
+            tmp_contract_date: '',
+            status: 'ปกติ',
+            other_status: '',
+            total_amount: '',
+            remaining_amount: '',
+            date_1: '',
+            tmp_date_1: '',
+            date_2: '',
+            tmp_date_2: '',
+            interest: '',
         }],
         workplace: '',
         building: '',
@@ -211,9 +262,61 @@ const RegisterForm = (props) => {
         benef_fax: '',
         docs: [{
             name: '',
-            desc: '',
+            desc: 'สำเนาบัตรประชาชน',
+            is_required: true,
+            del_btn: false,
             original_name: '',
-        }],
+            is_error: false,
+        },{
+            name: '',
+            desc: 'สำเนาทะเบียนบ้าน',
+            is_required: true,
+            del_btn: false,
+            original_name: '',
+            is_error: false,
+        },{
+            name: '',
+            desc: 'สำเนาเปลี่ยนชื่อ-นามสกุล (ถ้ามี)',
+            is_required: false,
+            del_btn: false,
+            original_name: '',
+            is_error: false,
+        },{
+            name: '',
+            desc: 'สำเนาใบสำคัญทะเบียนสมรส',
+            is_required: false,
+            del_btn: false,
+            original_name: '',
+            is_error: false,
+        },{
+            name: '',
+            desc: 'สำเนาบัตรประจำตัวข้าราชการ',
+            is_required: false,
+            del_btn: false,
+            original_name: '',
+            is_error: false,
+        },{
+            name: '',
+            desc: 'กรณีพนักงานประจำ สลิปเงินเดือนย้อนหลัง 3 เดือน (ถ้ามี)',
+            is_required: false,
+            del_btn: false,
+            original_name: '',
+            is_error: false,
+        },{
+            name: '',
+            desc: 'กรณีอาชีพอิสระทั่วไป รายการเดินบัญีย้อนหลัง 3 เดือน (ถ้ามี)',
+            is_required: false,
+            del_btn: false,
+            original_name: '',
+            is_error: false,
+        },{
+            name: '',
+            desc: 'เอกสารเกี่ยวกับมูลหนี้',
+            is_required: true,
+            del_btn: false,
+            original_name: '',
+            is_error: false,
+        },],
     });
 
     useEffect(() => {
@@ -279,12 +382,6 @@ const RegisterForm = (props) => {
                 }
             });
         }
-        // axios.get('/api/postcodes').then(res => {
-        //     setPostcodes(res.data);
-        //     setProvinces([...new Set(res.data.map(postcode => postcode.province))].sort());
-        // }).catch(error => {
-        //     console.log(error)
-        // });
     }, []);
 
     
@@ -352,10 +449,6 @@ const RegisterForm = (props) => {
         if (date != '') {
             setErrors(errors.filter(e => e != 'exp_date'));
         }
-    }
-
-    const handleChangeRaw = (raw) => {
-        console.log(`raw => ${raw}`);
     }
 
     const handleProvinceChange = (event, addrType) => {
@@ -443,11 +536,25 @@ const RegisterForm = (props) => {
 
     const addDebtDtl = (event, debtType) => {
         event.preventDefault();
-        const newDebtDtl = [...member[`debt_type_${debtType}_dtl`], {
-            desc: '',
-            total_amount: 0,
-            remaining_amount: 0,
+
+        let newDebtDtl = [...member[`debt_type_${debtType}_dtl`], {
+            bank_name: '',
+            bank_branch: '',
+            contact: '',
+            contract_no: '',
+            contract_date: '',
+            tmp_contract_date: '',
+            status: 'ปกติ',
+            other_status: '',
+            total_amount: '',
+            remaining_amount: '',
+            date_1: '',
+            tmp_date_1: '',
+            date_2: '',
+            tmp_date_2: '',
+            interest: '',
         }];
+
 
         setMember(prevState => {
             return {
@@ -459,7 +566,8 @@ const RegisterForm = (props) => {
 
     const removeDebtDtl = (event, debtType, index) => {
         event.preventDefault();
-        const newDebtDtl = [...member[`debt_type_${debtType}_dtl`]];
+
+        let newDebtDtl = [...member[`debt_type_${debtType}_dtl`]];
         newDebtDtl.splice(index, 1);
 
         setMember(prevState => {
@@ -478,9 +586,41 @@ const RegisterForm = (props) => {
         });
     }
 
+    const handleErrClass = (fieldName) => {
+        return errors.includes(fieldName)? 'is-invalid': '';
+    }
+
+    const handleDebtDateChange = (date, debtType, index, name, tmpName) => {
+        let selectedDate = new Date(date);
+        let tmpDate = `${selectedDate.getDate()}/${selectedDate.getMonth() + 1}/${selectedDate.getFullYear()}`;
+
+        if (date != '') {
+            setErrors(errors.filter(e => e != `${debtType}_${index}_${name}`));
+        }
+
+        let newDebtDtl = [...member[`debt_type_${debtType}_dtl`]];
+        newDebtDtl[index][name] = tmpDate;
+        newDebtDtl[index][tmpName] = date;
+
+        setMember(prevState => {
+            return {
+                ...prevState,
+                [`debt_type_${debtType}_dtl`]: newDebtDtl
+            }
+        });
+    }
+
     const handleDebtDtlChange = (event, debtType, index) => {
         const newDebtDtl = [...member[`debt_type_${debtType}_dtl`]];
         newDebtDtl[index][event.target.name] = event.target.value;
+
+        if (event.target.name == 'status' && event.target.value != 'อื่นๆ') {
+            newDebtDtl[index]['other_status'] = '';
+        }
+
+        if (event.target.value != '') {
+            setErrors(errors.filter(e => e != `${debtType}_${index}_${event.target.name}`));
+        }
 
         setMember(prevState => {
             return {
@@ -490,7 +630,7 @@ const RegisterForm = (props) => {
         });
 
         if (event.target.name === 'remaining_amount') {
-            const remainingAmount = newDebtDtl.reduce((acc, curr) => { return acc + parseFloat(curr.remaining_amount) }, 0);
+            const remainingAmount = newDebtDtl.reduce((acc, curr) => { return acc + parseFloat(curr.remaining_amount ? curr.remaining_amount: 0) }, 0);
             setMember(prevState => {
                 return {
                     ...prevState,
@@ -504,7 +644,10 @@ const RegisterForm = (props) => {
         const newDocs = [...member.docs, {
             name: '',
             desc: '',
+            is_required: false,
+            del_btn: true,
             original_name: '',
+            is_error: false,
         }];
 
         setMember(prevState => {
@@ -553,6 +696,7 @@ const RegisterForm = (props) => {
         });
 
         newDocs[index].original_name = event.target.files[0].name;
+        newDocs[index].is_error = false;
         
         setMember(prevState => {
             return {
@@ -582,10 +726,48 @@ const RegisterForm = (props) => {
             });
         }
 
+        // [1,2,3,4].map(i => {
+        //     member[`debt_type_${i}_dtl`].map((dtl, index) => {
+        //         let reqLst = ['bank_name', 'bank_branch', 'contact', 'contract_no', 'contract_date', 'total_amount', 'remaining_amount', 'date_1', 'date_2'];
+        //         if (i == 3) {
+        //             reqLst = ['bank_name', 'contact', 'contract_date', 'total_amount', 'interest', 'remaining_amount', 'date_1', 'date_2'];
+        //         }
+        //         reqLst.map(r => {
+        //             if (!dtl[r]) {
+        //                 setErrors(prevState => {
+        //                     return [...prevState, `${i}_${index}_${r}`]
+        //                 });
+        //             }
+        //         });
+        //     });
+        // });
+
+        member.docs.map((doc,index) => {
+            if (doc.is_required && doc.name == '') {
+                numberOfErrors += 1;
+                let newDocs = [...member.docs];
+                newDocs[index].is_error = true;
+
+                setMember(prevState => {
+                    return {
+                        ...prevState,
+                        docs: newDocs
+                    }
+                });
+            }
+        });
+
         if (numberOfErrors > 0) {
             swal('เกิดข้อผิดพลาด', 'กรุณากรอกข้อมูลให้ครบถ้วน', 'error');
             return;
+        } else {
+            // show modal for confirm save data
+            setShowConfModal(true);
         }
+    }
+
+    const handleConfSave = (event) => {
+        event.preventDefault();
 
         swal({
             icon: 'info',
@@ -667,6 +849,732 @@ const RegisterForm = (props) => {
                     <Button variant="success" onClick={handleClose}>ยืนยัน</Button>
                 </Modal.Footer>
             </Modal>
+            <Modal backdrop="static" keyboard={false} show={showConfModal} size="xl">
+                <Modal.Header>
+                    <Modal.Title>ข้อมูลผู้สมัคร</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <fieldset>
+                        <h4 className="mb-3">ข้อมูลส่วนตัว</h4>
+                        <div className="form-row">
+                            <div className="form-group col-2">
+                                <label>จังหวัดสังกัดสมาชิก</label>
+                                <input type="text" className="form-control" value={member.receipt_province || ''} readOnly/>
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group col-2">
+                                <label>คำนำหน้า</label>
+                                <input type="text" className="form-control" value={member.title || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-2">
+                                <label>อื่นๆ (โปรดระบุ)</label>
+                                <input type="text" className="form-control" value={member.other_title || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-4">
+                                <label>ชื่อ</label>
+                                <input type="text" className="form-control" value={member.firstname || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-4">
+                                <label>นามสกุล</label>
+                                <input type="text" className="form-control" value={member.lastname || ''} readOnly/>
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group col-3">
+                                <label>บัตรประจำตัวประชาชนเลขที่</label>
+                                <input type="text" className="form-control" value={member.id_card_no || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-3">
+                                <label>บัตรข้าราชการ/บัตรพนักงานรัฐวิสาหกิจ</label>
+                                <input type="text" className="form-control" value={member.emp_card_no || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-2">
+                                <label>วันหมดอายุ</label>
+                                <input type="text" className="form-control" value={member.exp_date || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-1">
+                                <label>อายุ</label>
+                                <input type="text" className="form-control" value={member.age || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-1">
+                                <label>สัญชาติ</label>
+                                <input type="text" className="form-control" value={member.nationality || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-2">
+                                <label>โทรศัพท์</label>
+                                <input type="text" className="form-control" value={member.mobile || ''} readOnly/>
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group col-3">
+                                <label>เป็นบุคคลล้มละลายหรือไม่</label>
+                                <input type="text" className="form-control" value={member.is_bankrupt || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-3">
+                                <label>คนไร้ความสามารถ</label>
+                                <input type="text" className="form-control" value={member.is_incompetent_person || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-3">
+                                <label>ทุพพลภาพถาวร</label>
+                                <input type="text" className="form-control" value={member.is_permanent_disability || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-3">
+                                <label>คนเสมือนไร้ความสามารถ</label>
+                                <input type="text" className="form-control" value={member.is_quasi_incompetent_person || ''} readOnly/>
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group col-2">
+                                <label>สถานภาพสมรส</label>
+                                <input type="text" className="form-control" value={member.marital_status || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-2">
+                                <label>จำนวนบุตร</label>
+                                <input type="text" className="form-control" value={member.number_of_children || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-2">
+                                <label>จำนวนบุตรที่กำลังศึกษาอยู่</label>
+                                <input type="text" className="form-control" value={member.number_of_children_study || ''} readOnly/>
+                            </div>
+                        </div>
+                        <h4 className="mb-3">ข้อมูลคู่สมรส</h4>
+                        <div className="form-row">
+                            <div className="form-group col-2">
+                                <label>คำนำหน้า</label>
+                                <input type="text" className="form-control" value={member.spouse_title || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-2">
+                                <label>อื่นๆ (โปรดระบุ)</label>
+                                <input type="text" className="form-control" value={member.other_spouse_title || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-4">
+                                <label>ชื่อ</label>
+                                <input type="text" className="form-control" value={member.spouse_firstname || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-4">
+                                <label>นามสกุล</label>
+                                <input type="text" className="form-control" value={member.spouse_lastname || ''} readOnly/>
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group col-3">
+                                <label>บัตรประจำตัวประชาชนเลขที่</label>
+                                <input type="text" className="form-control" value={member.spouse_id_card_no || ''} readOnly/>
+                            </div>
+                        </div>
+                        <h4 className="mb-3">ที่อยู่ตามทะเบียนบ้าน</h4>
+                        <div className="form-row">
+                            <div className="form-group col-2">
+                                <label>บ้านเลขที่</label>
+                                <input type="text" className="form-control" value={member.house_no || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-2">
+                                <label>หมู่ที่</label>
+                                <input type="text" className="form-control" value={member.moo || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-3">
+                                <label>ตรอก/ซอย</label>
+                                <input type="text" className="form-control" value={member.soi || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-5">
+                                <label>ถนน</label>
+                                <input type="text" className="form-control" value={member.street || ''} readOnly/>
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group col-2">
+                                <label>จังหวัด</label>
+                                <input type="text" className="form-control" value={member.province || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-4">
+                                <label>อำเภอ/เขต</label>
+                                <input type="text" className="form-control" value={member.district || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-4">
+                                <label>ตำบล/แขวง</label>
+                                <input type="text" className="form-control" value={member.sub_district || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-2">
+                                <label>รหัสไปรษณีย์</label>
+                                <input type="text" className="form-control" value={member.post_code || ''} readOnly/>
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group col-2">
+                                <label>โทรศัพท์</label>
+                                <input type="text" className="form-control" value={member.tel || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-2">
+                                <label>โทรสาร</label>
+                                <input type="text" className="form-control" value={member.fax || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-2">
+                                <label>อีเมล</label>
+                                <input type="text" className="form-control" value={member.mail || ''} readOnly/>
+                            </div>
+                        </div>
+                        <h4 className="mb-3">ที่อยู่จัดส่งเอกสาร</h4>
+                        <div className="form-row">
+                            <div className="form-group col-2">
+                                <label>บ้านเลขที่</label>
+                                <input type="text" className="form-control" value={member.mship_house_noail || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-2">
+                                <label>หมู่ที่ </label>
+                                <input type="text" className="form-control" value={member.ship_moo || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-3">
+                                <label>ตรอก/ซอย</label>
+                                <input type="text" className="form-control" value={member.ship_soi || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-5">
+                                <label>ถนน</label>
+                                <input type="text" className="form-control" value={member.ship_street || ''} readOnly/>
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group col-2">
+                                <label>จังหวัด</label>
+                                <input type="text" className="form-control" value={member.ship_province || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-4">
+                                <label>อำเภอ/เขต</label>
+                                <input type="text" className="form-control" value={member.ship_district || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-4">
+                                <label>ตำบล/แขวง</label>
+                                <input type="text" className="form-control" value={member.ship_sub_district || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-2">
+                                <label>รหัสไปรษณีย์</label>
+                                <input type="text" className="form-control" value={member.ship_postcode || ''} readOnly/>
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group col-3">
+                                <label>โทรศัพท์</label>
+                                <input type="text" className="form-control" value={member.ship_tel || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-3">
+                                <label>อีเมล</label>
+                                <input type="text" className="form-control" value={member.ship_mail || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-3">
+                                <label>ID Line</label>
+                                <input type="text" className="form-control" value={member.ship_line || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-3">
+                                <label>Facebook</label>
+                                <input type="text" className="form-control" value={member.ship_fb || ''} readOnly/>
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group col-3">
+                                <label>ที่อยู่อาศัยปัจจุบัน</label>
+                                <input type="text" className="form-control" value={member.house_type || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-2">
+                                <label>ผ่อนชำระ/ค่าเช่า (ต่อเดือน)</label>
+                                <input type="text" className="form-control" value={member.cost_per_month || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-2">
+                                <label>อาศัยอยู่เป็นเวลา (ปี)</label>
+                                <input type="text" className="form-control" value={member.house_year || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-3">
+                                <label>ระดับการศึกษาสูงสุด</label>
+                                <input type="text" className="form-control" value={member.education_level || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-2">
+                                <label>อื่นๆ (โปรดระบุ)</label>
+                                <input type="text" className="form-control" value={member.other_education_level || ''} readOnly/>
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group col-3">
+                                <label>สาขาอาชีพ</label>
+                                <input type="text" className="form-control" value={member.career || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-2">
+                                <label>อื่นๆ (โปรดระบุ)</label>
+                                <input type="text" className="form-control" value={member.other_career || ''} readOnly/>
+                            </div>
+                        </div>
+                        <h4 className="mb-3">รายได้</h4>
+                        <div className="form-row">
+                            <div className="form-group col-2">
+                                <label>รายได้ประจำ</label>
+                                <input type="text" className="form-control" value={member.income_type || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-2">
+                                <label>จำนวน (บาท/เดือน)</label>
+                                <input type="text" className="form-control" value={member.income_amount || ''} readOnly/>
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group col-2">
+                                <label>รายได้อื่นๆ</label>
+                                <input type="text" className="form-control" value={member.other_income_type || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-2">
+                                <label>อื่นๆ (โปรดระบุ)</label>
+                                <input type="text" className="form-control" value={member.other_income || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-2">
+                                <label>จำนวน (บาท/เดือน)</label>
+                                <input type="text" className="form-control" value={member.other_income_amount || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-2">
+                                <label>แหล่งที่มา</label>
+                                <input type="text" className="form-control" value={member.source_other_income || ''} readOnly/>
+                            </div>
+                        </div>
+                        <h4 className="mb-3">ภาระหนี้กับสถาบันการเงิน/บริษัท/หนี้นอกระบบ</h4>
+                        {/* ########## Debt Type 1 ########## */}
+                        <h5 className="mb-3">1.หนี้สินในระบบแบบถูกกฏหมาย</h5>
+                        <div className="form-group row">
+                            <label className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
+                            <div className="col-4">
+                                <input type="number" className="form-control" name="debt_type_1" value={member.debt_type_1 || 0} readOnly/>
+                            </div>
+                            <label className="col-2 col-form-label">บาท</label>
+                        </div>
+                        {member.debt_type_1_dtl.map((dtl,i) => (
+                        <fieldset key={i}>
+                            <div className="form-row">
+                                <div className="form-group col-6">
+                                    <strong>รายการที่ 1.{ i + 1 }</strong>
+                                </div>
+                            </div>
+                            <div className="form-row">
+                                <div className="form-group col-3">
+                                    <label>สถาบันการเงิน</label>
+                                    <input type="text" className="form-control" value={dtl.bank_name || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-3">
+                                    <label>สาขา</label>
+                                    <input type="text" className="form-control" value={dtl.bank_branch || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>เบอร์โทรศัพท์</label>
+                                    <input type="text" className="form-control" value={dtl.contact || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>เลขที่สัญญา</label>
+                                    <input type="text" className="form-control" value={dtl.contract_no || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>วันที่ลงสัญญา</label>
+                                    <input type="text" className="form-control" value={dtl.contract_date || ''} readOnly/>
+                                </div>
+                            </div>
+                            <div className="form-row">
+                                <div className="form-group col-2">
+                                    <label>จำนวนเงินที่กู้</label>
+                                    <input type="text" className="form-control" value={dtl.total_amount || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>จำนวนหนี้คงเหลือ</label>
+                                    <input type="text" className="form-control" value={dtl.remaining_amount || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>สถานะหนี้</label>
+                                    <input type="text" className="form-control" value={dtl.status || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>อื่นๆ (โปรดระบุ)</label>
+                                    <input type="text" className="form-control" value={dtl.other_status || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>วันที่ถูกฟ้องต่อศาล</label>
+                                    <input type="text" className="form-control" value={dtl.date_1 || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>วันที่ถูกบังคับคดี</label>
+                                    <input type="text" className="form-control" value={dtl.date_2 || ''} readOnly/>
+                                </div>
+                            </div>
+                        </fieldset>
+                        ))}
+                        {/* ########## Debt Type 2 ########## */}
+                        <h5 className="mb-3">2.หนี้สินนอกระบบแบบถูกกฏหมาย</h5>
+                        <div className="form-group row">
+                            <label className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
+                            <div className="col-4">
+                                <input type="number" className="form-control" value={member.debt_type_2 || 0} readOnly/>
+                            </div>
+                            <label className="col-2 col-form-label">บาท</label>
+                        </div>
+                        {member.debt_type_2_dtl.map((dtl,i) => (
+                        <fieldset key={i}>
+                            <div className="form-row">
+                                <div className="form-group col-6">
+                                    <strong>รายการที่ 2.{ i + 1 }</strong>
+                                </div>
+                            </div>
+                            <div className="form-row">
+                                <div className="form-group col-3">
+                                    <label>สถาบันการเงิน</label>
+                                    <input type="text" className="form-control" value={dtl.bank_name || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-3">
+                                    <label>สาขา</label>
+                                    <input type="text" className="form-control" value={dtl.bank_branch || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>เบอร์โทรศัพท์</label>
+                                    <input type="text" className="form-control" value={dtl.contact || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>เลขที่สัญญา</label>
+                                    <input type="text" className="form-control" value={dtl.contract_no || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>วันที่ลงสัญญา</label>
+                                    <input type="text" className="form-control" value={dtl.contract_date || ''} readOnly/>
+                                </div>
+                            </div>
+                            <div className="form-row">
+                                <div className="form-group col-2">
+                                    <label>จำนวนเงินที่กู้</label>
+                                    <input type="text" className="form-control" value={dtl.total_amount || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>จำนวนหนี้คงเหลือ</label>
+                                    <input type="text" className="form-control" value={dtl.remaining_amount || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>สถานะหนี้</label>
+                                    <input type="text" className="form-control" value={dtl.status || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>อื่นๆ (โปรดระบุ)</label>
+                                    <input type="text" className="form-control" value={dtl.other_status || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>วันที่ถูกฟ้องต่อศาล</label>
+                                    <input type="text" className="form-control" value={dtl.date_1 || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>วันที่ถูกบังคับคดี</label>
+                                    <input type="text" className="form-control" value={dtl.date_2 || ''} readOnly/>
+                                </div>
+                            </div>
+                        </fieldset>
+                        ))}
+                        {/* ########## Debt Type 3 ########## */}
+                        <h5 className="mb-3">3.หนี้สินนอกระบบแบบผิดกฏหมาย</h5>
+                        <div className="form-group row">
+                            <label className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
+                            <div className="col-4">
+                                <input type="number" className="form-control" name="debt_type_3" value={member.debt_type_3 || 0} readOnly/>
+                            </div>
+                            <label className="col-2 col-form-label">บาท</label>
+                        </div>
+                        {member.debt_type_3_dtl.map((dtl,i) => (
+                        <fieldset key={i}>
+                            <div className="form-row">
+                                <div className="form-group col-6">
+                                    <strong>รายการที่ 3.{ i + 1 }</strong>
+                                </div>
+                            </div>
+                            <div className="form-row">
+                                <div className="form-group col-2">
+                                    <label>กู้ยืมเงินจาก</label>
+                                    <input type="text" className="form-control" value={dtl.bank_name || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>เบอร์โทรศัพท์</label>
+                                    <input type="text" className="form-control" value={dtl.contact || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>กู้ยืมเงินลงวันที่</label>
+                                    <input type="text" className="form-control" value={dtl.contract_date || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>จำนวนเงินที่กู้</label>
+                                    <input type="text" className="form-control" value={dtl.total_amount || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>ดอกเบี้ยร้อยละ</label>
+                                    <input type="text" className="form-control" value={dtl.interest || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>จำนวนหนี้คงเหลือ</label>
+                                    <input type="text" className="form-control" value={dtl.remaining_amount || ''} readOnly/>
+                                </div>
+                            </div>
+                            <div className="form-row">
+                                <div className="form-group col-2">
+                                    <label>สถานะหนี้</label>
+                                    <input type="text" className="form-control" value={dtl.status || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>อื่นๆ (โปรดระบุ)</label>
+                                    <input type="text" className="form-control" value={dtl.other_status || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>วันที่ถูกฟ้องต่อศาล</label>
+                                    <input type="text" className="form-control" value={dtl.date_1 || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>วันที่ถูกบังคับคดี</label>
+                                    <input type="text" className="form-control" value={dtl.date_2 || ''} readOnly/>
+                                </div>
+                            </div>
+                        </fieldset>
+                        ))}
+                        {/* ########## Debt Type 4 ########## */}
+                        <h5 className="mb-3">4.หนี้สินแบบสหกรณ์</h5>
+                        <div className="form-group row">
+                            <label className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
+                            <div className="col-4">
+                                <input type="number" className="form-control" value={member.debt_type_4 || 0} readOnly/>
+                            </div>
+                            <label className="col-2 col-form-label">บาท</label>
+                        </div>
+                        {member.debt_type_4_dtl.map((dtl,i) => (
+                        <fieldset key={i}>
+                            <div className="form-row">
+                                <div className="form-group col-6">
+                                    <strong>รายการที่ 4.{ i + 1 }</strong>
+                                </div>
+                            </div>
+                            <div className="form-row">
+                                <div className="form-group col-3">
+                                    <label>สหกรณ์</label>
+                                    <input type="text" className="form-control" value={dtl.bank_name || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-3">
+                                    <label>สาขา</label>
+                                    <input type="text" className="form-control" value={dtl.bank_branch || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>เบอร์โทรศัพท์</label>
+                                    <input type="text" className="form-control" value={dtl.contact || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>เลขที่สัญญา</label>
+                                    <input type="text" className="form-control" value={dtl.contract_no || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>วันที่ลงสัญญา</label>
+                                    <input type="text" className="form-control" value={dtl.contract_date || ''} readOnly/>
+                                </div>
+                            </div>
+                            <div className="form-row">
+                                <div className="form-group col-2">
+                                    <label>จำนวนเงินที่กู้</label>
+                                    <input type="text" className="form-control" value={dtl.total_amount || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>จำนวนหนี้คงเหลือ</label>
+                                    <input type="text" className="form-control" value={dtl.remaining_amount || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>สถานะหนี้</label>
+                                    <input type="text" className="form-control" value={dtl.status || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>อื่นๆ (โปรดระบุ)</label>
+                                    <input type="text" className="form-control" value={dtl.other_status || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>วันที่ถูกฟ้องต่อศาล</label>
+                                    <input type="text" className="form-control" value={dtl.date_1 || ''} readOnly/>
+                                </div>
+                                <div className="form-group col-2">
+                                    <label>วันที่ถูกบังคับคดี</label>
+                                    <input type="text" className="form-control" value={dtl.date_2 || ''} readOnly/>
+                                </div>
+                            </div>
+                        </fieldset>
+                        ))}
+                        <h4 className="mb-3">สถานทีทำงาน</h4>
+                        <div className="form-row">
+                            <div className="form-group col-4">
+                                <label>ชื่อสถานที่ทำงาน</label>
+                                <input type="text" className="form-control" value={member.workplace || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-4">
+                                <label>อาคาร</label>
+                                <input type="text" className="form-control" value={member.building || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-1">
+                                <label>ชั้น</label>
+                                <input type="text" className="form-control" value={member.floor || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-3">
+                                <label>แผนก/ฝ่าย</label>
+                                <input type="text" className="form-control" value={member.department || ''} readOnly/>
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group col-2">
+                                <label>เลขที่</label>
+                                <input type="text" className="form-control" value={member.workplace_no || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-2">
+                                <label>หมู่ที่</label>
+                                <input type="text" className="form-control" value={member.workplace_moo || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-3">
+                                <label>ตรอก/ซอย</label>
+                                <input type="text" className="form-control" value={member.workplace_soi || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-5">
+                                <label>ถนน</label>
+                                <input type="text" className="form-control" value={member.workplace_street || ''} readOnly/>
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group col-2">
+                                <label>จังหวัด</label>
+                                <input type="text" className="form-control" value={member.workplace_province || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-4">
+                                <label>อำเภอ/เขต</label>
+                                <input type="text" className="form-control" value={member.workplace_district || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-4">
+                                <label>ตำบล/แขวง</label>
+                                <input type="text" className="form-control" value={member.workplace_sub_district || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-2">
+                                <label>รหัสไปรษณีย์</label>
+                                <input type="text" className="form-control" value={member.workplace_postcode || ''} readOnly/>
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group col-2">
+                                <label>โทรศัพท์</label>
+                                <input type="text" className="form-control" value={member.workplace_tel || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-2">
+                                <label>โทรสาร</label>
+                                <input type="text" className="form-control" value={member.workplace_fax || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-2">
+                                <label>อายุงานปัจจุบัน (ปี/เดือน)</label>
+                                <input type="text" className="form-control" value={member.work_exp || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-6">
+                                <label>ชื่อตำแหน่งงาน</label>
+                                <input type="text" className="form-control" value={member.job_position || ''} readOnly/>
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group col-12">
+                                <label>กรณีที่ผู้มีรายได้ประจำ อายุงานไม่ถึง 6 เดือน โปรดระบุชื่อสถานที่ทำงานเดิม</label>
+                                <input type="text" className="form-control" value={member.old_workplace || ''} readOnly/>
+                            </div>
+                        </div>
+                        <h4 className="mb-3">ผู้รับโอนผลประโยชน์ของข้าพเจ้า</h4>
+                        <div className="form-row">
+                            <div className="form-group col-2">
+                                <label>คำนำหน้า</label>
+                                <input type="text" className="form-control" value={member.benef_title || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-2">
+                                <label>อื่นๆ (โปรดระบุ)</label>
+                                <input type="text" className="form-control" value={member.benef_other_title || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-4">
+                                <label>ชื่อ</label>
+                                <input type="text" className="form-control" value={member.benef_firstname || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-4">
+                                <label>นามสกุล</label>
+                                <input type="text" className="form-control" value={member.benef_lastname || ''} readOnly/>
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group col-3">
+                                <label>บัตรประจำตัวประชาชนเลขที่</label>
+                                <input type="text" className="form-control" value={member.benef_id_card_no || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-3">
+                                <label>มีความสัมพันธ์เป็น</label>
+                                <input type="text" className="form-control" value={member.benef_relationship || ''} readOnly/>
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group col-2">
+                                <label>เลขที่</label>
+                                <input type="text" className="form-control" value={member.benef_house_no || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-2">
+                                <label>หมู่ที่</label>
+                                <input type="text" className="form-control" value={member.benef_moo || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-3">
+                                <label>ตรอก/ซอย</label>
+                                <input type="text" className="form-control" value={member.benef_soi || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-5">
+                                <label>ถนน</label>
+                                <input type="text" className="form-control" value={member.benef_street || ''} readOnly/>
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group col-2">
+                                <label>จังหวัด</label>
+                                <input type="text" className="form-control" value={member.benef_province || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-4">
+                                <label>อำเภอ/เขต</label>
+                                <input type="text" className="form-control" value={member.benef_district || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-4">
+                                <label>ตำบล/แขวง</label>
+                                <input type="text" className="form-control" value={member.benef_sub_district || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-2">
+                                <label>รหัสไปรษณีย์</label>
+                                <input type="text" className="form-control" value={member.benef_postcode || ''} readOnly/>
+                            </div>
+                        </div>
+                        <div className="form-row">
+                            <div className="form-group col-2">
+                                <label>โทรศัพท์</label>
+                                <input type="text" className="form-control" value={member.benef_tel || ''} readOnly/>
+                            </div>
+                            <div className="form-group col-2">
+                                <label htmlFor="benef_fax">โทรสาร</label>
+                                <input type="text" className="form-control" value={member.benef_fax || ''} readOnly/>
+                            </div>
+                        </div>
+                        <h4 className="mb-3">เอกสารประกอบ</h4>
+                        <table className="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">รายการ</th>
+                                    <th scope="col">ไฟล์</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {member.docs.map((doc,i) => (
+                                <tr key={i}>
+                                    <td scope="row">{ i + 1 }</td>
+                                    <td>
+                                        <input type="text" className="form-control" value={doc.desc} readOnly/>
+                                    </td>
+                                    <td>
+                                        {doc.name != '' && <a href={`/storage/uploads/${doc.name}`} target="_blank">เปิดไฟล์</a>}
+                                    </td>
+                                </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </fieldset>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="light" onClick={e => { e.preventDefault(); setShowConfModal(false); }}><i className="far fa-edit"></i> แก้ไขข้อมูล</Button>
+                    <Button variant="success" onClick={handleConfSave}><i className="fas fa-check-circle"></i> ยืนยันบันทึกข้อมูล</Button>
+                </Modal.Footer>
+            </Modal>
             <h4 className="mb-3">ข้อมูลส่วนตัว</h4>
             <div className="form-row">
                 <div className="form-group col-2">
@@ -680,33 +1588,21 @@ const RegisterForm = (props) => {
                         <option key={province} value={province}>{province}</option>
                         ))}
                     </select>
-                    {/* <div className="invalid-feedback">กรุณากรอกข้อมูลให้ครบถ้วน</div> */}
                 </div>
             </div>
             <div className="form-row">
                 <div className="form-group col-2">
-                    <label htmlFor="title">คำนำหน้า <span className="text-danger">*</span></label>
-                    <select className={`custom-select ${errors.includes('title')? 'is-invalid': ''}`}
-                        id="title" 
-                        name="title" 
-                        value={member.title || ''} 
-                        onChange={(e) => handleSelectChange(e, 'อื่นๆ', 'other_title')}>
+                    <label>คำนำหน้า <span className="text-danger">*</span></label>
+                    <select className={`custom-select ${errors.includes('title')? 'is-invalid': ''}`} name="title" value={member.title || ''} onChange={(e) => handleSelectChange(e, 'อื่นๆ', 'other_title')}>
                         <option>เลือก</option>
                         {['นาย', 'นาง', 'นางสาว', 'อื่นๆ'].map((title) => (
                         <option key={title} value={title}>{title}</option>
                         ))}
                     </select>
-                    {/* <div className="invalid-feedback">กรุณากรอกข้อมูลให้ครบถ้วน</div> */}
                 </div>
                 <div className="form-group col-2">
                     <label>อื่นๆ (โปรดระบุ)</label>
-                    <input type="text" 
-                        className={`form-control ${errors.includes('other_title')? 'is-invalid': ''}`} 
-                        name="other_title" 
-                        value={member.other_title || ''} 
-                        onChange={handleInputChange}
-                        disabled={disabledInput.other_title}/>
-                    {/* <div className="invalid-feedback">กรุณากรอกข้อมูลให้ครบถ้วน</div> */}
+                    <input type="text" className={`form-control ${errors.includes('other_title')? 'is-invalid': ''}`} name="other_title" value={member.other_title || ''}  onChange={handleInputChange} disabled={disabledInput.other_title}/>
                 </div>
                 <div className="form-group col-4">
                     <label htmlFor="firstname">ชื่อ <span className="text-danger">*</span></label>
@@ -1347,8 +2243,8 @@ const RegisterForm = (props) => {
                     <input type="number" 
                         className="form-control" 
                         id="other_income_amount" 
-                        name="other_income" 
-                        value={member.other_income_name || ''} 
+                        name="other_income_amount" 
+                        value={member.other_income_amount} 
                         onChange={handleInputChange}/>
                 </div>
                 <div className="form-group col-2">
@@ -1362,257 +2258,314 @@ const RegisterForm = (props) => {
                 </div>
             </div>
             <h4 className="mb-3">ภาระหนี้กับสถาบันการเงิน/บริษัท/หนี้นอกระบบ</h4>
+            {/* ########## Debt Type 1 ########## */}
             <h5 className="mb-3">1.หนี้สินในระบบแบบถูกกฏหมาย</h5>
             <div className="form-group row">
-                <label htmlFor="staticEmail" className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
+                <label className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
                 <div className="col-4">
-                    <input type="number" 
-                        className="form-control"
-                        id="debt_type_1" 
-                        name="debt_type_1" 
-                        value={member.debt_type_1 || 0} 
-                        onChange={handleInputChange}
-                        readOnly/>
+                    <input type="number" className="form-control" name="debt_type_1" value={member.debt_type_1 || 0} readOnly/>
                 </div>
                 <label className="col-2 col-form-label">บาท</label>
             </div>
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">รายการ</th>
-                        <th scope="col">จำนวนเงินที่กู้</th>
-                        <th scope="col">จำนวนหนี้คงเหลือ</th>
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {member.debt_type_1_dtl.map((dtl,i) => (
-                    <tr key={i}>
-                        <td scope="row">{ i + 1 }</td>
-                        <td>
-                            <input type="text" 
-                                className="form-control" 
-                                name="desc"
-                                value={dtl.desc}
-                                onChange={e => handleDebtDtlChange(e, 1, i)}/>
-                        </td>
-                        <td>
-                            <input type="number" 
-                                className="form-control" 
-                                name="total_amount" 
-                                min="0" 
-                                value={dtl.total_amount}
-                                onChange={e => handleDebtDtlChange(e, 1, i)}/>
-                        </td>
-                        <td>
-                            <input type="number" 
-                                className="form-control" 
-                                name="remaining_amount" 
-                                min="0" 
-                                value={dtl.remaining_amount}
-                                onChange={e => handleDebtDtlChange(e, 1, i)}/>
-                        </td>
-                        <td>
-                            <a className="btn btn-link" onClick={e => removeDebtDtl(e, 1, i)}>ลบรายการนี้</a>
-                        </td>
-                    </tr>
-                    ))}
-                    <tr>
-                        <td colSpan="5">
-                            <a className="btn btn-link" onClick={e => addDebtDtl(e, 1)}>เพิ่มรายการ</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            {member.debt_type_1_dtl.map((dtl,i) => (
+            <fieldset key={i}>
+                <div className="form-row">
+                    <div className="form-group col-6">
+                        <strong>รายการที่ 1.{ i + 1 }</strong>
+                    </div>
+                    <div className="form-group col-6 text-right">
+                        <button type="button" className="btn btn-outline-danger" onClick={e => removeDebtDtl(e, 1, i)}><i className="far fa-trash-alt"></i> ลบรายการนี้</button>
+                    </div>
+                </div>
+                <div className="form-row">
+                    <div className="form-group col-3">
+                        <label>สถาบันการเงิน <span className="text-danger">*</span></label>
+                        <input type="text" className={`form-control ${handleErrClass(`1_${i}_bank_name`)}`} name="bank_name" value={dtl.bank_name || ''}  onChange={e => handleDebtDtlChange(e, 1, i)}/>
+                    </div>
+                    <div className="form-group col-3">
+                        <label>สาขา <span className="text-danger">*</span></label>
+                        <input type="text" className={`form-control ${handleErrClass(`1_${i}_bank_branch`)}`} name="bank_branch" value={dtl.bank_branch || ''}  onChange={e => handleDebtDtlChange(e, 1, i)}/>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>เบอร์โทรศัพท์ <span className="text-danger">*</span></label>
+                        <input type="text" className={`form-control ${handleErrClass(`1_${i}_contact`)}`} name="contact" value={dtl.contact || ''}  onChange={e => handleDebtDtlChange(e, 1, i)}/>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>เลขที่สัญญา <span className="text-danger">*</span></label>
+                        <input type="text" className={`form-control ${handleErrClass(`1_${i}_contract_no`)}`} name="contract_no" value={dtl.contract_no || ''}  onChange={e => handleDebtDtlChange(e, 1, i)}/>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>วันที่ลงสัญญา <span className="text-danger">*</span></label>
+                        <DatePicker className={`form-control ${handleErrClass(`1_${i}_contract_date`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_contract_date} onChange={(date) => handleDebtDateChange(date, 1, i, 'contract_date', 'tmp_contract_date')} minDate={new Date()} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"/>
+                    </div>
+                </div>
+                <div className="form-row">
+                    <div className="form-group col-2">
+                        <label>จำนวนเงินที่กู้ <span className="text-danger">*</span></label>
+                        <input type="number" className={`form-control ${handleErrClass(`1_${i}_total_amount`)}`} name="total_amount" value={dtl.total_amount || ''}  onChange={e => handleDebtDtlChange(e, 1, i)}/>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>จำนวนหนี้คงเหลือ <span className="text-danger">*</span></label>
+                        <input type="number" className={`form-control ${handleErrClass(`1_${i}_remaining_amount`)}`} name="remaining_amount" value={dtl.remaining_amount || ''}  onChange={e => handleDebtDtlChange(e, 1, i)}/>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>สถานะหนี้ <span className="text-danger">*</span></label>
+                        <select className="custom-select" name="status" value={dtl.status || ''} onChange={e => handleDebtDtlChange(e, 1, i)}>
+                            {debtStatusLst.map(debtStatus => (
+                            <option key={debtStatus} value={debtStatus}>{debtStatus}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>อื่นๆ (โปรดระบุ)</label>
+                        <input type="text" className={`form-control ${handleErrClass(`1_${i}_other_status`)}`} name="other_status" value={dtl.other_status || ''} onChange={e => handleDebtDtlChange(e, 1, i)} disabled={dtl.status != 'อื่นๆ'}/>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>วันที่ถูกฟ้องต่อศาล <span className="text-danger">*</span></label>
+                        <DatePicker className={`form-control ${handleErrClass(`1_${i}_date_1`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_date_1} onChange={(date) => handleDebtDateChange(date, 1, i, 'date_1', 'tmp_date_1')} minDate={new Date()} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"/>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>วันที่ถูกบังคับคดี <span className="text-danger">*</span></label>
+                        <DatePicker className={`form-control ${handleErrClass(`1_${i}_date_2`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_date_2} onChange={(date) => handleDebtDateChange(date, 1, i, 'date_2', 'tmp_date_2')} minDate={new Date()} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"/>
+                    </div>
+                </div>
+            </fieldset>
+            ))}
+            <div className="form-row">
+                <div className="form-group col-12">
+                    <button type="button" className="btn btn-light" onClick={e => addDebtDtl(e,1)}><i className="fas fa-plus-circle"></i> เพิ่มรายการ</button>
+                </div>
+            </div>
+            {/* ########## Debt Type 2 ########## */}
             <h5 className="mb-3">2.หนี้สินนอกระบบแบบถูกกฏหมาย</h5>
             <div className="form-group row">
-                <label htmlFor="staticEmail" className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
+                <label className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
                 <div className="col-4">
-                    <input type="number" 
-                        className="form-control"
-                        id="debt_type_2" 
-                        name="debt_type_2" 
-                        value={member.debt_type_2 || 0} 
-                        onChange={handleInputChange}
-                        disabled/>
+                    <input type="number" className="form-control" name="debt_type_2" value={member.debt_type_2 || 0} readOnly/>
                 </div>
                 <label className="col-2 col-form-label">บาท</label>
             </div>
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">รายการ</th>
-                        <th scope="col">จำนวนเงินที่กู้</th>
-                        <th scope="col">จำนวนหนี้คงเหลือ</th>
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {member.debt_type_2_dtl.map((dtl,i) => (
-                    <tr key={i}>
-                        <td scope="row">{ i + 1 }</td>
-                        <td>
-                            <input type="text" 
-                                className="form-control" 
-                                name="desc"
-                                value={dtl.desc}
-                                onChange={e => handleDebtDtlChange(e, 2, i)}/>
-                        </td>
-                        <td>
-                            <input type="number" 
-                                className="form-control" 
-                                name="total_amount" 
-                                min="0" 
-                                value={dtl.total_amount}
-                                onChange={e => handleDebtDtlChange(e, 2, i)}/>
-                        </td>
-                        <td>
-                            <input type="number" 
-                                className="form-control" 
-                                name="remaining_amount" 
-                                min="0" 
-                                value={dtl.remaining_amount}
-                                onChange={e => handleDebtDtlChange(e, 2, i)}/>
-                        </td>
-                        <td>
-                            <a className="btn btn-link" onClick={e => removeDebtDtl(e, 2, i)}>ลบรายการนี้</a>
-                        </td>
-                    </tr>
-                    ))}
-                    <tr>
-                        <td colSpan="5">
-                            <a className="btn btn-link" onClick={e => addDebtDtl(e, 2)}>เพิ่มรายการ</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            {member.debt_type_2_dtl.map((dtl,i) => (
+            <fieldset key={i}>
+                <div className="form-row">
+                    <div className="form-group col-6">
+                        <strong>รายการที่ 2.{ i + 1 }</strong>
+                    </div>
+                    <div className="form-group col-6 text-right">
+                        <button type="button" className="btn btn-outline-danger" onClick={e => removeDebtDtl(e, 2, i)}><i className="far fa-trash-alt"></i> ลบรายการนี้</button>
+                    </div>
+                </div>
+                <div className="form-row">
+                    <div className="form-group col-3">
+                        <label>สถาบันการเงิน <span className="text-danger">*</span></label>
+                        <input type="text" className={`form-control ${handleErrClass(`2_${i}_bank_name`)}`} name="bank_name" value={dtl.bank_name || ''}  onChange={e => handleDebtDtlChange(e, 2, i)}/>
+                    </div>
+                    <div className="form-group col-3">
+                        <label>สาขา <span className="text-danger">*</span></label>
+                        <input type="text" className={`form-control ${handleErrClass(`2_${i}_bank_branch`)}`} name="bank_branch" value={dtl.bank_branch || ''}  onChange={e => handleDebtDtlChange(e, 2, i)}/>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>เบอร์โทรศัพท์ <span className="text-danger">*</span></label>
+                        <input type="text" className={`form-control ${handleErrClass(`2_${i}_contact`)}`} name="contact" value={dtl.contact || ''}  onChange={e => handleDebtDtlChange(e, 2, i)}/>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>เลขที่สัญญา <span className="text-danger">*</span></label>
+                        <input type="text" className={`form-control ${handleErrClass(`2_${i}_contract_no`)}`} name="contract_no" value={dtl.contract_no || ''}  onChange={e => handleDebtDtlChange(e, 2, i)}/>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>วันที่ลงสัญญา <span className="text-danger">*</span></label>
+                        <DatePicker className={`form-control ${handleErrClass(`2_${i}_contract_date`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_contract_date} onChange={(date) => handleDebtDateChange(date, 2, i, 'contract_date', 'tmp_contract_date')} minDate={new Date()} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"/>
+                    </div>
+                </div>
+                <div className="form-row">
+                    <div className="form-group col-2">
+                        <label>จำนวนเงินที่กู้ <span className="text-danger">*</span></label>
+                        <input type="number" className={`form-control ${handleErrClass(`2_${i}_total_amount`)}`} name="total_amount" value={dtl.total_amount || ''}  onChange={e => handleDebtDtlChange(e, 2, i)}/>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>จำนวนหนี้คงเหลือ <span className="text-danger">*</span></label>
+                        <input type="number" className={`form-control ${handleErrClass(`2_${i}_remaining_amount`)}`} name="remaining_amount" value={dtl.remaining_amount || ''}  onChange={e => handleDebtDtlChange(e, 2, i)}/>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>สถานะหนี้ <span className="text-danger">*</span></label>
+                        <select className="custom-select" name="status" value={dtl.status || ''} onChange={e => handleDebtDtlChange(e, 2, i)}>
+                            {debtStatusLst.map(debtStatus => (
+                            <option key={debtStatus} value={debtStatus}>{debtStatus}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>อื่นๆ (โปรดระบุ)</label>
+                        <input type="text" className={`form-control ${handleErrClass(`2_${i}_other_status`)}`} name="other_status" value={dtl.other_status || ''} onChange={e => handleDebtDtlChange(e, 2, i)} disabled={dtl.status != 'อื่นๆ'}/>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>วันที่ถูกฟ้องต่อศาล <span className="text-danger">*</span></label>
+                        <DatePicker className={`form-control ${handleErrClass(`2_${i}_date_1`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_date_1} onChange={(date) => handleDebtDateChange(date, 2, i, 'date_1', 'tmp_date_1')} minDate={new Date()} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"/>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>วันที่ถูกบังคับคดี <span className="text-danger">*</span></label>
+                        <DatePicker className={`form-control ${handleErrClass(`2_${i}_date_2`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_date_2} onChange={(date) => handleDebtDateChange(date, 2, i, 'date_2', 'tmp_date_2')} minDate={new Date()} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"/>
+                    </div>
+                </div>
+            </fieldset>
+            ))}
+            <div className="form-row">
+                <div className="form-group col-12">
+                    <button type="button" className="btn btn-light" onClick={e => addDebtDtl(e,2)}><i className="fas fa-plus-circle"></i> เพิ่มรายการ</button>
+                </div>
+            </div>
+            {/* ########## Debt Type 3 ########## */}
             <h5 className="mb-3">3.หนี้สินนอกระบบแบบผิดกฏหมาย</h5>
             <div className="form-group row">
-                <label htmlFor="staticEmail" className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
+                <label className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
                 <div className="col-4">
-                    <input type="number" 
-                        className="form-control"
-                        id="debt_type_3" 
-                        name="debt_type_3" 
-                        value={member.debt_type_3 || 0} 
-                        onChange={handleInputChange}
-                        disabled/>
+                    <input type="number" className="form-control" name="debt_type_3" value={member.debt_type_3 || 0} readOnly/>
                 </div>
                 <label className="col-2 col-form-label">บาท</label>
             </div>
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">รายการ</th>
-                        <th scope="col">จำนวนเงินที่กู้</th>
-                        <th scope="col">จำนวนหนี้คงเหลือ</th>
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {member.debt_type_3_dtl.map((dtl,i) => (
-                    <tr key={i}>
-                        <td scope="row">{ i + 1 }</td>
-                        <td>
-                            <input type="text" 
-                                className="form-control" 
-                                name="desc"
-                                value={dtl.desc}
-                                onChange={e => handleDebtDtlChange(e, 3, i)}/>
-                        </td>
-                        <td>
-                            <input type="number" 
-                                className="form-control" 
-                                name="total_amount" 
-                                min="0" 
-                                value={dtl.total_amount}
-                                onChange={e => handleDebtDtlChange(e, 3, i)}/>
-                        </td>
-                        <td>
-                            <input type="number" 
-                                className="form-control" 
-                                name="remaining_amount" 
-                                min="0" 
-                                value={dtl.remaining_amount}
-                                onChange={e => handleDebtDtlChange(e, 3, i)}/>
-                        </td>
-                        <td>
-                            <a className="btn btn-link" onClick={e => removeDebtDtl(e, 3, i)}>ลบรายการนี้</a>
-                        </td>
-                    </tr>
-                    ))}
-                    <tr>
-                        <td colSpan="5">
-                            <a className="btn btn-link" onClick={e => addDebtDtl(e, 3)}>เพิ่มรายการ</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            {member.debt_type_3_dtl.map((dtl,i) => (
+            <fieldset key={i}>
+                <div className="form-row">
+                    <div className="form-group col-6">
+                        <strong>รายการที่ 3.{ i + 1 }</strong>
+                    </div>
+                    <div className="form-group col-6 text-right">
+                        <button type="button" className="btn btn-outline-danger" onClick={e => removeDebtDtl(e, 2, i)}><i className="far fa-trash-alt"></i> ลบรายการนี้</button>
+                    </div>
+                </div>
+                <div className="form-row">
+                    <div className="form-group col-2">
+                        <label>กู้ยืมเงินจาก <span className="text-danger">*</span></label>
+                        <input type="text" className={`form-control ${handleErrClass(`3_${i}_bank_name`)}`} name="bank_name" value={dtl.bank_name || ''}  onChange={e => handleDebtDtlChange(e, 3, i)}/>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>เบอร์โทรศัพท์ <span className="text-danger">*</span></label>
+                        <input type="text" className={`form-control ${handleErrClass(`3_${i}_contact`)}`} name="contact" value={dtl.contact || ''}  onChange={e => handleDebtDtlChange(e, 3, i)}/>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>กู้ยืมเงินลงวันที่ <span className="text-danger">*</span></label>
+                        <DatePicker className={`form-control ${handleErrClass(`3_${i}_contract_date`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_contract_date} onChange={(date) => handleDebtDateChange(date, 3, i, 'contract_date', 'tmp_contract_date')} minDate={new Date()} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"/>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>จำนวนเงินที่กู้ <span className="text-danger">*</span></label>
+                        <input type="number" className={`form-control ${handleErrClass(`3_${i}_total_amount`)}`} name="total_amount" value={dtl.total_amount || ''}  onChange={e => handleDebtDtlChange(e, 3, i)}/>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>ดอกเบี้ยร้อยละ <span className="text-danger">*</span></label>
+                        <input type="number" className={`form-control ${handleErrClass(`3_${i}_interest`)}`} name="interest" value={dtl.interest || ''}  onChange={e => handleDebtDtlChange(e, 3, i)}/>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>จำนวนหนี้คงเหลือ <span className="text-danger">*</span></label>
+                        <input type="number" className={`form-control ${handleErrClass(`3_${i}_remaining_amount`)}`} name="remaining_amount" value={dtl.remaining_amount || ''}  onChange={e => handleDebtDtlChange(e, 3, i)}/>
+                    </div>
+                </div>
+                <div className="form-row">
+                    <div className="form-group col-2">
+                        <label>สถานะหนี้ <span className="text-danger">*</span></label>
+                        <select className="custom-select" name="status" value={dtl.status || ''} onChange={e => handleDebtDtlChange(e, 3, i)}>
+                            {debtStatusLst.map(debtStatus => (
+                            <option key={debtStatus} value={debtStatus}>{debtStatus}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>อื่นๆ (โปรดระบุ)</label>
+                        <input type="text" className={`form-control ${handleErrClass(`3_${i}_other_status`)}`} name="other_status" value={dtl.other_status || ''} onChange={e => handleDebtDtlChange(e, 3, i)} disabled={dtl.status != 'อื่นๆ'}/>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>วันที่ถูกฟ้องต่อศาล <span className="text-danger">*</span></label>
+                        <DatePicker className={`form-control ${handleErrClass(`3_${i}_date_1`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_date_1} onChange={(date) => handleDebtDateChange(date, 3, i, 'date_1', 'tmp_date_1')} minDate={new Date()} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"/>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>วันที่ถูกบังคับคดี <span className="text-danger">*</span></label>
+                        <DatePicker className={`form-control ${handleErrClass(`3_${i}_date_2`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_date_2} onChange={(date) => handleDebtDateChange(date, 3, i, 'date_2', 'tmp_date_2')} minDate={new Date()} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"/>
+                    </div>
+                </div>
+            </fieldset>
+            ))}
+            <div className="form-row">
+                <div className="form-group col-12">
+                    <button type="button" className="btn btn-light" onClick={e => addDebtDtl(e, 3)}><i className="fas fa-plus-circle"></i> เพิ่มรายการ</button>
+                </div>
+            </div>
+            {/* ########## Debt Type 4 ########## */}
             <h5 className="mb-3">4.หนี้สินแบบสหกรณ์</h5>
             <div className="form-group row">
-                <label htmlFor="staticEmail" className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
+                <label className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
                 <div className="col-4">
-                    <input type="number" 
-                        className="form-control"
-                        id="debt_type_4" 
-                        name="debt_type_4" 
-                        value={member.debt_type_4 || 0} 
-                        onChange={handleInputChange}/>
+                    <input type="number" className="form-control" name="debt_type_4" value={member.debt_type_4 || 0} readOnly/>
                 </div>
                 <label className="col-2 col-form-label">บาท</label>
             </div>
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">รายการ</th>
-                        <th scope="col">จำนวนเงินที่กู้</th>
-                        <th scope="col">จำนวนหนี้คงเหลือ</th>
-                        <th scope="col"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {member.debt_type_4_dtl.map((dtl,i) => (
-                    <tr key={i}>
-                        <td scope="row">{ i + 1 }</td>
-                        <td>
-                            <input type="text" 
-                                className="form-control" 
-                                name="desc"
-                                value={dtl.desc}
-                                onChange={e => handleDebtDtlChange(e, 4, i)}/>
-                        </td>
-                        <td>
-                            <input type="number" 
-                                className="form-control" 
-                                name="total_amount" 
-                                min="0" 
-                                value={dtl.total_amount}
-                                onChange={e => handleDebtDtlChange(e, 4, i)}/>
-                        </td>
-                        <td>
-                            <input type="number" 
-                                className="form-control" 
-                                name="remaining_amount" 
-                                min="0" 
-                                value={dtl.remaining_amount}
-                                onChange={e => handleDebtDtlChange(e, 4, i)}/>
-                        </td>
-                        <td>
-                            <a className="btn btn-link" onClick={e => removeDebtDtl(e, 4, i)}>ลบรายการนี้</a>
-                        </td>
-                    </tr>
-                    ))}
-                    <tr>
-                        <td colSpan="5">
-                            <a className="btn btn-link" onClick={e => addDebtDtl(e, 4)}>เพิ่มรายการ</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            {member.debt_type_4_dtl.map((dtl,i) => (
+            <fieldset key={i}>
+                <div className="form-row">
+                    <div className="form-group col-6">
+                        <strong>รายการที่ 4.{ i + 1 }</strong>
+                    </div>
+                    <div className="form-group col-6 text-right">
+                        <button type="button" className="btn btn-outline-danger" onClick={e => removeDebtDtl(e, 4, i)}><i className="far fa-trash-alt"></i> ลบรายการนี้</button>
+                    </div>
+                </div>
+                <div className="form-row">
+                    <div className="form-group col-3">
+                        <label>สหกรณ์ <span className="text-danger">*</span></label>
+                        <input type="text" className={`form-control ${handleErrClass(`4_${i}_bank_name`)}`} name="bank_name" value={dtl.bank_name || ''}  onChange={e => handleDebtDtlChange(e, 4, i)}/>
+                    </div>
+                    <div className="form-group col-3">
+                        <label>สาขา <span className="text-danger">*</span></label>
+                        <input type="text" className={`form-control ${handleErrClass(`4_${i}_bank_branch`)}`} name="bank_branch" value={dtl.bank_branch || ''}  onChange={e => handleDebtDtlChange(e, 4, i)}/>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>เบอร์โทรศัพท์ <span className="text-danger">*</span></label>
+                        <input type="text" className={`form-control ${handleErrClass(`4_${i}_contact`)}`} name="contact" value={dtl.contact || ''}  onChange={e => handleDebtDtlChange(e, 4, i)}/>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>เลขที่สัญญา <span className="text-danger">*</span></label>
+                        <input type="text" className={`form-control ${handleErrClass(`4_${i}_contract_no`)}`} name="contract_no" value={dtl.contract_no || ''}  onChange={e => handleDebtDtlChange(e, 4, i)}/>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>วันที่ลงสัญญา <span className="text-danger">*</span></label>
+                        <DatePicker className={`form-control ${handleErrClass(`4_${i}_contract_date`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_contract_date} onChange={(date) => handleDebtDateChange(date, 4, i, 'contract_date', 'tmp_contract_date')} minDate={new Date()} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"/>
+                    </div>
+                </div>
+                <div className="form-row">
+                    <div className="form-group col-2">
+                        <label>จำนวนเงินที่กู้ <span className="text-danger">*</span></label>
+                        <input type="number" className={`form-control ${handleErrClass(`4_${i}_total_amount`)}`} name="total_amount" value={dtl.total_amount || ''}  onChange={e => handleDebtDtlChange(e, 4, i)}/>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>จำนวนหนี้คงเหลือ <span className="text-danger">*</span></label>
+                        <input type="number" className={`form-control ${handleErrClass(`4_${i}_remaining_amount`)}`} name="remaining_amount" value={dtl.remaining_amount || ''}  onChange={e => handleDebtDtlChange(e, 4, i)}/>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>สถานะหนี้ <span className="text-danger">*</span></label>
+                        <select className="custom-select" name="status" value={dtl.status || ''} onChange={e => handleDebtDtlChange(e, 4, i)}>
+                            {debtStatusLst.map(debtStatus => (
+                            <option key={debtStatus} value={debtStatus}>{debtStatus}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>อื่นๆ (โปรดระบุ)</label>
+                        <input type="text" className={`form-control ${handleErrClass(`4_${i}_other_status`)}`} name="other_status" value={dtl.other_status || ''} onChange={e => handleDebtDtlChange(e, 4, i)} disabled={dtl.status != 'อื่นๆ'}/>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>วันที่ถูกฟ้องต่อศาล <span className="text-danger">*</span></label>
+                        <DatePicker className={`form-control ${handleErrClass(`4_${i}_date_1`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_date_1} onChange={(date) => handleDebtDateChange(date, 4, i, 'date_1', 'tmp_date_1')} minDate={new Date()} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"/>
+                    </div>
+                    <div className="form-group col-2">
+                        <label>วันที่ถูกบังคับคดี <span className="text-danger">*</span></label>
+                        <DatePicker className={`form-control ${handleErrClass(`4_${i}_date_2`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_date_2} onChange={(date) => handleDebtDateChange(date, 4, i, 'date_2', 'tmp_date_2')} minDate={new Date()} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"/>
+                    </div>
+                </div>
+            </fieldset>
+            ))}
+            <div className="form-row">
+                <div className="form-group col-12">
+                    <button type="button" className="btn btn-light" onClick={e => addDebtDtl(e,4)}><i className="fas fa-plus-circle"></i> เพิ่มรายการ</button>
+                </div>
+            </div>
             <h4 className="mb-3">สถานทีทำงาน</h4>
             <div className="form-row">
                 <div className="form-group col-4">
@@ -1963,40 +2916,44 @@ const RegisterForm = (props) => {
                         onChange={handleInputChange}/>
                 </div>
             </div>
-            <h4 className="mb-3">เอกสารประกอบ <button type="button" className="btn btn-link" onClick={addDoc}>เพิ่มเอกสารประกอบ</button></h4>
-            {member.docs.map((doc,i) => (
-            <div className="form-row" key={i}>
-                <div className="form-group col-3">
-                    <label htmlFor="benef_title">คำอธิบาย</label>
-                    <input type="text" 
-                        className="form-control" 
-                        name="desc"
-                        value={doc.desc}
-                        onChange={e => handleDocChange(e, i)}/>
-                </div>
-                <div className="form-group col-3">
-                    <label htmlFor="benef_other_title">ไฟล์แนบ</label>
-                    <div className="custom-file">
-                        <input type="file" 
-                            className="custom-file-input" 
-                            id="customFile" 
-                            onChange={e => handleInputFileChange(e, i)}/>
-                        <label className="custom-file-label" htmlFor="customFile">เลือกไฟล์</label>
-                    </div>
-                </div>
-                <div className="form-group col-3">
-                    <label htmlFor="benef_other_title">ชื่อไฟล์</label>
-                    <input type="text" 
-                        className="form-control-plaintext"
-                        value={doc.original_name}
-                        readOnly/>
-                </div>
-                <div className="form-group col-3">
-                    <button type="button" className="btn btn-link mt-3" onClick={e => removeDoc(e, i)}>ลบเอกสารประกอบ</button>
+            <h4 className="mb-3">เอกสารประกอบ</h4>
+            <table className="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">รายการ</th>
+                        <th scope="col">เลือกไฟล์</th>
+                        <th scope="col">ชื่อไฟล์</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {member.docs.map((doc,i) => (
+                    <tr key={i}>
+                        <td scope="row">{ i + 1 } { doc.is_required && <span className="text-danger">*</span>}</td>
+                        <td>
+                            <input type="text" className={`form-control ${doc.is_error? 'is-invalid': ''}`} name="desc" value={doc.desc} onChange={e => handleDocChange(e, i)} readOnly={!doc.del_btn}/>
+                        </td>
+                        <td>
+                            <div className="custom-file">
+                                <input type="file" className="custom-file-input" onChange={e => handleInputFileChange(e, i)}/>
+                                <label className="custom-file-label" htmlFor="customFile">เลือกไฟล์</label>
+                            </div>
+                        </td>
+                        <td>{doc.original_name}</td>
+                        <td>
+                            { doc.del_btn && <a className="btn btn-link" onClick={e => removeDoc(e, i)}>ลบรายการนี้</a>}
+                        </td>
+                    </tr>
+                    ))}
+                </tbody>
+            </table>
+            <div className="form-row">
+                <div className="form-group col-12">
+                    <button type="button" className="btn btn-light" onClick={addDoc}><i className="fas fa-plus-circle"></i> เพิ่มเอกสารประกอบ</button>
                 </div>
             </div>
-            ))}
-            <button type="submit" className="btn btn-primary">บันทึกข้อมูล</button>
+            <button type="submit" className="btn btn-primary"><i className="far fa-save"></i> บันทึกข้อมูล</button>
         </form>
     );
 }

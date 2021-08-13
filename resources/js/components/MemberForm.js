@@ -2,10 +2,26 @@ import axios from 'axios';
 import swal from 'sweetalert';
 import React, { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
+import { Modal, Button } from 'react-bootstrap';
+import DatePicker, { registerLocale, setDefaultLocale } from 'react-datepicker';
+import th from 'date-fns/locale/th';
+registerLocale('th', th);
 
-function MemberForm(props) {
+import "react-datepicker/dist/react-datepicker.css";
+import './form.css';
+import { event } from 'jquery';
+
+const MemberForm = (props) => {
+
+    const [show, setShow] = useState(true);
+    const handleClose = () => setShow(false);
+
+    const [errors, setErrors] = useState([]);
+
+    const [selectedDate, setSelectedDate] = useState('');
 
     const requireFields = [
+        'receipt_province',
         'title',
         'firstname',
         'lastname',
@@ -13,51 +29,36 @@ function MemberForm(props) {
         'exp_date',
         'age',
         'nationality',
-        'is_bankrupt',
-        'is_incompetent_person',
-        'is_permanent_disability',
-        'is_quasi_incompetent_person',
+        'mobile',
         'marital_status',
-        'number_of_children',
-        'number_of_children_study',
-        'sub_district',
-        'district',
+        'house_no',
         'province',
-        'post_code',
+        'district',
+        'sub_district',
         'tel',
-        'fax',
-        'mail',
+        'ship_house_no',
+        'ship_province',
         'ship_sub_district',
         'ship_district',
-        'ship_province',
-        'ship_postcode',
         'ship_tel',
-        'ship_mail', 
-        'ship_line', 
-        'ship_fb', 
         'house_type',
         'education_level', 
         'career',
         'income_type',
         'income_amount',
-        'debt_type', 
-        'workplace',
-        'workplace_sub_district',
-        'workplace_district',
+        'workplace_no',
         'workplace_province',
-        'workplace_postcode',
-        'work_exp',
-        'job_position',
+        'workplace_district',
+        'workplace_sub_district',
+        'workplace_tel',
         'benef_title',
         'benef_firstname',
         'benef_lastname',
         'benef_id_card_no',
-        'benef_relationship',
+        'benef_house_no',
+        'benef_province',
         'benef_sub_district',
         'benef_district',
-        'benef_province',
-        'benef_postcode',
-        'benef_tel',
     ];
     
     const [postcodes, setPostcodes] = useState([]);
@@ -67,6 +68,7 @@ function MemberForm(props) {
     const [districts, setDistricts] = useState({
         member: [],
         ship: [],
+        bener: [],
         workplace: [],
         benef: [],
     });
@@ -74,6 +76,7 @@ function MemberForm(props) {
     const [subDistricts, setSubDistricts] = useState({
         member: [],
         ship: [],
+        bener: [],
         workplace: [],
         benef: [],
     });
@@ -89,12 +92,6 @@ function MemberForm(props) {
         benef_other_title: true,
     });
 
-    const [className, setClassName] = useState({
-        id_card_no: '',
-        spouse_id_card_no: '',
-        benef_id_card_no: '',
-    }); 
-
     const [member, setMember] = useState({
         title: '',
         other_title: '',
@@ -107,11 +104,11 @@ function MemberForm(props) {
         age: '',
         nationality: '',
         mobile: '',
-        is_bankrupt: '',
-        is_incompetent_person: '',
-        is_permanent_disability: '',
-        is_quasi_incompetent_person: '',
-        marital_status: '',
+        is_bankrupt: 'ไม่เป็น',
+        is_incompetent_person: 'ไม่ใช่',
+        is_permanent_disability: 'ไม่ใช่',
+        is_quasi_incompetent_person: 'ไม่ใช่',
+        marital_status: 'โสด',
         number_of_children: 0,
         number_of_children_study: 0,
         spouse_title: '',
@@ -126,7 +123,7 @@ function MemberForm(props) {
         sub_district: '',
         district: '',
         province: '',
-        postcode: '',
+        post_code: '',
         tel: '',
         fax: '',
         mail: '',
@@ -155,7 +152,30 @@ function MemberForm(props) {
         other_income: '',
         other_income_amount: '',
         source_other_income: '',
-        debt_type: '',
+        debt_type_1: 0,
+        debt_type_1_dtl: [{
+            desc: '',
+            total_amount: 0,
+            remaining_amount: 0,
+        }],
+        debt_type_2: 0,
+        debt_type_2_dtl: [{
+            desc: '',
+            total_amount: 0,
+            remaining_amount: 0,
+        }],
+        debt_type_3: 0,
+        debt_type_3_dtl: [{
+            desc: '',
+            total_amount: 0,
+            remaining_amount: 0,
+        }],
+        debt_type_4: 0,
+        debt_type_4_dtl: [{
+            desc: '',
+            total_amount: 0,
+            remaining_amount: 0,
+        }],
         workplace: '',
         building: '',
         floor: '',
@@ -189,64 +209,124 @@ function MemberForm(props) {
         benef_postcode: '',
         benef_tel: '',
         benef_fax: '',
+        docs: [{
+            name: '',
+            desc: '',
+            original_name: '',
+        }],
     });
 
     useEffect(() => {
-        const data = JSON.parse(props.data);
+        let propsPostcodes = '';
+        if (props.postcodes) {
+            propsPostcodes = JSON.parse(props.postcodes);
+            setPostcodes(propsPostcodes);
+            setProvinces([...new Set(propsPostcodes.map(postcode => postcode.province))].sort());
+        }
 
-        setPostcodes(data.postcodes);
-        setProvinces([...new Set(data.postcodes.map(postcode => postcode.province))].sort());
-        setMember(data.member);
+        if (props.member) {
+            let propsMember = JSON.parse(props.member);
+            [1, 2, 3, 4].map(i => {
+                if (!propsMember[`debt_type_${i}_dtl`]) {
+                    propsMember = {...propsMember, [`debt_type_${i}_dtl`]: [{
+                        desc: '',
+                        total_amount: 0,
+                        remaining_amount: 0,
+                    }]};
+                }
+            });
 
-        ['member', 'ship', 'workplace', 'benef'].map(addr => {
-            const prefixName = (addr == 'member')? '': `${addr}_`;
-
-            if (data.member[`${prefixName}province`] != '') {
-                let districtFilter = data.postcodes.filter(postcode => postcode.province == data.member[`${prefixName}province`]);
-        
-                setDistricts(prevState => {
-                    return {
-                        ...prevState,
-                        [addr]: [...new Set(districtFilter.map(district => district.district))].sort(),
-                    }
-                });
-        
-                let subDistrictFilter = data.postcodes.filter(postcode => postcode.province == data.member[`${prefixName}province`] && postcode.district == data.member[`${prefixName}district`]);
-
-                setSubDistricts(prevState => {
-                    return {
-                        ...prevState,
-                        [addr]: [...new Set(subDistrictFilter.map(subDistrict => subDistrict.sub_district))].sort(),
-                    }
-                });
+            if (!propsMember.doc) {
+                propsMember = {...propsMember, docs: [{
+                    name: '',
+                    desc: '',
+                    original_name: '',
+                }]};
             }
-        });
-    }, []);
+
+            setMember(propsMember);
+            setShow(false);
+
+            ['member', 'ship', 'workplace', 'benef'].map(addr => {
+                const prefixName = (addr == 'member')? '': `${addr}_`;
     
-    function handleInputChange(event) {
-        setMember({
-            ...member,
-            [event.target.name]: event.target.value
-        });
+                if (propsMember[`${prefixName}province`] != '') {
+                    let districtFilter = propsPostcodes.filter(postcode => postcode.province == propsMember[`${prefixName}province`]);
+            
+                    setDistricts(prevState => {
+                        return {
+                            ...prevState,
+                            [addr]: [...new Set(districtFilter.map(district => district.district))].sort(),
+                        }
+                    });
+            
+                    let subDistrictFilter = propsPostcodes.filter(postcode => postcode.province == propsMember[`${prefixName}province`] && postcode.district == propsMember[`${prefixName}district`]);
+    
+                    setSubDistricts(prevState => {
+                        return {
+                            ...prevState,
+                            [addr]: [...new Set(subDistrictFilter.map(subDistrict => subDistrict.sub_district))].sort(),
+                        }
+                    });
+                }
+            });
+        }
+        if(props.updatedBy) {
+            setMember(prevState => {
+                return {
+                    ...prevState,
+                    updated_by: props.updatedBy
+                }
+            });
+        }
+    }, []);
+
+    
+    const handleInputChange = (event) => {
+        setMember({...member, [event.target.name]: event.target.value});
+
+        if (event.target.value != '') {
+            setErrors(errors.filter(e => e != event.target.name));
+        }
     }
 
-    function handleIdChange(event) {
+    const handleInputNumberChange = (event) => {
+        const { value, maxLength } = event.target;
+
+        setMember({...member, [event.target.name]: value.slice(0, maxLength)});
+
+        if (event.target.value != '') {
+            setErrors(errors.filter(e => e != event.target.name));
+        }
+    }
+
+    const handleIdChange = (event) => {
         let id = event.target.value;
-        let inputClassName = '';
         if (id != '') {
             if (id.length == 13 && /^\d+$/.test(id)) {
                 const lastDigit = id.charAt(12);
                 const sum = id.substring(0,12).split('').reduce((total, value, index) => total + (parseInt(value) * (13 - index)), 0);
-                inputClassName = (lastDigit == (11 - sum % 11) % 10)? 'is-valid': 'is-invalid';
+                if (lastDigit == (11 - sum % 11) % 10) {
+                    setErrors(errors.filter(e => e != event.target.name));
+                } else {
+                    if (!errors.includes(event.target.name)) {
+                        setErrors(prevState => {
+                            return [...prevState, event.target.name]
+                        });
+                    }
+                }
             } else {
-                inputClassName = 'is-invalid';
+                if (!errors.includes(event.target.name)) {
+                    setErrors(prevState => {
+                        return [...prevState, event.target.name]
+                    });
+                }
+            }
+        } else {
+            if (event.target.name == 'spouse_id_card_no') {
+                setErrors(errors.filter(e => e != event.target.name));
             }
         }
-
-        setClassName({
-            ...className,
-            [event.target.name]: inputClassName
-        });
 
         setMember({
             ...member,
@@ -254,7 +334,25 @@ function MemberForm(props) {
         });
     }
 
-    function handleProvinceChange(event, addrType) {
+    const handleDatePickerChange = (date) => {
+
+        setSelectedDate(date);
+
+        const selectedDate = new Date(date);
+        const expDate = `${selectedDate.getDate()}/${selectedDate.getMonth() + 1}/${selectedDate.getFullYear()}`;
+
+        setMember({...member, exp_date: expDate });
+
+        if (date != '') {
+            setErrors(errors.filter(e => e != 'exp_date'));
+        }
+    }
+
+    const handleChangeRaw = (raw) => {
+        console.log(`raw => ${raw}`);
+    }
+
+    const handleProvinceChange = (event, addrType) => {
         let districtFilter = postcodes.filter(postcode => postcode.province == event.target.value);
 
         setDistricts({
@@ -266,9 +364,13 @@ function MemberForm(props) {
             ...member,
             [event.target.name]: event.target.value
         });
+
+        if (event.target.value != '') {
+            setErrors(errors.filter(e => e != event.target.name));
+        }
     }
 
-    function handleDistrictChange(event, addrType, selectedProvince) {
+    const handleDistrictChange = (event, addrType, selectedProvince) => {
         let subDistrictFilter = postcodes.filter(postcode => postcode.province == selectedProvince && postcode.district == event.target.value);
 
         setSubDistricts({
@@ -280,9 +382,13 @@ function MemberForm(props) {
             ...member,
             [event.target.name]: event.target.value
         });
+
+        if (event.target.value != '') {
+            setErrors(errors.filter(e => e != event.target.name));
+        }
     }
 
-    function handleSubDistrictChange(event, addrType, selectedProvince, selectedDistrict, inputPostcode) {
+    const handleSubDistrictChange = (event, addrType, selectedProvince, selectedDistrict, inputPostcode) => {
         let postcodeFilter = postcodes.filter(postcode => postcode.province == selectedProvince && postcode.district == selectedDistrict && postcode.sub_district == event.target.value)[0];
 
         setMember({
@@ -290,9 +396,13 @@ function MemberForm(props) {
             [event.target.name]: event.target.value,
             [inputPostcode]: postcodeFilter.postcode
         });
+
+        if (event.target.value != '') {
+            setErrors(errors.filter(e => e != event.target.name));
+        }
     }
 
-    function handleHouseTypeChange(event) {
+    const handleHouseTypeChange = (event) => {
         setDisabledCostPerMonth(true);
         if (event.target.value == 'บ้านตนเองและผ่อนอยู่กับสถาบันการเงิน' || event.target.value == 'บ้านเช่า') {
             setDisabledCostPerMonth(false);
@@ -302,9 +412,13 @@ function MemberForm(props) {
             ...member,
             [event.target.name]: event.target.value
         });
+
+        if (event.target.value != '') {
+            setErrors(errors.filter(e => e != event.target.name));
+        }
     }
 
-    function handleSelectChange(event, otherValue, inputName) {
+    const handleSelectChange = (event, otherValue, inputName) => {
         setMember({
             ...member,
             [event.target.name]: event.target.value,
@@ -315,25 +429,155 @@ function MemberForm(props) {
             ...disabledInput,
             [inputName]: event.target.value == otherValue? false: true
         });
+
+        if (event.target.value != '') {
+            setErrors(errors.filter(e => e != event.target.name));
+        }
     }
-    
-    function handleSubmitForm(event) {
+
+    const addDebtDtl = (event, debtType) => {
         event.preventDefault();
+        const newDebtDtl = [...member[`debt_type_${debtType}_dtl`], {
+            desc: '',
+            total_amount: 0,
+            remaining_amount: 0,
+        }];
 
-        let err = 0;
+        setMember(prevState => {
+            return {
+                ...prevState,
+                [`debt_type_${debtType}_dtl`]: newDebtDtl
+            }
+        });
+    }
 
-        requireFields.map(field => {
-            if (!member[field]) {
-                err += 1;
+    const removeDebtDtl = (event, debtType, index) => {
+        event.preventDefault();
+        const newDebtDtl = [...member[`debt_type_${debtType}_dtl`]];
+        newDebtDtl.splice(index, 1);
+
+        setMember(prevState => {
+            return {
+                ...prevState,
+                [`debt_type_${debtType}_dtl`]: newDebtDtl
             }
         });
 
-        // if (className.id_card_no != 'is-valid' && className.benef_id_card_no != 'is-valid') {
-        //     err += 1;
-        // }
+        const remainingAmount = newDebtDtl.reduce((acc, curr) => { return acc + parseFloat(curr.remaining_amount) }, 0);
+        setMember(prevState => {
+            return {
+                ...prevState,
+                [`debt_type_${debtType}`]: remainingAmount
+            }
+        });
+    }
 
-        if (err > 0) {
-            swal('เกิดข้อผิดพลาด', 'รบกวนกรอกข้อมูลให้ครบถ้วน', "error");
+    const handleDebtDtlChange = (event, debtType, index) => {
+        const newDebtDtl = [...member[`debt_type_${debtType}_dtl`]];
+        newDebtDtl[index][event.target.name] = event.target.value;
+
+        setMember(prevState => {
+            return {
+                ...prevState,
+                [`debt_type_${debtType}_dtl`]: newDebtDtl
+            }
+        });
+
+        if (event.target.name === 'remaining_amount') {
+            const remainingAmount = newDebtDtl.reduce((acc, curr) => { return acc + parseFloat(curr.remaining_amount) }, 0);
+            setMember(prevState => {
+                return {
+                    ...prevState,
+                    [`debt_type_${debtType}`]: remainingAmount
+                }
+            });
+        }
+    }
+
+    const addDoc = () => {
+        const newDocs = [...member.docs, {
+            name: '',
+            desc: '',
+            original_name: '',
+        }];
+
+        setMember(prevState => {
+            return {
+                ...prevState,
+                docs: newDocs
+            }
+        });
+    }
+
+    const removeDoc = (event, index) => {
+        const newDocs = [...member.docs];
+        newDocs.splice(index, 1);
+
+        setMember(prevState => {
+            return {
+                ...prevState,
+                docs: newDocs
+            }
+        });
+    }
+
+    const handleDocChange = (event, index) => {
+        const newDocs = [...member.docs];
+        newDocs[index][event.target.name] = event.target.value;
+
+        setMember(prevState => {
+            return {
+                ...prevState,
+                docs: newDocs
+            }
+        });
+    }
+
+    const handleInputFileChange = (event, index) => {
+        const newDocs = [...member.docs];
+
+        const data = new FormData();
+        data.append('document', event.target.files[0]);
+        axios.post('/api/upload-document', data).then(response => {
+            if (response.status == 200) {
+                newDocs[index].name = response.data.name;
+            }
+        }).catch(error => {
+            console.log(error)
+        });
+
+        newDocs[index].original_name = event.target.files[0].name;
+        
+        setMember(prevState => {
+            return {
+                ...prevState,
+                docs: newDocs
+            }
+        });
+    }
+    
+    const handleSubmitForm = (event) => {
+        event.preventDefault();
+
+        let numberOfErrors = 0;
+
+        requireFields.map(field => {
+            if (!member[field]) {
+                numberOfErrors += 1;
+                setErrors(prevState => {
+                    return [...prevState, field]
+                });
+            }
+        });
+
+        if (member.title == 'อื่นๆ' && member.other_title == '') {
+            setErrors(prevState => {
+                return [...prevState, 'other_title']
+            });
+        }
+
+        if (numberOfErrors > 0) {
+            swal('เกิดข้อผิดพลาด', 'กรุณากรอกข้อมูลให้ครบถ้วน', 'error');
             return;
         }
 
@@ -345,22 +589,54 @@ function MemberForm(props) {
             closeOnClickOutside: false,
         });
 
-        axios.put(`/api/member/${member.id}`, member).then(res => {
-            console.log(res);
-            if (res.status == 200) {
-                console.log(res.data);
-                swal({
-                    icon: 'success',
-                    text: 'ระบบบันทึกข้อมูลเรียบร้อย',
-                }).then(value => {
-                    if (value) {
-                        window.location.href = `/member`;
+        if (!member.id) {
+            axios.post('/api/member', member).then(response => {
+                if (response.status == 200) {
+                    console.log(response);
+                    if (response.data.error) {
+                        const errMsg = response.data.error.errorInfo;
+                        swal('เกิดข้อผิดพลาด', errMsg.toString(), 'error');
+                    } else {
+                        swal({
+                            icon: 'success',
+                            text: 'ระบบบันทึกข้อมูลเรียบร้อย',
+                            closeOnEsc: false,
+                            closeOnClickOutside: false,
+                            button: {
+                                text: "ดาวน์โหลดเอกสาร",
+                                closeModal: true,
+                            },
+                        }).then(value => {
+                            if (value) {
+                                const id = response.data.member_id;
+                                window.location.href = `/contract/${id}`;
+                            }
+                        });
                     }
-                });;
-            }
-        }).catch(err => {
-            console.log(err)
-        });
+                }
+            }).catch(error => {
+                console.log(error)
+            });
+        } else {
+            axios.put(`/api/member/${member.id}`, member).then(res => {
+                console.log(res);
+                if (res.status == 200) {
+                    console.log(res.data);
+                    swal({
+                        icon: 'success',
+                        text: 'ระบบบันทึกข้อมูลเรียบร้อย',
+                        closeOnEsc: false,
+                        closeOnClickOutside: false,
+                    }).then(value => {
+                        if (value) {
+                            window.location.href = `/member`;
+                        }
+                    });;
+                }
+            }).catch(err => {
+                console.log(err)
+            });
+        }
     }
 
     return (
@@ -369,18 +645,17 @@ function MemberForm(props) {
             <div className="form-row">
                 <div className="form-group col-2">
                     <label>จังหวัดสังกัดสมาชิก <span className="text-danger">*</span></label>
-                    <select className="form-control" name="receipt_province" value={member.receipt_province || ''} onChange={handleInputChange}>
-                        <option>เลือก</option>
-                        {provinces.map((province) => (
-                        <option key={province} value={province}>{province}</option>
-                        ))}
-                    </select>
+                    <input type="text" 
+                        className="form-control"
+                        value={member.receipt_province} 
+                        onChange={handleInputChange}
+                        disabled={disabledInput.other_title}/>
                 </div>
             </div>
             <div className="form-row">
                 <div className="form-group col-2">
                     <label htmlFor="title">คำนำหน้า <span className="text-danger">*</span></label>
-                    <select className="form-control" 
+                    <select className={`custom-select ${errors.includes('title')? 'is-invalid': ''}`}
                         id="title" 
                         name="title" 
                         value={member.title || ''} 
@@ -390,42 +665,48 @@ function MemberForm(props) {
                         <option key={title} value={title}>{title}</option>
                         ))}
                     </select>
+                    {/* <div className="invalid-feedback">กรุณากรอกข้อมูลให้ครบถ้วน</div> */}
                 </div>
                 <div className="form-group col-2">
                     <label>อื่นๆ (โปรดระบุ)</label>
                     <input type="text" 
-                        className="form-control" 
+                        className={`form-control ${errors.includes('other_title')? 'is-invalid': ''}`} 
                         name="other_title" 
                         value={member.other_title || ''} 
                         onChange={handleInputChange}
                         disabled={disabledInput.other_title}/>
+                    {/* <div className="invalid-feedback">กรุณากรอกข้อมูลให้ครบถ้วน</div> */}
                 </div>
                 <div className="form-group col-4">
                     <label htmlFor="firstname">ชื่อ <span className="text-danger">*</span></label>
                     <input type="text" 
-                        className="form-control" 
+                        className={`form-control ${errors.includes('firstname')? 'is-invalid': ''}`} 
                         name="firstname" 
                         value={member.firstname || ''} 
                         onChange={handleInputChange}/>
+                    {/* <div className="invalid-feedback">กรุณากรอกข้อมูลให้ครบถ้วน</div> */}
                 </div>
                 <div className="form-group col-4">
                     <label htmlFor="lastname">นามสกุล <span className="text-danger">*</span></label>
                     <input type="text" 
-                        className="form-control" 
+                        className={`form-control ${errors.includes('lastname')? 'is-invalid': ''}`} 
                         name="lastname" 
                         value={member.lastname || ''} 
                         onChange={handleInputChange}/>
+                    {/* <div className="invalid-feedback">กรุณากรอกข้อมูลให้ครบถ้วน</div> */}
                 </div>
             </div>
             <div className="form-row">
                 <div className="form-group col-3">
                     <label htmlFor="id_card_no">บัตรประจำตัวประชาชนเลขที่ <span className="text-danger">*</span></label>
-                    <input type="text" 
-                        className={`form-control ${className.id_card_no}`} 
+                    <input type="number" 
+                        className={`form-control ${errors.includes('id_card_no')? 'is-invalid': ''}`} 
                         id="id_card_no"
                         name="id_card_no" 
                         value={member.id_card_no} 
-                        onChange={handleIdChange}/>
+                        onChange={handleIdChange}
+                        maxLength="13"/>
+                    {/* <div className="invalid-feedback">กรุณากรอกข้อมูลให้ถูกต้องและครบถ้วน</div> */}
                 </div>
                 <div className="form-group col-3">
                     <label htmlFor="emp_card_no">บัตรข้าราชการ/บัตรพนักงานรัฐวิสาหกิจ</label>
@@ -433,45 +714,53 @@ function MemberForm(props) {
                         className="form-control" 
                         id="emp_card_no"
                         name="emp_card_no" 
-                        value={member.emp_card_no} 
+                        value={member.emp_card_no || ''} 
                         onChange={handleInputChange}/>
                 </div>
                 <div className="form-group col-2">
                     <label htmlFor="exp_date">วันหมดอายุ <span className="text-danger">*</span></label>
-                    <input type="text" 
-                        className="form-control" 
-                        placeholder="วว/ดด/ปปปป" 
-                        id="exp_date"
-                        name="exp_date" 
-                        value={member.exp_date} 
-                        onChange={handleInputChange}/>
+                    <DatePicker dateFormat="dd/MM/yyyy" 
+                        locale="th" 
+                        selected={selectedDate} 
+                        onChange={(date) => handleDatePickerChange(date)}
+                        minDate={new Date()}
+                        peekNextMonth
+                        showMonthDropdown
+                        showYearDropdown
+                        dropdownMode="select"
+                        className={`form-control ${errors.includes('exp_date')? 'is-invalid': ''}`}/>
                 </div>
                 <div className="form-group col-1">
                     <label htmlFor="age">อายุ <span className="text-danger">*</span></label>
                     <input type="number" 
-                        className="form-control"
+                        className={`form-control ${errors.includes('age')? 'is-invalid': ''}`} 
                         id="age"
                         name="age" 
-                        value={member.age} 
+                        value={member.age || ''} 
+                        min="0"
                         onChange={handleInputChange}/>
+                    {/* <div className="invalid-feedback">กรุณากรอกข้อมูลให้ครบถ้วน</div> */}
                 </div>
                 <div className="form-group col-1">
                     <label htmlFor="nationality">สัญชาติ <span className="text-danger">*</span></label>
                     <input type="text" 
-                        className="form-control" 
+                        className={`form-control ${errors.includes('nationality')? 'is-invalid': ''}`}  
                         id="nationality" 
                         name="nationality" 
-                        value={member.nationality} 
+                        value={member.nationality || ''} 
                         onChange={handleInputChange}/>
+                    {/* <div className="invalid-feedback">กรุณากรอกข้อมูลให้ครบถ้วน</div> */}
                 </div>
                 <div className="form-group col-2">
                     <label htmlFor="mobile">โทรศัพท์ <span className="text-danger">*</span></label>
-                    <input type="text" 
-                        className="form-control" 
+                    <input type="number" 
+                        className={`form-control ${errors.includes('mobile')? 'is-invalid': ''}`}   
                         id="mobile"
                         name="mobile" 
-                        value={member.mobile} 
-                        onChange={handleInputChange}/>
+                        value={member.mobile || ''} 
+                        maxLength="10"
+                        onChange={handleInputNumberChange}/>
+                    {/* <div className="invalid-feedback">กรุณากรอกข้อมูลให้ครบถ้วน</div> */}
                 </div>
             </div>
             <div className="form-row">
@@ -495,7 +784,7 @@ function MemberForm(props) {
                                 name="is_bankrupt" 
                                 value="ไม่เป็น" 
                                 onChange={handleInputChange}
-                                checked={member.is_bankrupt == 'ไม่เป็น'}/>
+                                checked={member.is_bankrupt == 'ไม่เป็น' || member.is_bankrupt == ''}/>
                             <label className="form-check-label" htmlFor="is_bankrupt_2">ไม่เป็น</label>
                         </div>
                     </div>
@@ -516,7 +805,7 @@ function MemberForm(props) {
                         <div className="form-check form-check-inline">
                             <input className="form-check-input" type="radio" id="is_incompetent_person_2" name="is_incompetent_person" value="ไม่ใช่" 
                             onChange={handleInputChange}
-                            checked={member.is_incompetent_person == 'ไม่ใช่'}/>
+                            checked={member.is_incompetent_person == 'ไม่ใช่' || member.is_incompetent_person == ''}/>
                             <label className="form-check-label" htmlFor="is_incompetent_person_2">ไม่ใช่</label>
                         </div>
                     </div>
@@ -536,7 +825,7 @@ function MemberForm(props) {
                                 name="is_permanent_disability" 
                                 value="ไม่ใช่" 
                                 onChange={handleInputChange}
-                                checked={member.is_permanent_disability == 'ไม่ใช่'}/>
+                                checked={member.is_permanent_disability == 'ไม่ใช่' || member.is_permanent_disability == ''}/>
                             <label className="form-check-label" htmlFor="is_permanent_disability_2">ไม่ใช่</label>
                         </div>
                     </div>
@@ -557,7 +846,7 @@ function MemberForm(props) {
                                 name="is_quasi_incompetent_person" 
                                 value="ไม่ใช่" 
                                 onChange={handleInputChange}
-                                checked={member.is_quasi_incompetent_person == 'ไม่ใช่'}/>
+                                checked={member.is_quasi_incompetent_person == 'ไม่ใช่' || member.is_quasi_incompetent_person == ''}/>
                             <label className="form-check-label" htmlFor="is_quasi_incompetent_person_2">ไม่ใช่</label>
                         </div>
                     </div>
@@ -582,22 +871,24 @@ function MemberForm(props) {
                     </div>
                 </div>
                 <div className="form-group col-2">
-                    <label htmlFor="number_of_children">จำนวนบุตร <span className="text-danger">*</span></label>
+                    <label htmlFor="number_of_children">จำนวนบุตร</label>
                     <input type="number" 
                         className="form-control" 
                         id="number_of_children" 
                         name="number_of_children" 
-                        value={member.number_of_children || 0} 
-                        onChange={handleInputChange}/>
+                        value={member.number_of_children || ''} 
+                        onChange={handleInputChange}
+                        min="0"/>
                 </div>
                 <div className="form-group col-2">
-                    <label htmlFor="number_of_children_study">จำนวนบุตรที่กำลังศึกษาอยู่ <span className="text-danger">*</span></label>
+                    <label htmlFor="number_of_children_study">จำนวนบุตรที่กำลังศึกษาอยู่</label>
                     <input type="number" 
                         className="form-control" 
                         id="number_of_children_study" 
                         name="number_of_children_study" 
-                        value={member.number_of_children_study || 0} 
-                        onChange={handleInputChange}/>
+                        value={member.number_of_children_study || ''} 
+                        onChange={handleInputChange}
+                        min="0"/>
                 </div>
             </div>
             <h4 className="mb-3">ข้อมูลคู่สมรส</h4>
@@ -636,45 +927,70 @@ function MemberForm(props) {
             <div className="form-row">
                 <div className="form-group col-3">
                     <label htmlFor="spouse_id_card_no">บัตรประจำตัวประชาชนเลขที่</label>
-                    <input type="text" className={`form-control ${className.spouse_id_card_no}`} name="spouse_id_card_no" value={member.spouse_id_card_no || ''} onChange={handleIdChange}/>
+                    <input type="number" 
+                        className={`form-control ${errors.includes('spouse_id_card_no')? 'is-invalid': ''}`} 
+                        name="spouse_id_card_no" 
+                        value={member.spouse_id_card_no || ''} 
+                        onChange={handleIdChange}
+                        maxLength="13"/>
                 </div>
             </div>
             <h4 className="mb-3">ที่อยู่ตามทะเบียนบ้าน</h4>
             <div className="form-row">
                 <div className="form-group col-2">
-                    <label htmlFor="house_no">บ้านเลขที่</label>
-                    <input type="text" className="form-control" id="house_no" name="house_no" value={member.house_no || ''} onChange={handleInputChange}/>
+                    <label htmlFor="house_no">บ้านเลขที่ <span className="text-danger">*</span></label>
+                    <input type="text" 
+                        className={`form-control ${errors.includes('house_no')? 'is-invalid': ''}`} 
+                        id="house_no" 
+                        name="house_no" 
+                        value={member.house_no || ''} 
+                        onChange={handleInputChange}/>
                 </div>
                 <div className="form-group col-2">
                     <label htmlFor="moo">หมู่ที่</label>
-                    <input type="text" className="form-control" id="moo" name="moo" value={member.moo || ''} onChange={handleInputChange}/>
+                    <input type="text" 
+                        className="form-control" 
+                        id="moo" 
+                        name="moo" 
+                        value={member.moo || ''} 
+                        onChange={handleInputChange}/>
                 </div>
                 <div className="form-group col-3">
                     <label htmlFor="soi">ตรอก/ซอย</label>
-                    <input type="text" className="form-control" id="soi" name="soi" value={member.soi || ''} onChange={handleInputChange}/>
+                    <input type="text" 
+                        className="form-control" 
+                        id="soi" 
+                        name="soi" 
+                        value={member.soi || ''} 
+                        onChange={handleInputChange}/>
                 </div>
                 <div className="form-group col-5">
                     <label htmlFor="street">ถนน</label>
-                    <input type="text" className="form-control" id="street" name="street" value={member.street || ''} onChange={handleInputChange}/>
+                    <input type="text" 
+                        className="form-control" 
+                        id="street" 
+                        name="street" 
+                        value={member.street || ''} 
+                        onChange={handleInputChange}/>
                 </div>
             </div>
             <div className="form-row">
-                <div className="form-group col-4">
-                    <label htmlFor="sub_district">ตำบล/แขวง <span className="text-danger">*</span></label>
-                    <select className="form-control" 
-                        id="sub_district" 
-                        name="sub_district" 
-                        value={member.sub_district || ''} 
-                        onChange={(e) => handleSubDistrictChange(e, 'member', member.province, member.district, 'post_code')}>
+                <div className="form-group col-2">
+                    <label htmlFor="province">จังหวัด <span className="text-danger">*</span></label>
+                    <select className={`custom-select ${errors.includes('province')? 'is-invalid': ''}`}
+                        id="province"
+                        name="province" 
+                        value={member.province || ''} 
+                        onChange={(event) => handleProvinceChange(event, 'member')}>
                         <option>เลือก</option>
-                        {subDistricts.member.map((subDistrict) => (
-                        <option key={subDistrict} value={subDistrict}>{subDistrict}</option>
+                        {provinces.map((province) => (
+                        <option key={province} value={province}>{province}</option>
                         ))}
                     </select>
                 </div>
                 <div className="form-group col-4">
                     <label htmlFor="district">อำเภอ/เขต <span className="text-danger">*</span></label>
-                    <select className="form-control" 
+                    <select className={`custom-select ${errors.includes('district')? 'is-invalid': ''}`}
                         id="district" 
                         name="district" 
                         value={member.district || ''} 
@@ -685,44 +1001,65 @@ function MemberForm(props) {
                         ))}
                     </select>
                 </div>
-                <div className="form-group col-2">
-                    <label htmlFor="province">จังหวัด <span className="text-danger">*</span></label>
-                    <select className="form-control" 
-                        id="province"
-                        name="province" 
-                        value={member.province || ''} 
-                        onChange={(e) => handleProvinceChange(e, 'member')}>
+                <div className="form-group col-4">
+                    <label htmlFor="sub_district">ตำบล/แขวง <span className="text-danger">*</span></label>
+                    <select className={`custom-select ${errors.includes('sub_district')? 'is-invalid': ''}`}
+                        id="sub_district" 
+                        name="sub_district" 
+                        value={member.sub_district || ''} 
+                        onChange={(e) => handleSubDistrictChange(e, 'member', member.province, member.district, 'post_code')}>
                         <option>เลือก</option>
-                        {provinces.map((province) => (
-                        <option key={province} value={province}>{province}</option>
+                        {subDistricts.member.map((subDistrict) => (
+                        <option key={subDistrict} value={subDistrict}>{subDistrict}</option>
                         ))}
                     </select>
                 </div>
                 <div className="form-group col-2">
-                    <label htmlFor="post_code">รหัสไปรษณีย์ <span className="text-danger">*</span></label>
-                    <input type="text" className="form-control" id="postcode" name="post_code" value={member.post_code || ''} onChange={handleInputChange} disabled/>
+                    <label htmlFor="post_code">รหัสไปรษณีย์</label>
+                    <input type="text" 
+                        className="form-control"
+                        id="postcode" 
+                        name="post_code" 
+                        value={member.post_code || ''} 
+                        onChange={handleInputChange} disabled/>
                 </div>
             </div>
             <div className="form-row">
                 <div className="form-group col-2">
                     <label htmlFor="tel">โทรศัพท์ <span className="text-danger">*</span></label>
-                    <input type="text" className="form-control" id="tel" name="tel" value={member.tel || ''} onChange={handleInputChange}/>
+                    <input type="number" 
+                        className={`form-control ${errors.includes('tel')? 'is-invalid': ''}`}
+                        id="tel" 
+                        name="tel" 
+                        value={member.tel || ''} 
+                        onChange={handleInputNumberChange}
+                        maxLength="10"/>
                 </div>
                 <div className="form-group col-2">
-                    <label htmlFor="fax">โทรสาร <span className="text-danger">*</span></label>
-                    <input type="text" className="form-control" id="fax" name="fax" value={member.fax || ''} onChange={handleInputChange}/>
+                    <label htmlFor="fax">โทรสาร</label>
+                    <input type="text" 
+                        className="form-control" 
+                        id="fax" 
+                        name="fax" 
+                        value={member.fax || ''} 
+                        onChange={handleInputChange}/>
                 </div>
                 <div className="form-group col-2">
-                    <label htmlFor="mail">อีเมล <span className="text-danger">*</span></label>
-                    <input type="text" className="form-control" id="mail" name="mail" value={member.mail || ''} onChange={handleInputChange}/>
+                    <label htmlFor="mail">อีเมล</label>
+                    <input type="text" 
+                        className="form-control" 
+                        id="mail" 
+                        name="mail" 
+                        value={member.mail || ''} 
+                        onChange={handleInputChange}/>
                 </div>
             </div>
             <h4 className="mb-3">ที่อยู่จัดส่งเอกสาร</h4>
             <div className="form-row">
                 <div className="form-group col-2">
-                    <label htmlFor="ship_house_no">บ้านเลขที่</label>
+                    <label htmlFor="ship_house_no">บ้านเลขที่ <span className="text-danger">*</span></label>
                     <input type="text" 
-                        className="form-control" 
+                        className={`form-control ${errors.includes('ship_house_no')? 'is-invalid': ''}`} 
                         id="ship_house_no" 
                         name="ship_house_no" 
                         value={member.ship_house_no || ''} 
@@ -756,35 +1093,9 @@ function MemberForm(props) {
                 </div>
             </div>
             <div className="form-row">
-                <div className="form-group col-4">
-                    <label htmlFor="ship_sub_district">ตำบล/แขวง <span className="text-danger">*</span></label>
-                    <select className="form-control" 
-                        id="ship_sub_district" 
-                        name="ship_sub_district" 
-                        value={member.ship_sub_district || ''} 
-                        onChange={(e) => handleSubDistrictChange(e, 'ship', member.ship_province, member.ship_district, 'ship_postcode')}>
-                        <option>เลือก</option>
-                        {subDistricts.ship.map((subDistrict) => (
-                        <option key={subDistrict} value={subDistrict}>{subDistrict}</option>
-                        ))}
-                    </select>
-                </div>
-                <div className="form-group col-4">
-                    <label htmlFor="ship_district">อำเภอ/เขต <span className="text-danger">*</span></label>
-                    <select className="form-control" 
-                        id="ship_district" 
-                        name="ship_district" 
-                        value={member.ship_district || ''} 
-                        onChange={(e) => handleDistrictChange(e, 'ship', member.ship_province)}>
-                        <option>เลือก</option>
-                        {districts.ship.map((district) => (
-                        <option key={district} value={district}>{district}</option>
-                        ))}
-                    </select>
-                </div>
                 <div className="form-group col-2">
                     <label htmlFor="ship_province">จังหวัด <span className="text-danger">*</span></label>
-                    <select className="form-control" 
+                    <select className={`custom-select ${errors.includes('ship_province')? 'is-invalid': ''}`}
                         id="ship_province"
                         name="ship_province" 
                         value={member.ship_province || ''} 
@@ -795,10 +1106,36 @@ function MemberForm(props) {
                         ))}
                     </select>
                 </div>
+                <div className="form-group col-4">
+                    <label htmlFor="ship_district">อำเภอ/เขต <span className="text-danger">*</span></label>
+                    <select className={`custom-select ${errors.includes('ship_district')? 'is-invalid': ''}`} 
+                        id="ship_district" 
+                        name="ship_district" 
+                        value={member.ship_district || ''} 
+                        onChange={(e) => handleDistrictChange(e, 'ship', member.ship_province)}>
+                        <option>เลือก</option>
+                        {districts.ship.map((district) => (
+                        <option key={district} value={district}>{district}</option>
+                        ))}
+                    </select>
+                </div>
+                <div className="form-group col-4">
+                    <label htmlFor="ship_sub_district">ตำบล/แขวง <span className="text-danger">*</span></label>
+                    <select className={`custom-select ${errors.includes('ship_sub_district')? 'is-invalid': ''}`} 
+                        id="ship_sub_district" 
+                        name="ship_sub_district" 
+                        value={member.ship_sub_district || ''} 
+                        onChange={(e) => handleSubDistrictChange(e, 'ship', member.ship_province, member.ship_district, 'ship_postcode')}>
+                        <option>เลือก</option>
+                        {subDistricts.ship.map((subDistrict) => (
+                        <option key={subDistrict} value={subDistrict}>{subDistrict}</option>
+                        ))}
+                    </select>
+                </div>
                 <div className="form-group col-2">
-                    <label htmlFor="ship_postcode">รหัสไปรษณีย์ <span className="text-danger">*</span></label>
+                    <label htmlFor="ship_postcode">รหัสไปรษณีย์</label>
                     <input type="text" 
-                        className="form-control" 
+                        className="form-control"
                         id="ship_postcode" 
                         name="ship_postcode" 
                         value={member.ship_postcode} 
@@ -808,15 +1145,16 @@ function MemberForm(props) {
             <div className="form-row">
                 <div className="form-group col-3">
                     <label htmlFor="ship_tel">โทรศัพท์ <span className="text-danger">*</span></label>
-                    <input type="text" 
-                        className="form-control" 
+                    <input type="number" 
+                        className={`form-control ${errors.includes('ship_tel')? 'is-invalid': ''}`} 
                         id="ship_tel" 
                         name="ship_tel" 
                         value={member.ship_tel || ''} 
-                        onChange={handleInputChange}/>
+                        onChange={handleInputNumberChange}
+                        maxLength="10"/>
                 </div>
                 <div className="form-group col-3">
-                    <label htmlFor="ship_mail">อีเมล <span className="text-danger">*</span></label>
+                    <label htmlFor="ship_mail">อีเมล</label>
                     <input type="text" 
                         className="form-control" 
                         id="ship_mail" 
@@ -825,7 +1163,7 @@ function MemberForm(props) {
                         onChange={handleInputChange}/>
                 </div>
                 <div className="form-group col-3">
-                    <label htmlFor="ship_line">ID Line <span className="text-danger">*</span></label>
+                    <label htmlFor="ship_line">ID Line</label>
                     <input type="text" 
                         className="form-control" 
                         id="ship_line" 
@@ -834,7 +1172,7 @@ function MemberForm(props) {
                         onChange={handleInputChange}/>
                 </div>
                 <div className="form-group col-3">
-                    <label htmlFor="ship_fb">Facebook <span className="text-danger">*</span></label>
+                    <label htmlFor="ship_fb">Facebook</label>
                     <input type="text" 
                         className="form-control" 
                         id="ship_fb" 
@@ -846,13 +1184,13 @@ function MemberForm(props) {
             <div className="form-row">
                 <div className="form-group col-3">
                     <label htmlFor="house_type">ที่อยู่อาศัยปัจจุบัน <span className="text-danger">*</span></label>
-                    <select className="form-control" 
+                    <select className={`custom-select ${errors.includes('house_type')? 'is-invalid': ''}`} 
                         id="house_type" 
                         name="house_type" 
                         value={member.house_type || ''} 
                         onChange={handleHouseTypeChange}>
                         <option>เลือก</option>
-                        {['บ้านตนเองปลอดภาระ', 'บ้านของมิดามารดา', 'บ้านของญาติ', 'บ้านพักสวัสดิการ', 'บ้านตนเองและผ่อนอยู่กับสถาบันการเงิน', 'บ้านเช่า'].map((option) => (
+                        {['บ้านตนเองปลอดภาระ', 'บ้านของบิดามารดา', 'บ้านของญาติ', 'บ้านพักสวัสดิการ', 'บ้านตนเองและผ่อนอยู่กับสถาบันการเงิน', 'บ้านเช่า'].map((option) => (
                         <option key={option} value={option}>{option}</option>
                         ))}
                     </select>
@@ -869,7 +1207,7 @@ function MemberForm(props) {
                 </div>
                 <div className="form-group col-2">
                     <label htmlFor="house_year">อาศัยอยู่เป็นเวลา (ปี)</label>
-                    <input type="text" 
+                    <input type="number" 
                         className="form-control" 
                         id="house_year" 
                         name="house_year" 
@@ -878,7 +1216,7 @@ function MemberForm(props) {
                 </div>
                 <div className="form-group col-3">
                     <label htmlFor="education_level">ระดับการศึกษาสูงสุด <span className="text-danger">*</span></label>
-                    <select className="form-control" 
+                    <select className={`custom-select ${errors.includes('education_level')? 'is-invalid': ''}`} 
                         id="education_level" 
                         name="education_level" 
                         value={member.education_level || ''} 
@@ -903,7 +1241,7 @@ function MemberForm(props) {
             <div className="form-row">
                 <div className="form-group col-3">
                     <label htmlFor="career">สาขาอาชีพ <span className="text-danger">*</span></label>
-                    <select className="form-control" 
+                    <select className={`custom-select ${errors.includes('career')? 'is-invalid': ''}`} 
                         id="career" 
                         name="career" 
                         value={member.career || ''} 
@@ -929,7 +1267,7 @@ function MemberForm(props) {
             <div className="form-row">
                 <div className="form-group col-2">
                     <label htmlFor="income_type">รายได้ประจำ <span className="text-danger">*</span></label>
-                    <select className="form-control" 
+                    <select className={`custom-select ${errors.includes('income_type')? 'is-invalid': ''}`} 
                         id="income_type" 
                         name="income_type" 
                         value={member.income_type || ''} 
@@ -940,9 +1278,9 @@ function MemberForm(props) {
                     </select>
                 </div>
                 <div className="form-group col-2">
-                    <label htmlFor="income_amount">จำนวน (บาท/เดือน)</label>
+                    <label htmlFor="income_amount">จำนวน (บาท/เดือน) <span className="text-danger">*</span></label>
                     <input type="number" 
-                        className="form-control" 
+                        className={`form-control ${errors.includes('income_amount')? 'is-invalid': ''}`}
                         id="income_amount" 
                         name="income_amount" 
                         value={member.income_amount || ''} 
@@ -993,30 +1331,257 @@ function MemberForm(props) {
                 </div>
             </div>
             <h4 className="mb-3">ภาระหนี้กับสถาบันการเงิน/บริษัท/หนี้นอกระบบ</h4>
-            <div className="form-row">
-                <div className="form-group col-12">
-                    <div className="form-check">
-                        <input className="form-check-input" 
-                            type="radio" 
-                            name="debt_type" 
-                            id="debt_1" 
-                            value="เอกสารมูลหนี้สินตามความเป็นจริงทั้งในระบบและนอกระบบ" 
-                            onChange={handleInputChange}
-                            checked={ member.debt_type == 'เอกสารมูลหนี้สินตามความเป็นจริงทั้งในระบบและนอกระบบ'}/>
-                        <label className="form-check-label" htmlFor="debt_1">เอกสารมูลหนี้สินตามความเป็นจริงทั้งในระบบและนอกระบบ</label>
-                    </div>
-                    <div className="form-check">
-                        <input className="form-check-input" 
-                            type="radio" 
-                            name="debt_type" 
-                            id="debt_2" 
-                            value="เอกสารการตรวจเครดิตบูโร" 
-                            onChange={handleInputChange}
-                            checked={ member.debt_type == 'เอกสารการตรวจเครดิตบูโร'}/>
-                        <label className="form-check-label" htmlFor="debt_2">เอกสารการตรวจเครดิตบูโร</label>
-                    </div>
+            <h5 className="mb-3">1.หนี้สินในระบบแบบถูกกฏหมาย</h5>
+            <div className="form-group row">
+                <label htmlFor="staticEmail" className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
+                <div className="col-4">
+                    <input type="number" 
+                        className="form-control"
+                        id="debt_type_1" 
+                        name="debt_type_1" 
+                        value={member.debt_type_1 || 0} 
+                        onChange={handleInputChange}
+                        readOnly/>
                 </div>
+                <label className="col-2 col-form-label">บาท</label>
             </div>
+            <table className="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">รายการ</th>
+                        <th scope="col">จำนวนเงินที่กู้</th>
+                        <th scope="col">จำนวนหนี้คงเหลือ</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {member.debt_type_1_dtl.map((dtl,i) => (
+                    <tr key={i}>
+                        <td scope="row">{ i + 1 }</td>
+                        <td>
+                            <input type="text" 
+                                className="form-control" 
+                                name="desc"
+                                value={dtl.desc}
+                                onChange={e => handleDebtDtlChange(e, 1, i)}/>
+                        </td>
+                        <td>
+                            <input type="number" 
+                                className="form-control" 
+                                name="total_amount" 
+                                min="0" 
+                                value={dtl.total_amount}
+                                onChange={e => handleDebtDtlChange(e, 1, i)}/>
+                        </td>
+                        <td>
+                            <input type="number" 
+                                className="form-control" 
+                                name="remaining_amount" 
+                                min="0" 
+                                value={dtl.remaining_amount}
+                                onChange={e => handleDebtDtlChange(e, 1, i)}/>
+                        </td>
+                        <td>
+                            <a className="btn btn-link" onClick={e => removeDebtDtl(e, 1, i)}>ลบรายการนี้</a>
+                        </td>
+                    </tr>
+                    ))}
+                    <tr>
+                        <td colSpan="5">
+                            <a className="btn btn-link" onClick={e => addDebtDtl(e, 1)}>เพิ่มรายการ</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <h5 className="mb-3">2.หนี้สินนอกระบบแบบถูกกฏหมาย</h5>
+            <div className="form-group row">
+                <label htmlFor="staticEmail" className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
+                <div className="col-4">
+                    <input type="number" 
+                        className="form-control"
+                        id="debt_type_2" 
+                        name="debt_type_2" 
+                        value={member.debt_type_2 || 0} 
+                        onChange={handleInputChange}
+                        disabled/>
+                </div>
+                <label className="col-2 col-form-label">บาท</label>
+            </div>
+            <table className="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">รายการ</th>
+                        <th scope="col">จำนวนเงินที่กู้</th>
+                        <th scope="col">จำนวนหนี้คงเหลือ</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {member.debt_type_2_dtl.map((dtl,i) => (
+                    <tr key={i}>
+                        <td scope="row">{ i + 1 }</td>
+                        <td>
+                            <input type="text" 
+                                className="form-control" 
+                                name="desc"
+                                value={dtl.desc}
+                                onChange={e => handleDebtDtlChange(e, 2, i)}/>
+                        </td>
+                        <td>
+                            <input type="number" 
+                                className="form-control" 
+                                name="total_amount" 
+                                min="0" 
+                                value={dtl.total_amount}
+                                onChange={e => handleDebtDtlChange(e, 2, i)}/>
+                        </td>
+                        <td>
+                            <input type="number" 
+                                className="form-control" 
+                                name="remaining_amount" 
+                                min="0" 
+                                value={dtl.remaining_amount}
+                                onChange={e => handleDebtDtlChange(e, 2, i)}/>
+                        </td>
+                        <td>
+                            <a className="btn btn-link" onClick={e => removeDebtDtl(e, 2, i)}>ลบรายการนี้</a>
+                        </td>
+                    </tr>
+                    ))}
+                    <tr>
+                        <td colSpan="5">
+                            <a className="btn btn-link" onClick={e => addDebtDtl(e, 2)}>เพิ่มรายการ</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <h5 className="mb-3">3.หนี้สินนอกระบบแบบผิดกฏหมาย</h5>
+            <div className="form-group row">
+                <label htmlFor="staticEmail" className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
+                <div className="col-4">
+                    <input type="number" 
+                        className="form-control"
+                        id="debt_type_3" 
+                        name="debt_type_3" 
+                        value={member.debt_type_3 || 0} 
+                        onChange={handleInputChange}
+                        disabled/>
+                </div>
+                <label className="col-2 col-form-label">บาท</label>
+            </div>
+            <table className="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">รายการ</th>
+                        <th scope="col">จำนวนเงินที่กู้</th>
+                        <th scope="col">จำนวนหนี้คงเหลือ</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {member.debt_type_3_dtl.map((dtl,i) => (
+                    <tr key={i}>
+                        <td scope="row">{ i + 1 }</td>
+                        <td>
+                            <input type="text" 
+                                className="form-control" 
+                                name="desc"
+                                value={dtl.desc}
+                                onChange={e => handleDebtDtlChange(e, 3, i)}/>
+                        </td>
+                        <td>
+                            <input type="number" 
+                                className="form-control" 
+                                name="total_amount" 
+                                min="0" 
+                                value={dtl.total_amount}
+                                onChange={e => handleDebtDtlChange(e, 3, i)}/>
+                        </td>
+                        <td>
+                            <input type="number" 
+                                className="form-control" 
+                                name="remaining_amount" 
+                                min="0" 
+                                value={dtl.remaining_amount}
+                                onChange={e => handleDebtDtlChange(e, 3, i)}/>
+                        </td>
+                        <td>
+                            <a className="btn btn-link" onClick={e => removeDebtDtl(e, 3, i)}>ลบรายการนี้</a>
+                        </td>
+                    </tr>
+                    ))}
+                    <tr>
+                        <td colSpan="5">
+                            <a className="btn btn-link" onClick={e => addDebtDtl(e, 3)}>เพิ่มรายการ</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <h5 className="mb-3">4.หนี้สินแบบสหกรณ์</h5>
+            <div className="form-group row">
+                <label htmlFor="staticEmail" className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
+                <div className="col-4">
+                    <input type="number" 
+                        className="form-control"
+                        id="debt_type_4" 
+                        name="debt_type_4" 
+                        value={member.debt_type_4 || 0} 
+                        onChange={handleInputChange}/>
+                </div>
+                <label className="col-2 col-form-label">บาท</label>
+            </div>
+            <table className="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">รายการ</th>
+                        <th scope="col">จำนวนเงินที่กู้</th>
+                        <th scope="col">จำนวนหนี้คงเหลือ</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {member.debt_type_4_dtl.map((dtl,i) => (
+                    <tr key={i}>
+                        <td scope="row">{ i + 1 }</td>
+                        <td>
+                            <input type="text" 
+                                className="form-control" 
+                                name="desc"
+                                value={dtl.desc}
+                                onChange={e => handleDebtDtlChange(e, 4, i)}/>
+                        </td>
+                        <td>
+                            <input type="number" 
+                                className="form-control" 
+                                name="total_amount" 
+                                min="0" 
+                                value={dtl.total_amount}
+                                onChange={e => handleDebtDtlChange(e, 4, i)}/>
+                        </td>
+                        <td>
+                            <input type="number" 
+                                className="form-control" 
+                                name="remaining_amount" 
+                                min="0" 
+                                value={dtl.remaining_amount}
+                                onChange={e => handleDebtDtlChange(e, 4, i)}/>
+                        </td>
+                        <td>
+                            <a className="btn btn-link" onClick={e => removeDebtDtl(e, 4, i)}>ลบรายการนี้</a>
+                        </td>
+                    </tr>
+                    ))}
+                    <tr>
+                        <td colSpan="5">
+                            <a className="btn btn-link" onClick={e => addDebtDtl(e, 4)}>เพิ่มรายการ</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
             <h4 className="mb-3">สถานทีทำงาน</h4>
             <div className="form-row">
                 <div className="form-group col-4">
@@ -1057,9 +1622,9 @@ function MemberForm(props) {
             </div>
             <div className="form-row">
                 <div className="form-group col-2">
-                    <label htmlFor="workplace_no">เลขที่</label>
+                    <label htmlFor="workplace_no">เลขที่ <span className="text-danger">*</span></label>
                     <input type="text" 
-                        className="form-control" 
+                        className={`form-control ${errors.includes('workplace_no')? 'is-invalid': ''}`} 
                         id="workplace_no"
                         name="workplace_no" 
                         value={member.workplace_no || ''} 
@@ -1094,35 +1659,9 @@ function MemberForm(props) {
                 </div>
             </div>
             <div className="form-row">
-                <div className="form-group col-4">
-                    <label htmlFor="workplace_sub_district">ตำบล/แขวง <span className="text-danger">*</span></label>
-                    <select className="form-control" 
-                        id="workplace_sub_district" 
-                        name="workplace_sub_district" 
-                        value={member.workplace_sub_district || ''} 
-                        onChange={(e) => handleSubDistrictChange(e, 'workplace', member.workplace_province, member.workplace_district, 'workplace_postcode')}>
-                        <option>เลือก</option>
-                        {subDistricts.workplace.map((subDistrict) => (
-                        <option key={subDistrict} value={subDistrict}>{subDistrict}</option>
-                        ))}
-                    </select>
-                </div>
-                <div className="form-group col-4">
-                    <label htmlFor="workplace_district">อำเภอ/เขต <span className="text-danger">*</span></label>
-                    <select className="form-control" 
-                        id="workplace_district" 
-                        name="workplace_district" 
-                        value={member.workplace_district || ''} 
-                        onChange={(e) => handleDistrictChange(e, 'workplace', member.workplace_province)}>
-                        <option>เลือก</option>
-                        {districts.workplace.map((district) => (
-                        <option key={district} value={district}>{district}</option>
-                        ))}
-                    </select>
-                </div>
                 <div className="form-group col-2">
                     <label htmlFor="workplace_province">จังหวัด <span className="text-danger">*</span></label>
-                    <select className="form-control" 
+                    <select className={`custom-select ${errors.includes('workplace_province')? 'is-invalid': ''}`} 
                         id="workplace_province"
                         name="workplace_province" 
                         value={member.workplace_province || ''} 
@@ -1133,8 +1672,34 @@ function MemberForm(props) {
                         ))}
                     </select>
                 </div>
+                <div className="form-group col-4">
+                    <label htmlFor="workplace_district">อำเภอ/เขต <span className="text-danger">*</span></label>
+                    <select className={`custom-select ${errors.includes('workplace_district')? 'is-invalid': ''}`} 
+                        id="workplace_district" 
+                        name="workplace_district" 
+                        value={member.workplace_district || ''} 
+                        onChange={(e) => handleDistrictChange(e, 'workplace', member.workplace_province)}>
+                        <option>เลือก</option>
+                        {districts.workplace.map((district) => (
+                        <option key={district} value={district}>{district}</option>
+                        ))}
+                    </select>
+                </div>
+                <div className="form-group col-4">
+                    <label htmlFor="workplace_sub_district">ตำบล/แขวง <span className="text-danger">*</span></label>
+                    <select className={`custom-select ${errors.includes('workplace_sub_district')? 'is-invalid': ''}`} 
+                        id="workplace_sub_district" 
+                        name="workplace_sub_district" 
+                        value={member.workplace_sub_district || ''} 
+                        onChange={(e) => handleSubDistrictChange(e, 'workplace', member.workplace_province, member.workplace_district, 'workplace_postcode')}>
+                        <option>เลือก</option>
+                        {subDistricts.workplace.map((subDistrict) => (
+                        <option key={subDistrict} value={subDistrict}>{subDistrict}</option>
+                        ))}
+                    </select>
+                </div>
                 <div className="form-group col-2">
-                    <label htmlFor="workplace_postcode">รหัสไปรษณีย์ <span className="text-danger">*</span></label>
+                    <label htmlFor="workplace_postcode">รหัสไปรษณีย์</label>
                     <input type="text" 
                         className="form-control" 
                         id="workplace_postcode" 
@@ -1146,15 +1711,16 @@ function MemberForm(props) {
             <div className="form-row">
                 <div className="form-group col-2">
                     <label htmlFor="workplace_tel">โทรศัพท์ <span className="text-danger">*</span></label>
-                    <input type="text" 
-                        className="form-control" 
+                    <input type="number" 
+                        className={`form-control ${errors.includes('workplace_tel')? 'is-invalid': ''}`} 
                         id="workplace_tel"
                         name="workplace_tel" 
                         value={member.workplace_tel || ''} 
-                        onChange={handleInputChange}/>
+                        onChange={handleInputNumberChange}
+                        maxLength="10"/>
                 </div>
                 <div className="form-group col-2">
-                    <label htmlFor="workplace_fax">โทรสาร <span className="text-danger">*</span></label>
+                    <label htmlFor="workplace_fax">โทรสาร</label>
                     <input type="text" 
                         className="form-control" 
                         id="workplace_fax"
@@ -1163,18 +1729,18 @@ function MemberForm(props) {
                         onChange={handleInputChange}/>
                 </div>
                 <div className="form-group col-2">
-                    <label htmlFor="work_exp">อายุงานปัจจุบัน (ปี/เดือน) <span className="text-danger">*</span></label>
+                    <label htmlFor="work_exp">อายุงานปัจจุบัน (ปี/เดือน)</label>
                     <input type="text" 
-                        className="form-control" 
+                        className="form-control"
                         id="work_exp"
                         name="work_exp" 
                         value={member.work_exp || ''} 
                         onChange={handleInputChange}/>
                 </div>
                 <div className="form-group col-6">
-                    <label htmlFor="job_position">ชื่อตำแหน่งงาน <span className="text-danger">*</span></label>
+                    <label htmlFor="job_position">ชื่อตำแหน่งงาน</label>
                     <input type="text" 
-                        className="form-control" 
+                        className="form-control"
                         id="job_position"
                         name="job_position" 
                         value={member.job_position || ''} 
@@ -1196,7 +1762,7 @@ function MemberForm(props) {
             <div className="form-row">
                 <div className="form-group col-2">
                     <label htmlFor="benef_title">คำนำหน้า <span className="text-danger">*</span></label>
-                    <select className="form-control" 
+                    <select className={`custom-select ${errors.includes('benef_title')? 'is-invalid': ''}`}
                         id="benef_title" 
                         name="benef_title" 
                         value={member.benef_title || ''} 
@@ -1220,7 +1786,7 @@ function MemberForm(props) {
                 <div className="form-group col-4">
                     <label htmlFor="benef_firstname">ชื่อ <span className="text-danger">*</span></label>
                     <input type="text" 
-                        className="form-control" 
+                        className={`form-control ${errors.includes('benef_firstname')? 'is-invalid': ''}`}
                         id="benef_firstname" 
                         name="benef_firstname" 
                         value={member.benef_firstname || ''} 
@@ -1229,7 +1795,7 @@ function MemberForm(props) {
                 <div className="form-group col-4">
                     <label htmlFor="benef_lastname">นามสกุล <span className="text-danger">*</span></label>
                     <input type="text" 
-                        className="form-control" 
+                        className={`form-control ${errors.includes('benef_lastname')? 'is-invalid': ''}`}
                         id="benef_lastname" 
                         name="benef_lastname" 
                         value={member.benef_lastname || ''} 
@@ -1239,12 +1805,13 @@ function MemberForm(props) {
             <div className="form-row">
                 <div className="form-group col-3">
                     <label htmlFor="benef_id_card_no">บัตรประจำตัวประชาชนเลขที่ <span className="text-danger">*</span></label>
-                    <input type="text" 
-                        className={`form-control ${className.benef_id_card_no}`} 
+                    <input type="number" 
+                        className={`form-control ${errors.includes('benef_id_card_no')? 'is-invalid': ''}`} 
                         id="benef_id_card_no"
                         name="benef_id_card_no" 
                         value={member.benef_id_card_no || ''} 
-                        onChange={handleIdChange}/>
+                        onChange={handleIdChange}
+                        maxLength="13"/>
                 </div>
                 <div className="form-group col-3">
                     <label htmlFor="benef_relationship">มีความสัมพันธ์เป็น</label>
@@ -1252,15 +1819,15 @@ function MemberForm(props) {
                         className="form-control" 
                         id="benef_relationship" 
                         name="benef_relationship" 
-                        value={member.relationship || ''} 
+                        value={member.benef_relationship || ''} 
                         onChange={handleInputChange}/>
                 </div>
             </div>
             <div className="form-row">
                 <div className="form-group col-2">
-                    <label htmlFor="benef_house_no">เลขที่</label>
+                    <label htmlFor="benef_house_no">เลขที่ <span className="text-danger">*</span></label>
                     <input type="text" 
-                        className="form-control" 
+                        className={`form-control ${errors.includes('benef_house_no')? 'is-invalid': ''}`} 
                         id="benef_house_no" 
                         name="benef_house_no" 
                         value={member.benef_house_no || ''} 
@@ -1295,35 +1862,9 @@ function MemberForm(props) {
                 </div>
             </div>
             <div className="form-row">
-                <div className="form-group col-4">
-                    <label htmlFor="benef_sub_district">ตำบล/แขวง <span className="text-danger">*</span></label>
-                    <select className="form-control" 
-                        id="benef_sub_district" 
-                        name="benef_sub_district" 
-                        value={member.benef_sub_district || ''} 
-                        onChange={(e) => handleSubDistrictChange(e, 'benef', member.benef_province, member.benef_district, 'benef_postcode')}>
-                        <option>เลือก</option>
-                        {subDistricts.benef.map((subDistrict) => (
-                        <option key={subDistrict} value={subDistrict}>{subDistrict}</option>
-                        ))}
-                    </select>
-                </div>
-                <div className="form-group col-4">
-                    <label htmlFor="benef_district">อำเภอ/เขต <span className="text-danger">*</span></label>
-                    <select className="form-control" 
-                        id="benef_district" 
-                        name="benef_district" 
-                        value={member.benef_district || ''} 
-                        onChange={(e) => handleDistrictChange(e, 'benef', member.benef_province)}>
-                        <option>เลือก</option>
-                        {districts.benef.map((district) => (
-                        <option key={district} value={district}>{district}</option>
-                        ))}
-                    </select>
-                </div>
                 <div className="form-group col-2">
                     <label htmlFor="benef_province">จังหวัด <span className="text-danger">*</span></label>
-                    <select className="form-control" 
+                    <select className={`custom-select ${errors.includes('benef_province')? 'is-invalid': ''}`} 
                         id="benef_province"
                         name="benef_province" 
                         value={member.benef_province || ''} 
@@ -1334,8 +1875,34 @@ function MemberForm(props) {
                         ))}
                     </select>
                 </div>
+                <div className="form-group col-4">
+                    <label htmlFor="benef_district">อำเภอ/เขต <span className="text-danger">*</span></label>
+                    <select className={`custom-select ${errors.includes('benef_district')? 'is-invalid': ''}`} 
+                        id="benef_district" 
+                        name="benef_district" 
+                        value={member.benef_district || ''} 
+                        onChange={(e) => handleDistrictChange(e, 'benef', member.benef_province)}>
+                        <option>เลือก</option>
+                        {districts.benef.map((district) => (
+                        <option key={district} value={district}>{district}</option>
+                        ))}
+                    </select>
+                </div>
+                <div className="form-group col-4">
+                    <label htmlFor="benef_sub_district">ตำบล/แขวง <span className="text-danger">*</span></label>
+                    <select className={`custom-select ${errors.includes('benef_sub_district')? 'is-invalid': ''}`} 
+                        id="benef_sub_district" 
+                        name="benef_sub_district" 
+                        value={member.benef_sub_district || ''} 
+                        onChange={(e) => handleSubDistrictChange(e, 'benef', member.benef_province, member.benef_district, 'benef_postcode')}>
+                        <option>เลือก</option>
+                        {subDistricts.benef.map((subDistrict) => (
+                        <option key={subDistrict} value={subDistrict}>{subDistrict}</option>
+                        ))}
+                    </select>
+                </div>
                 <div className="form-group col-2">
-                    <label htmlFor="benef_postcode">รหัสไปรษณีย์ <span className="text-danger">*</span></label>
+                    <label htmlFor="benef_postcode">รหัสไปรษณีย์</label>
                     <input type="text" 
                         className="form-control" 
                         id="benef_postcode" 
@@ -1346,13 +1913,14 @@ function MemberForm(props) {
             </div>
             <div className="form-row">
                 <div className="form-group col-2">
-                    <label htmlFor="benef_tel">โทรศัพท์ <span className="text-danger">*</span></label>
-                    <input type="text" 
+                    <label htmlFor="benef_tel">โทรศัพท์</label>
+                    <input type="number" 
                         className="form-control" 
                         id="benef_tel" 
                         name="benef_tel" 
                         value={member.benef_tel || ''} 
-                        onChange={handleInputChange}/>
+                        onChange={handleInputNumberChange}
+                        maxLength="10"/>
                 </div>
                 <div className="form-group col-2">
                     <label htmlFor="benef_fax">โทรสาร</label>
@@ -1364,7 +1932,39 @@ function MemberForm(props) {
                         onChange={handleInputChange}/>
                 </div>
             </div>
-            <button type="submit" className="btn btn-primary">บันทึกข้อมูล</button>
+            <h4 className="mb-3">เอกสารประกอบ <button type="button" className="btn btn-link" onClick={addDoc}>เพิ่มเอกสารประกอบ</button></h4>
+            {member.docs.map((doc,i) => (
+            <div className="form-row" key={i}>
+                <div className="form-group col-3">
+                    <label htmlFor="benef_title">คำอธิบาย</label>
+                    <input type="text" 
+                        className="form-control" 
+                        name="desc"
+                        value={doc.desc}
+                        onChange={e => handleDocChange(e, i)}/>
+                </div>
+                <div className="form-group col-3">
+                    <label htmlFor="benef_other_title">ไฟล์แนบ</label>
+                    <div className="custom-file">
+                        <input type="file" 
+                            className="custom-file-input" 
+                            id="customFile" 
+                            onChange={e => handleInputFileChange(e, i)}/>
+                        <label className="custom-file-label" htmlFor="customFile">เลือกไฟล์</label>
+                    </div>
+                </div>
+                <div className="form-group col-3">
+                    <label htmlFor="benef_other_title">ชื่อไฟล์</label>
+                    <input type="text" 
+                        className="form-control-plaintext"
+                        value={doc.original_name}
+                        readOnly/>
+                </div>
+                <div className="form-group col-3">
+                    <button type="button" className="btn btn-link mt-3" onClick={e => removeDoc(e, i)}>ลบเอกสารประกอบ</button>
+                </div>
+            </div>
+            ))}
         </form>
     );
 }
@@ -1372,6 +1972,6 @@ function MemberForm(props) {
 export default MemberForm;
 
 if (document.getElementById('member-form')) {
-    const data = document.getElementById('member-form').getAttribute('data');
-    ReactDOM.render(<MemberForm data={data} />, document.getElementById('member-form'));
+    const member = document.getElementById('member-form').getAttribute('data-member');
+    ReactDOM.render(<MemberForm member={member}/>, document.getElementById('member-form'));
 }

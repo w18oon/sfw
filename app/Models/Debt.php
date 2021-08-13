@@ -9,7 +9,7 @@ class Debt extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['type', 'desc', 'total_amount', 'remaining_amount'];
+    protected $fillable = ['type', 'bank_name', 'total_amount', 'remaining_amount', 'bank_branch', 'contact', 'contract_no', 'contract_date', 'status', 'other_status', 'date_1', 'date_2', 'interest'];
 
     public function member()
     {
