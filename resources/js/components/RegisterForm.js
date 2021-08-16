@@ -156,77 +156,13 @@ const RegisterForm = (props) => {
         other_income_amount: '',
         source_other_income: '',
         debt_type_1: 0,
-        debt_type_1_dtl: [{
-            bank_name: '',
-            bank_branch: '',
-            contact: '',
-            contract_no: '',
-            contract_date: '',
-            tmp_contract_date: '',
-            status: 'ปกติ',
-            other_status: '',
-            total_amount: '',
-            remaining_amount: '',
-            date_1: '',
-            tmp_date_1: '',
-            date_2: '',
-            tmp_date_2: '',
-            interest: '',
-        }],
+        debt_type_1_dtl: [],
         debt_type_2: 0,
-        debt_type_2_dtl: [{
-            bank_name: '',
-            bank_branch: '',
-            contact: '',
-            contract_no: '',
-            contract_date: '',
-            tmp_contract_date: '',
-            status: 'ปกติ',
-            other_status: '',
-            total_amount: '',
-            remaining_amount: '',
-            date_1: '',
-            tmp_date_1: '',
-            date_2: '',
-            tmp_date_2: '',
-            interest: '',
-        }],
+        debt_type_2_dtl: [],
         debt_type_3: 0,
-        debt_type_3_dtl: [{
-            bank_name: '',
-            bank_branch: '',
-            contact: '',
-            contract_no: '',
-            contract_date: '',
-            tmp_contract_date: '',
-            status: 'ปกติ',
-            other_status: '',
-            total_amount: '',
-            remaining_amount: '',
-            date_1: '',
-            tmp_date_1: '',
-            date_2: '',
-            tmp_date_2: '',
-            interest: '',
-        }],
+        debt_type_3_dtl: [],
         debt_type_4: 0,
-        debt_type_4_dtl: [{
-            bank_name: '',
-            bank_branch: '',
-            contact: '',
-            contract_no: '',
-            contract_date: '',
-            tmp_contract_date: '',
-            status: 'ปกติ',
-            other_status: '',
-            total_amount: '',
-            remaining_amount: '',
-            date_1: '',
-            tmp_date_1: '',
-            date_2: '',
-            tmp_date_2: '',
-            interest: '',
-        }],
+        debt_type_4_dtl: [],
         workplace: '',
         building: '',
         floor: '',
@@ -577,11 +513,13 @@ const RegisterForm = (props) => {
             }
         });
 
-        const remainingAmount = newDebtDtl.reduce((acc, curr) => { return acc + parseFloat(curr.remaining_amount) }, 0);
+        let remainingAmount = newDebtDtl.reduce((acc, curr) => { return acc + parseFloat(curr.remaining_amount ? curr.remaining_amount: 0) }, 0);
+        let num = remainingAmount.toString().split('.');
+        num[0] = num[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         setMember(prevState => {
             return {
                 ...prevState,
-                [`debt_type_${debtType}`]: remainingAmount
+                [`debt_type_${debtType}`]: num.join('.')
             }
         });
     }
@@ -630,11 +568,13 @@ const RegisterForm = (props) => {
         });
 
         if (event.target.name === 'remaining_amount') {
-            const remainingAmount = newDebtDtl.reduce((acc, curr) => { return acc + parseFloat(curr.remaining_amount ? curr.remaining_amount: 0) }, 0);
+            let remainingAmount = newDebtDtl.reduce((acc, curr) => { return acc + parseFloat(curr.remaining_amount ? curr.remaining_amount: 0) }, 0);
+            let num = remainingAmount.toString().split('.');
+            num[0] = num[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             setMember(prevState => {
                 return {
                     ...prevState,
-                    [`debt_type_${debtType}`]: remainingAmount
+                    [`debt_type_${debtType}`]: num.join('.')
                 }
             });
         }
@@ -757,13 +697,13 @@ const RegisterForm = (props) => {
             }
         });
 
-        if (numberOfErrors > 0) {
-            swal('เกิดข้อผิดพลาด', 'กรุณากรอกข้อมูลให้ครบถ้วน', 'error');
-            return;
-        } else {
+        // if (numberOfErrors > 0) {
+        //     swal('เกิดข้อผิดพลาด', 'กรุณากรอกข้อมูลให้ครบถ้วน', 'error');
+        //     return;
+        // } else {
             // show modal for confirm save data
             setShowConfModal(true);
-        }
+        // }
     }
 
     const handleConfSave = (event) => {
@@ -850,8 +790,8 @@ const RegisterForm = (props) => {
                 </Modal.Footer>
             </Modal>
             <Modal backdrop="static" keyboard={false} show={showConfModal} size="xl">
-                <Modal.Header>
-                    <Modal.Title>ข้อมูลผู้สมัคร</Modal.Title>
+                <Modal.Header style={{ display: "flex", justifyContent: "center", alignItems: "center", }}>
+                    <Modal.Title>ยืนยันข้อมูลผู้สมัคร</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <fieldset>
@@ -1136,7 +1076,7 @@ const RegisterForm = (props) => {
                         <div className="form-group row">
                             <label className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
                             <div className="col-4">
-                                <input type="number" className="form-control" name="debt_type_1" value={member.debt_type_1 || 0} readOnly/>
+                                <input type="text" className="form-control" name="debt_type_1" value={member.debt_type_1 || ''} readOnly/>
                             </div>
                             <label className="col-2 col-form-label">บาท</label>
                         </div>
@@ -1158,7 +1098,7 @@ const RegisterForm = (props) => {
                                 </div>
                                 <div className="form-group col-2">
                                     <label>เบอร์โทรศัพท์</label>
-                                    <input type="text" className="form-control" value={dtl.contact || ''} readOnly/>
+                                    <input type="number" className="form-control" value={dtl.contact || ''} readOnly/>
                                 </div>
                                 <div className="form-group col-2">
                                     <label>เลขที่สัญญา</label>
@@ -1224,7 +1164,7 @@ const RegisterForm = (props) => {
                                 </div>
                                 <div className="form-group col-2">
                                     <label>เบอร์โทรศัพท์</label>
-                                    <input type="text" className="form-control" value={dtl.contact || ''} readOnly/>
+                                    <input type="number" className="form-control" value={dtl.contact || ''} readOnly/>
                                 </div>
                                 <div className="form-group col-2">
                                     <label>เลขที่สัญญา</label>
@@ -1286,7 +1226,7 @@ const RegisterForm = (props) => {
                                 </div>
                                 <div className="form-group col-2">
                                     <label>เบอร์โทรศัพท์</label>
-                                    <input type="text" className="form-control" value={dtl.contact || ''} readOnly/>
+                                    <input type="number" className="form-control" value={dtl.contact || ''} readOnly/>
                                 </div>
                                 <div className="form-group col-2">
                                     <label>กู้ยืมเงินลงวันที่</label>
@@ -1352,7 +1292,7 @@ const RegisterForm = (props) => {
                                 </div>
                                 <div className="form-group col-2">
                                     <label>เบอร์โทรศัพท์</label>
-                                    <input type="text" className="form-control" value={dtl.contact || ''} readOnly/>
+                                    <input type="number" className="form-control" value={dtl.contact || ''} readOnly/>
                                 </div>
                                 <div className="form-group col-2">
                                     <label>เลขที่สัญญา</label>
@@ -1550,7 +1490,7 @@ const RegisterForm = (props) => {
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">รายการ</th>
+                                    <th scope="col" style={{width: '40%'}}>รายการ</th>
                                     <th scope="col">ไฟล์</th>
                                 </tr>
                             </thead>
@@ -1572,7 +1512,7 @@ const RegisterForm = (props) => {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="light" onClick={e => { e.preventDefault(); setShowConfModal(false); }}><i className="far fa-edit"></i> แก้ไขข้อมูล</Button>
-                    <Button variant="success" onClick={handleConfSave}><i className="fas fa-check-circle"></i> ยืนยันบันทึกข้อมูล</Button>
+                    <Button variant="success" onClick={handleConfSave}><i className="fas fa-check-circle"></i> ยืนยันการสมัครสมาชิก</Button>
                 </Modal.Footer>
             </Modal>
             <h4 className="mb-3">ข้อมูลส่วนตัว</h4>
@@ -1646,16 +1586,7 @@ const RegisterForm = (props) => {
                 </div>
                 <div className="form-group col-2">
                     <label htmlFor="exp_date">วันหมดอายุ <span className="text-danger">*</span></label>
-                    <DatePicker dateFormat="dd/MM/yyyy" 
-                        locale="th" 
-                        selected={selectedDate} 
-                        onChange={(date) => handleDatePickerChange(date)}
-                        minDate={new Date()}
-                        peekNextMonth
-                        showMonthDropdown
-                        showYearDropdown
-                        dropdownMode="select"
-                        className={`form-control ${errors.includes('exp_date')? 'is-invalid': ''}`}/>
+                    <DatePicker dateFormat="dd/MM/yyyy" locale="th" selected={selectedDate} onChange={(date) => handleDatePickerChange(date)} minDate={new Date()} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" className={`form-control ${errors.includes('exp_date')? 'is-invalid': ''}`}/>
                 </div>
                 <div className="form-group col-1">
                     <label htmlFor="age">อายุ <span className="text-danger">*</span></label>
@@ -2263,7 +2194,7 @@ const RegisterForm = (props) => {
             <div className="form-group row">
                 <label className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
                 <div className="col-4">
-                    <input type="number" className="form-control" name="debt_type_1" value={member.debt_type_1 || 0} readOnly/>
+                    <input type="text" className="form-control" name="debt_type_1" value={member.debt_type_1 || 0} readOnly/>
                 </div>
                 <label className="col-2 col-form-label">บาท</label>
             </div>
@@ -2279,37 +2210,37 @@ const RegisterForm = (props) => {
                 </div>
                 <div className="form-row">
                     <div className="form-group col-3">
-                        <label>สถาบันการเงิน <span className="text-danger">*</span></label>
+                        <label>สถาบันการเงิน</label>
                         <input type="text" className={`form-control ${handleErrClass(`1_${i}_bank_name`)}`} name="bank_name" value={dtl.bank_name || ''}  onChange={e => handleDebtDtlChange(e, 1, i)}/>
                     </div>
                     <div className="form-group col-3">
-                        <label>สาขา <span className="text-danger">*</span></label>
+                        <label>สาขา</label>
                         <input type="text" className={`form-control ${handleErrClass(`1_${i}_bank_branch`)}`} name="bank_branch" value={dtl.bank_branch || ''}  onChange={e => handleDebtDtlChange(e, 1, i)}/>
                     </div>
                     <div className="form-group col-2">
-                        <label>เบอร์โทรศัพท์ <span className="text-danger">*</span></label>
-                        <input type="text" className={`form-control ${handleErrClass(`1_${i}_contact`)}`} name="contact" value={dtl.contact || ''}  onChange={e => handleDebtDtlChange(e, 1, i)}/>
+                        <label>เบอร์โทรศัพท์</label>
+                        <input type="number" className={`form-control ${handleErrClass(`1_${i}_contact`)}`} name="contact" value={dtl.contact || ''}  onChange={e => handleDebtDtlChange(e, 1, i)}/>
                     </div>
                     <div className="form-group col-2">
-                        <label>เลขที่สัญญา <span className="text-danger">*</span></label>
+                        <label>เลขที่สัญญา</label>
                         <input type="text" className={`form-control ${handleErrClass(`1_${i}_contract_no`)}`} name="contract_no" value={dtl.contract_no || ''}  onChange={e => handleDebtDtlChange(e, 1, i)}/>
                     </div>
                     <div className="form-group col-2">
-                        <label>วันที่ลงสัญญา <span className="text-danger">*</span></label>
-                        <DatePicker className={`form-control ${handleErrClass(`1_${i}_contract_date`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_contract_date} onChange={(date) => handleDebtDateChange(date, 1, i, 'contract_date', 'tmp_contract_date')} minDate={new Date()} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"/>
+                        <label>วันที่ลงสัญญา</label>
+                        <DatePicker className={`form-control ${handleErrClass(`1_${i}_contract_date`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_contract_date} onChange={(date) => handleDebtDateChange(date, 1, i, 'contract_date', 'tmp_contract_date')} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"/>
                     </div>
                 </div>
                 <div className="form-row">
                     <div className="form-group col-2">
-                        <label>จำนวนเงินที่กู้ <span className="text-danger">*</span></label>
+                        <label>จำนวนเงินที่กู้</label>
                         <input type="number" className={`form-control ${handleErrClass(`1_${i}_total_amount`)}`} name="total_amount" value={dtl.total_amount || ''}  onChange={e => handleDebtDtlChange(e, 1, i)}/>
                     </div>
                     <div className="form-group col-2">
-                        <label>จำนวนหนี้คงเหลือ <span className="text-danger">*</span></label>
+                        <label>จำนวนหนี้คงเหลือ</label>
                         <input type="number" className={`form-control ${handleErrClass(`1_${i}_remaining_amount`)}`} name="remaining_amount" value={dtl.remaining_amount || ''}  onChange={e => handleDebtDtlChange(e, 1, i)}/>
                     </div>
                     <div className="form-group col-2">
-                        <label>สถานะหนี้ <span className="text-danger">*</span></label>
+                        <label>สถานะหนี้</label>
                         <select className="custom-select" name="status" value={dtl.status || ''} onChange={e => handleDebtDtlChange(e, 1, i)}>
                             {debtStatusLst.map(debtStatus => (
                             <option key={debtStatus} value={debtStatus}>{debtStatus}</option>
@@ -2321,12 +2252,12 @@ const RegisterForm = (props) => {
                         <input type="text" className={`form-control ${handleErrClass(`1_${i}_other_status`)}`} name="other_status" value={dtl.other_status || ''} onChange={e => handleDebtDtlChange(e, 1, i)} disabled={dtl.status != 'อื่นๆ'}/>
                     </div>
                     <div className="form-group col-2">
-                        <label>วันที่ถูกฟ้องต่อศาล <span className="text-danger">*</span></label>
-                        <DatePicker className={`form-control ${handleErrClass(`1_${i}_date_1`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_date_1} onChange={(date) => handleDebtDateChange(date, 1, i, 'date_1', 'tmp_date_1')} minDate={new Date()} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"/>
+                        <label>วันที่ถูกฟ้องต่อศาล</label>
+                        <DatePicker className={`form-control ${handleErrClass(`1_${i}_date_1`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_date_1} onChange={(date) => handleDebtDateChange(date, 1, i, 'date_1', 'tmp_date_1')} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" disabled={dtl.status == 'ปกติ'}/>
                     </div>
                     <div className="form-group col-2">
-                        <label>วันที่ถูกบังคับคดี <span className="text-danger">*</span></label>
-                        <DatePicker className={`form-control ${handleErrClass(`1_${i}_date_2`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_date_2} onChange={(date) => handleDebtDateChange(date, 1, i, 'date_2', 'tmp_date_2')} minDate={new Date()} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"/>
+                        <label>วันที่ถูกบังคับคดี</label>
+                        <DatePicker className={`form-control ${handleErrClass(`1_${i}_date_2`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_date_2} onChange={(date) => handleDebtDateChange(date, 1, i, 'date_2', 'tmp_date_2')} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" disabled={dtl.status == 'ปกติ'}/>
                     </div>
                 </div>
             </fieldset>
@@ -2357,37 +2288,37 @@ const RegisterForm = (props) => {
                 </div>
                 <div className="form-row">
                     <div className="form-group col-3">
-                        <label>สถาบันการเงิน <span className="text-danger">*</span></label>
+                        <label>สถาบันการเงิน</label>
                         <input type="text" className={`form-control ${handleErrClass(`2_${i}_bank_name`)}`} name="bank_name" value={dtl.bank_name || ''}  onChange={e => handleDebtDtlChange(e, 2, i)}/>
                     </div>
                     <div className="form-group col-3">
-                        <label>สาขา <span className="text-danger">*</span></label>
+                        <label>สาขา</label>
                         <input type="text" className={`form-control ${handleErrClass(`2_${i}_bank_branch`)}`} name="bank_branch" value={dtl.bank_branch || ''}  onChange={e => handleDebtDtlChange(e, 2, i)}/>
                     </div>
                     <div className="form-group col-2">
-                        <label>เบอร์โทรศัพท์ <span className="text-danger">*</span></label>
-                        <input type="text" className={`form-control ${handleErrClass(`2_${i}_contact`)}`} name="contact" value={dtl.contact || ''}  onChange={e => handleDebtDtlChange(e, 2, i)}/>
+                        <label>เบอร์โทรศัพท์</label>
+                        <input type="number" className={`form-control ${handleErrClass(`2_${i}_contact`)}`} name="contact" value={dtl.contact || ''}  onChange={e => handleDebtDtlChange(e, 2, i)}/>
                     </div>
                     <div className="form-group col-2">
-                        <label>เลขที่สัญญา <span className="text-danger">*</span></label>
+                        <label>เลขที่สัญญา</label>
                         <input type="text" className={`form-control ${handleErrClass(`2_${i}_contract_no`)}`} name="contract_no" value={dtl.contract_no || ''}  onChange={e => handleDebtDtlChange(e, 2, i)}/>
                     </div>
                     <div className="form-group col-2">
-                        <label>วันที่ลงสัญญา <span className="text-danger">*</span></label>
-                        <DatePicker className={`form-control ${handleErrClass(`2_${i}_contract_date`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_contract_date} onChange={(date) => handleDebtDateChange(date, 2, i, 'contract_date', 'tmp_contract_date')} minDate={new Date()} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"/>
+                        <label>วันที่ลงสัญญา</label>
+                        <DatePicker className={`form-control ${handleErrClass(`2_${i}_contract_date`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_contract_date} onChange={(date) => handleDebtDateChange(date, 2, i, 'contract_date', 'tmp_contract_date')} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"/>
                     </div>
                 </div>
                 <div className="form-row">
                     <div className="form-group col-2">
-                        <label>จำนวนเงินที่กู้ <span className="text-danger">*</span></label>
+                        <label>จำนวนเงินที่กู้</label>
                         <input type="number" className={`form-control ${handleErrClass(`2_${i}_total_amount`)}`} name="total_amount" value={dtl.total_amount || ''}  onChange={e => handleDebtDtlChange(e, 2, i)}/>
                     </div>
                     <div className="form-group col-2">
-                        <label>จำนวนหนี้คงเหลือ <span className="text-danger">*</span></label>
+                        <label>จำนวนหนี้คงเหลือ</label>
                         <input type="number" className={`form-control ${handleErrClass(`2_${i}_remaining_amount`)}`} name="remaining_amount" value={dtl.remaining_amount || ''}  onChange={e => handleDebtDtlChange(e, 2, i)}/>
                     </div>
                     <div className="form-group col-2">
-                        <label>สถานะหนี้ <span className="text-danger">*</span></label>
+                        <label>สถานะหนี้</label>
                         <select className="custom-select" name="status" value={dtl.status || ''} onChange={e => handleDebtDtlChange(e, 2, i)}>
                             {debtStatusLst.map(debtStatus => (
                             <option key={debtStatus} value={debtStatus}>{debtStatus}</option>
@@ -2399,12 +2330,12 @@ const RegisterForm = (props) => {
                         <input type="text" className={`form-control ${handleErrClass(`2_${i}_other_status`)}`} name="other_status" value={dtl.other_status || ''} onChange={e => handleDebtDtlChange(e, 2, i)} disabled={dtl.status != 'อื่นๆ'}/>
                     </div>
                     <div className="form-group col-2">
-                        <label>วันที่ถูกฟ้องต่อศาล <span className="text-danger">*</span></label>
-                        <DatePicker className={`form-control ${handleErrClass(`2_${i}_date_1`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_date_1} onChange={(date) => handleDebtDateChange(date, 2, i, 'date_1', 'tmp_date_1')} minDate={new Date()} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"/>
+                        <label>วันที่ถูกฟ้องต่อศาล</label>
+                        <DatePicker className={`form-control ${handleErrClass(`2_${i}_date_1`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_date_1} onChange={(date) => handleDebtDateChange(date, 2, i, 'date_1', 'tmp_date_1')} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" disabled={dtl.status == 'ปกติ'}/>
                     </div>
                     <div className="form-group col-2">
-                        <label>วันที่ถูกบังคับคดี <span className="text-danger">*</span></label>
-                        <DatePicker className={`form-control ${handleErrClass(`2_${i}_date_2`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_date_2} onChange={(date) => handleDebtDateChange(date, 2, i, 'date_2', 'tmp_date_2')} minDate={new Date()} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"/>
+                        <label>วันที่ถูกบังคับคดี</label>
+                        <DatePicker className={`form-control ${handleErrClass(`2_${i}_date_2`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_date_2} onChange={(date) => handleDebtDateChange(date, 2, i, 'date_2', 'tmp_date_2')} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" disabled={dtl.status == 'ปกติ'}/>
                     </div>
                 </div>
             </fieldset>
@@ -2430,38 +2361,38 @@ const RegisterForm = (props) => {
                         <strong>รายการที่ 3.{ i + 1 }</strong>
                     </div>
                     <div className="form-group col-6 text-right">
-                        <button type="button" className="btn btn-outline-danger" onClick={e => removeDebtDtl(e, 2, i)}><i className="far fa-trash-alt"></i> ลบรายการนี้</button>
+                        <button type="button" className="btn btn-outline-danger" onClick={e => removeDebtDtl(e, 3, i)}><i className="far fa-trash-alt"></i> ลบรายการนี้</button>
                     </div>
                 </div>
                 <div className="form-row">
                     <div className="form-group col-2">
-                        <label>กู้ยืมเงินจาก <span className="text-danger">*</span></label>
+                        <label>กู้ยืมเงินจาก</label>
                         <input type="text" className={`form-control ${handleErrClass(`3_${i}_bank_name`)}`} name="bank_name" value={dtl.bank_name || ''}  onChange={e => handleDebtDtlChange(e, 3, i)}/>
                     </div>
                     <div className="form-group col-2">
-                        <label>เบอร์โทรศัพท์ <span className="text-danger">*</span></label>
-                        <input type="text" className={`form-control ${handleErrClass(`3_${i}_contact`)}`} name="contact" value={dtl.contact || ''}  onChange={e => handleDebtDtlChange(e, 3, i)}/>
+                        <label>เบอร์โทรศัพท์</label>
+                        <input type="number" className={`form-control ${handleErrClass(`3_${i}_contact`)}`} name="contact" value={dtl.contact || ''}  onChange={e => handleDebtDtlChange(e, 3, i)}/>
                     </div>
                     <div className="form-group col-2">
-                        <label>กู้ยืมเงินลงวันที่ <span className="text-danger">*</span></label>
-                        <DatePicker className={`form-control ${handleErrClass(`3_${i}_contract_date`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_contract_date} onChange={(date) => handleDebtDateChange(date, 3, i, 'contract_date', 'tmp_contract_date')} minDate={new Date()} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"/>
+                        <label>กู้ยืมเงินลงวันที่</label>
+                        <DatePicker className={`form-control ${handleErrClass(`3_${i}_contract_date`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_contract_date} onChange={(date) => handleDebtDateChange(date, 3, i, 'contract_date', 'tmp_contract_date')} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"/>
                     </div>
                     <div className="form-group col-2">
-                        <label>จำนวนเงินที่กู้ <span className="text-danger">*</span></label>
+                        <label>จำนวนเงินที่กู้</label>
                         <input type="number" className={`form-control ${handleErrClass(`3_${i}_total_amount`)}`} name="total_amount" value={dtl.total_amount || ''}  onChange={e => handleDebtDtlChange(e, 3, i)}/>
                     </div>
                     <div className="form-group col-2">
-                        <label>ดอกเบี้ยร้อยละ <span className="text-danger">*</span></label>
+                        <label>ดอกเบี้ยร้อยละ</label>
                         <input type="number" className={`form-control ${handleErrClass(`3_${i}_interest`)}`} name="interest" value={dtl.interest || ''}  onChange={e => handleDebtDtlChange(e, 3, i)}/>
                     </div>
                     <div className="form-group col-2">
-                        <label>จำนวนหนี้คงเหลือ <span className="text-danger">*</span></label>
+                        <label>จำนวนหนี้คงเหลือ</label>
                         <input type="number" className={`form-control ${handleErrClass(`3_${i}_remaining_amount`)}`} name="remaining_amount" value={dtl.remaining_amount || ''}  onChange={e => handleDebtDtlChange(e, 3, i)}/>
                     </div>
                 </div>
                 <div className="form-row">
                     <div className="form-group col-2">
-                        <label>สถานะหนี้ <span className="text-danger">*</span></label>
+                        <label>สถานะหนี้</label>
                         <select className="custom-select" name="status" value={dtl.status || ''} onChange={e => handleDebtDtlChange(e, 3, i)}>
                             {debtStatusLst.map(debtStatus => (
                             <option key={debtStatus} value={debtStatus}>{debtStatus}</option>
@@ -2473,12 +2404,12 @@ const RegisterForm = (props) => {
                         <input type="text" className={`form-control ${handleErrClass(`3_${i}_other_status`)}`} name="other_status" value={dtl.other_status || ''} onChange={e => handleDebtDtlChange(e, 3, i)} disabled={dtl.status != 'อื่นๆ'}/>
                     </div>
                     <div className="form-group col-2">
-                        <label>วันที่ถูกฟ้องต่อศาล <span className="text-danger">*</span></label>
-                        <DatePicker className={`form-control ${handleErrClass(`3_${i}_date_1`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_date_1} onChange={(date) => handleDebtDateChange(date, 3, i, 'date_1', 'tmp_date_1')} minDate={new Date()} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"/>
+                        <label>วันที่ถูกฟ้องต่อศาล</label>
+                        <DatePicker className={`form-control ${handleErrClass(`3_${i}_date_1`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_date_1} onChange={(date) => handleDebtDateChange(date, 3, i, 'date_1', 'tmp_date_1')} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" disabled={dtl.status == 'ปกติ'}/>
                     </div>
                     <div className="form-group col-2">
-                        <label>วันที่ถูกบังคับคดี <span className="text-danger">*</span></label>
-                        <DatePicker className={`form-control ${handleErrClass(`3_${i}_date_2`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_date_2} onChange={(date) => handleDebtDateChange(date, 3, i, 'date_2', 'tmp_date_2')} minDate={new Date()} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"/>
+                        <label>วันที่ถูกบังคับคดี</label>
+                        <DatePicker className={`form-control ${handleErrClass(`3_${i}_date_2`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_date_2} onChange={(date) => handleDebtDateChange(date, 3, i, 'date_2', 'tmp_date_2')} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" disabled={dtl.status == 'ปกติ'}/>
                     </div>
                 </div>
             </fieldset>
@@ -2509,37 +2440,37 @@ const RegisterForm = (props) => {
                 </div>
                 <div className="form-row">
                     <div className="form-group col-3">
-                        <label>สหกรณ์ <span className="text-danger">*</span></label>
+                        <label>สหกรณ์</label>
                         <input type="text" className={`form-control ${handleErrClass(`4_${i}_bank_name`)}`} name="bank_name" value={dtl.bank_name || ''}  onChange={e => handleDebtDtlChange(e, 4, i)}/>
                     </div>
                     <div className="form-group col-3">
-                        <label>สาขา <span className="text-danger">*</span></label>
+                        <label>สาขา</label>
                         <input type="text" className={`form-control ${handleErrClass(`4_${i}_bank_branch`)}`} name="bank_branch" value={dtl.bank_branch || ''}  onChange={e => handleDebtDtlChange(e, 4, i)}/>
                     </div>
                     <div className="form-group col-2">
-                        <label>เบอร์โทรศัพท์ <span className="text-danger">*</span></label>
-                        <input type="text" className={`form-control ${handleErrClass(`4_${i}_contact`)}`} name="contact" value={dtl.contact || ''}  onChange={e => handleDebtDtlChange(e, 4, i)}/>
+                        <label>เบอร์โทรศัพท์</label>
+                        <input type="number" className={`form-control ${handleErrClass(`4_${i}_contact`)}`} name="contact" value={dtl.contact || ''}  onChange={e => handleDebtDtlChange(e, 4, i)}/>
                     </div>
                     <div className="form-group col-2">
-                        <label>เลขที่สัญญา <span className="text-danger">*</span></label>
+                        <label>เลขที่สัญญา</label>
                         <input type="text" className={`form-control ${handleErrClass(`4_${i}_contract_no`)}`} name="contract_no" value={dtl.contract_no || ''}  onChange={e => handleDebtDtlChange(e, 4, i)}/>
                     </div>
                     <div className="form-group col-2">
-                        <label>วันที่ลงสัญญา <span className="text-danger">*</span></label>
-                        <DatePicker className={`form-control ${handleErrClass(`4_${i}_contract_date`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_contract_date} onChange={(date) => handleDebtDateChange(date, 4, i, 'contract_date', 'tmp_contract_date')} minDate={new Date()} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"/>
+                        <label>วันที่ลงสัญญา</label>
+                        <DatePicker className={`form-control ${handleErrClass(`4_${i}_contract_date`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_contract_date} onChange={(date) => handleDebtDateChange(date, 4, i, 'contract_date', 'tmp_contract_date')} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"/>
                     </div>
                 </div>
                 <div className="form-row">
                     <div className="form-group col-2">
-                        <label>จำนวนเงินที่กู้ <span className="text-danger">*</span></label>
+                        <label>จำนวนเงินที่กู้</label>
                         <input type="number" className={`form-control ${handleErrClass(`4_${i}_total_amount`)}`} name="total_amount" value={dtl.total_amount || ''}  onChange={e => handleDebtDtlChange(e, 4, i)}/>
                     </div>
                     <div className="form-group col-2">
-                        <label>จำนวนหนี้คงเหลือ <span className="text-danger">*</span></label>
+                        <label>จำนวนหนี้คงเหลือ</label>
                         <input type="number" className={`form-control ${handleErrClass(`4_${i}_remaining_amount`)}`} name="remaining_amount" value={dtl.remaining_amount || ''}  onChange={e => handleDebtDtlChange(e, 4, i)}/>
                     </div>
                     <div className="form-group col-2">
-                        <label>สถานะหนี้ <span className="text-danger">*</span></label>
+                        <label>สถานะหนี้</label>
                         <select className="custom-select" name="status" value={dtl.status || ''} onChange={e => handleDebtDtlChange(e, 4, i)}>
                             {debtStatusLst.map(debtStatus => (
                             <option key={debtStatus} value={debtStatus}>{debtStatus}</option>
@@ -2551,12 +2482,12 @@ const RegisterForm = (props) => {
                         <input type="text" className={`form-control ${handleErrClass(`4_${i}_other_status`)}`} name="other_status" value={dtl.other_status || ''} onChange={e => handleDebtDtlChange(e, 4, i)} disabled={dtl.status != 'อื่นๆ'}/>
                     </div>
                     <div className="form-group col-2">
-                        <label>วันที่ถูกฟ้องต่อศาล <span className="text-danger">*</span></label>
-                        <DatePicker className={`form-control ${handleErrClass(`4_${i}_date_1`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_date_1} onChange={(date) => handleDebtDateChange(date, 4, i, 'date_1', 'tmp_date_1')} minDate={new Date()} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"/>
+                        <label>วันที่ถูกฟ้องต่อศาล</label>
+                        <DatePicker className={`form-control ${handleErrClass(`4_${i}_date_1`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_date_1} onChange={(date) => handleDebtDateChange(date, 4, i, 'date_1', 'tmp_date_1')} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" disabled={dtl.status == 'ปกติ'}/>
                     </div>
                     <div className="form-group col-2">
-                        <label>วันที่ถูกบังคับคดี <span className="text-danger">*</span></label>
-                        <DatePicker className={`form-control ${handleErrClass(`4_${i}_date_2`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_date_2} onChange={(date) => handleDebtDateChange(date, 4, i, 'date_2', 'tmp_date_2')} minDate={new Date()} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select"/>
+                        <label>วันที่ถูกบังคับคดี</label>
+                        <DatePicker className={`form-control ${handleErrClass(`4_${i}_date_2`)}`} dateFormat="dd/MM/yyyy" locale="th" selected={dtl.tmp_date_2} onChange={(date) => handleDebtDateChange(date, 4, i, 'date_2', 'tmp_date_2')} peekNextMonth showMonthDropdown showYearDropdown dropdownMode="select" disabled={dtl.status == 'ปกติ'}/>
                     </div>
                 </div>
             </fieldset>
@@ -2921,8 +2852,8 @@ const RegisterForm = (props) => {
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">รายการ</th>
-                        <th scope="col">เลือกไฟล์</th>
+                        <th scope="col" style={{width: '40%'}}>รายการ</th>
+                        <th scope="col" style={{width: '20%'}}>เลือกไฟล์</th>
                         <th scope="col">ชื่อไฟล์</th>
                         <th></th>
                     </tr>

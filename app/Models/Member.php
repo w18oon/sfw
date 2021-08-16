@@ -109,6 +109,7 @@ class Member extends Model
         'benef_tel',
         'benef_fax',
         'updated_by',
+        'status',
     ];
 
     public function receipt()
@@ -117,12 +118,12 @@ class Member extends Model
     }
 
 
-    public function debt()
+    public function debts()
     {
         return $this->hasMany(Debt::class);
     }
 
-    public function document()
+    public function documents()
     {
         return $this->hasMany(Document::class);
     }

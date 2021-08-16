@@ -18,7 +18,7 @@
                                 <a class="nav-link" data-toggle="pill" href="#v-pills-debt" role="tab" aria-selected="false">ภาระหนี้</a>
                                 <a class="nav-link" data-toggle="pill" href="#v-pills-work" role="tab" aria-selected="false">สถานทีทำงาน</a>
                                 <a class="nav-link" data-toggle="pill" href="#v-pills-benef" role="tab" aria-selected="false">ผู้รับโอนผลประโยชน์</a>
-                                <a class="nav-link" data-toggle="pill" href="#v-pills-doc" role="tab" aria-selected="false">เอกสารประกอบ</a>
+                                <a class="nav-link" data-toggle="pill" href="#v-pills-docs" role="tab" aria-selected="false">เอกสารประกอบ</a>
                             </div>
                         </div>
                         <div class="col-9">
@@ -256,6 +256,322 @@
                                             <input type="text" class="form-control" value="{{ $member->career == 'อื่นๆ'? $member->other_career: $member->career }}" readonly/>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="tab-pane fade" id="v-pills-income" role="tabpanel">
+                                    <div class="form-row">
+                                        <div class="form-group col-2">
+                                            <label>รายได้ประจำ</label>
+                                            <input type="text" class="form-control" value="{{ $member->income_type }}" readonly/>
+                                        </div>
+                                        <div class="form-group col-2">
+                                            <label>จำนวน (บาท/เดือน)</label>
+                                            <input type="text" class="form-control" value="{{ $member->income_amount }}" readonly/>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-3">
+                                            <label>รายได้อื่นๆ</label>
+                                            <input type="text" class="form-control" value="{{ $member->other_income_type == 'อื่นๆ' ? $member->other_income :$member->other_income_type }}" readonly/>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label>จำนวน (บาท/เดือน)</label>
+                                            <input type="text" class="form-control" value="{{ $member->other_income_amount }}" readonly/>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label>แหล่งที่มา</label>
+                                            <input type="text" class="form-control" value="{{ $member->source_other_income }}" readonly/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="v-pills-debt" role="tabpanel">
+                                    @foreach (['หนี้สินในระบบแบบถูกกฏหมาย', 'หนี้สินนอกระบบแบบถูกกฏหมาย', 'หนี้สินนอกระบบแบบผิดกฏหมาย', 'หนี้สินแบบสหกรณ์'] as $debt_type)
+                                        <h5 class="mb-3">{{ $loop->iteration . "." . $debt_type }}</h5>
+                                        <div class="form-group row">
+                                            <label class="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
+                                            <div class="col-4">
+                                                <input type="number" class="form-control" value="{{ $member->{'debt_type_' . $loop->iteration} }}" readonly/>
+                                            </div>
+                                            <label class="col-2 col-form-label">บาท</label>
+                                        </div>
+                                        @foreach ($member->debts as $debt)
+                                            @if ($debt->type == $loop->parent->iteration) 
+                                            <fieldset>
+                                                <div class="form-row">
+                                                    <div class="form-group col-6">
+                                                        <strong>{{ __('รายการที่ ') . $loop->parent->iteration . __('.') . $loop->iteration }}</strong>
+                                                    </div>
+                                                </div>
+                                                @if ($debt->type == 3)
+                                                <div class="form-row">
+                                                    <div class="form-group col-2">
+                                                        <label>กู้ยืมเงินจาก</label>
+                                                        <input type="text" class="form-control" value="{{ $debt->bank_name }}" readonly/>
+                                                    </div>
+                                                    <div class="form-group col-2">
+                                                        <label>เบอร์โทรศัพท์</label>
+                                                        <input type="text" class="form-control" value="{{ $debt->contact }}" readonly/>
+                                                    </div>
+                                                    <div class="form-group col-2">
+                                                        <label>วันที่ลงสัญญา</label>
+                                                        <input type="text" class="form-control" value="{{ $debt->contract_date }}" readonly/>
+                                                    </div>
+                                                    <div class="form-group col-2">
+                                                        <label>จำนวนเงินที่กู้</label>
+                                                        <input type="text" class="form-control" value="{{ $debt->total_amount }}" readonly/>
+                                                    </div>
+                                                    <div class="form-group col-2">
+                                                        <label>ดอกเบี้ยร้อยละ</label>
+                                                        <input type="text" class="form-control" value="{{ $debt->interest }}" readonly/>
+                                                    </div>
+                                                    <div class="form-group col-2">
+                                                        <label>จำนวนหนี้คงเหลือ</label>
+                                                        <input type="text" class="form-control" value="{{ $debt->remaining_amount }}" readonly/>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="form-group col-2">
+                                                        <label>สถานะหนี้</label>
+                                                        <input type="text" class="form-control" value="{{ $debt->status }}" readonly/>
+                                                    </div>
+                                                    <div class="form-group col-2">
+                                                        <label>อื่นๆ (โปรดระบุ)</label>
+                                                        <input type="text" class="form-control" value="{{ $debt->other_status }}" readonly/>
+                                                    </div>
+                                                    <div class="form-group col-2">
+                                                        <label>วันที่ถูกฟ้องต่อศาล</label>
+                                                        <input type="text" class="form-control" value="{{ $debt->date_1 }}" readonly/>
+                                                    </div>
+                                                    <div class="form-group col-2">
+                                                        <label>วันที่ถูกบังคับคดี</label>
+                                                        <input type="text" class="form-control" value="{{ $debt->date_2 }}" readonly/>
+                                                    </div>
+                                                </div>
+                                                @else
+                                                <div class="form-row">
+                                                    <div class="form-group col-3"> 
+                                                        <label>{{ $debt->type == 4 ? 'สหกรณ์': 'สถาบันการเงิน' }}</label>
+                                                        <input type="text" class="form-control" value="{{ $debt->bank_name }}" readonly/>
+                                                    </div>
+                                                    <div class="form-group col-3">
+                                                        <label>สาขา</label>
+                                                        <input type="text" class="form-control" value="{{ $debt->bank_branch }}" readonly/>
+                                                    </div>
+                                                    <div class="form-group col-2">
+                                                        <label>เบอร์โทรศัพท์</label>
+                                                        <input type="text" class="form-control" value="{{ $debt->contact }}" readonly/>
+                                                    </div>
+                                                    <div class="form-group col-2">
+                                                        <label>เลขที่สัญญา</label>
+                                                        <input type="text" class="form-control" value="{{ $debt->contract_no }}" readonly/>
+                                                    </div>
+                                                    <div class="form-group col-2">
+                                                        <label>วันที่ลงสัญญา</label>
+                                                        <input type="text" class="form-control" value="{{ $debt->contract_date }}" readonly/>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="form-group col-2">
+                                                        <label>จำนวนเงินที่กู้</label>
+                                                        <input type="text" class="form-control" value="{{ $debt->total_amount }}" readonly/>
+                                                    </div>
+                                                    <div class="form-group col-2">
+                                                        <label>จำนวนหนี้คงเหลือ</label>
+                                                        <input type="text" class="form-control" value="{{ $debt->remaining_amount }}" readonly/>
+                                                    </div>
+                                                    <div class="form-group col-2">
+                                                        <label>สถานะหนี้</label>
+                                                        <input type="text" class="form-control" value="{{ $debt->status }}" readonly/>
+                                                    </div>
+                                                    <div class="form-group col-2">
+                                                        <label>อื่นๆ (โปรดระบุ)</label>
+                                                        <input type="text" class="form-control" value="{{ $debt->other_status }}" readonly/>
+                                                    </div>
+                                                    <div class="form-group col-2">
+                                                        <label>วันที่ถูกฟ้องต่อศาล</label>
+                                                        <input type="text" class="form-control" value="{{ $debt->date_1 }}" readonly/>
+                                                    </div>
+                                                    <div class="form-group col-2">
+                                                        <label>วันที่ถูกบังคับคดี</label>
+                                                        <input type="text" class="form-control" value="{{ $debt->date_2 }}" readonly/>
+                                                    </div>
+                                                </div>
+                                                @endif
+                                            </fieldset>
+                                            @endif
+                                        @endforeach
+                                    @endforeach
+                                </div>
+                                <div class="tab-pane fade" id="v-pills-work" role="tabpanel">
+                                    <div class="form-row">
+                                        <div class="form-group col-4">
+                                            <label>ชื่อสถานที่ทำงาน</label>
+                                            <input type="text" class="form-control" value="{{ $member->workplace }}" readonly/>
+                                        </div>
+                                        <div class="form-group col-4">
+                                            <label>อาคาร</label>
+                                            <input type="text" class="form-control" value="{{ $member->building }}" readonly/>
+                                        </div>
+                                        <div class="form-group col-1">
+                                            <label>ชั้น</label>
+                                            <input type="text" class="form-control" value="{{ $member->floor }}" readonly/>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label>แผนก/ฝ่าย</label>
+                                            <input type="text" class="form-control" value="{{ $member->department }}" readonly/>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-2">
+                                            <label>เลขที่</label>
+                                            <input type="text" class="form-control" value="{{ $member->workplace_no }}" readonly/>
+                                        </div>
+                                        <div class="form-group col-2">
+                                            <label>หมู่ที่</label>
+                                            <input type="text" class="form-control" value="{{ $member->workplace_moo }}" readonly/>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label>ตรอก/ซอย</label>
+                                            <input type="text" class="form-control" value="{{ $member->workplace_soi }}" readonly/>
+                                        </div>
+                                        <div class="form-group col-5">
+                                            <label>ถนน</label>
+                                            <input type="text" class="form-control" value="{{ $member->workplace_street }}" readonly/>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-2">
+                                            <label>จังหวัด</label>
+                                            <input type="text" class="form-control" value="{{ $member->workplace_province }}" readonly/>
+                                        </div>
+                                        <div class="form-group col-4">
+                                            <label>อำเภอ/เขต</label>
+                                            <input type="text" class="form-control" value="{{ $member->workplace_district }}" readonly/>
+                                        </div>
+                                        <div class="form-group col-4">
+                                            <label>ตำบล/แขวง</label>
+                                            <input type="text" class="form-control" value="{{ $member->workplace_sub_district }}" readonly/>
+                                        </div>
+                                        <div class="form-group col-2">
+                                            <label>รหัสไปรษณีย์</label>
+                                            <input type="text" class="form-control" value="{{ $member->workplace_postcode }}" readonly/>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-3">
+                                            <label>โทรศัพท์</label>
+                                            <input type="text" class="form-control" value="{{ $member->workplace_tel }}" readonly/>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label>โทรสาร</label>
+                                            <input type="text" class="form-control" value="{{ $member->workplace_fax }}" readonly/>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label>อายุงานปัจจุบัน (ปี/เดือน)</label>
+                                            <input type="text" class="form-control" value="{{ $member->work_exp }}" readonly/>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label>ชื่อตำแหน่งงาน</label>
+                                            <input type="text" class="form-control" value="{{ $member->job_position }}" readonly/>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-8">
+                                            <label>กรณีที่ผู้มีรายได้ประจำ อายุงานไม่ถึง 6 เดือน โปรดระบุชื่อสถานที่ทำงานเดิม</label>
+                                            <input type="text" class="form-control" value="{{ $member->old_workplace }}" readonly/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="v-pills-benef" role="tabpanel">
+                                    <div class="form-row">
+                                        <div class="form-group col-2">
+                                            <label>คำนำหน้า</label>
+                                            <input type="text" class="form-control" value="{{ $member->benef_title }}" readonly/>
+                                        </div>
+                                        <div class="form-group col-2">
+                                            <label>อื่นๆ (โปรดระบุ)</label>
+                                            <input type="text" class="form-control" value="{{ $member->benef_other_title }}" readonly/>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label>ชื่อ</label>
+                                            <input type="text" class="form-control" value="{{ $member->benef_firstname }}" readonly/>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label>นามสกุล</label>
+                                            <input type="text" class="form-control" value="{{ $member->benef_lastname }}" readonly/>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-3">
+                                            <label>บัตรประจำตัวประชาชนเลขที่</label>
+                                            <input type="text" class="form-control" value="{{ $member->benef_id_card_no }}" readonly/>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label>มีความสัมพันธ์เป็น</label>
+                                            <input type="text" class="form-control" value="{{ $member->benef_relationship }}" readonly/>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-2">
+                                            <label>เลขที่</label>
+                                            <input type="text" class="form-control" value="{{ $member->benef_house_no }}" readonly/>
+                                        </div>
+                                        <div class="form-group col-2">
+                                            <label>หมู่ที่</label>
+                                            <input type="text" class="form-control" value="{{ $member->benef_moo }}" readonly/>
+                                        </div>
+                                        <div class="form-group col-3">
+                                            <label>ตรอก/ซอย</label>
+                                            <input type="text" class="form-control" value="{{ $member->benef_soi }}" readonly/>
+                                        </div>
+                                        <div class="form-group col-5">
+                                            <label>ถนน</label>
+                                            <input type="text" class="form-control" value="{{ $member->benef_street }}" readonly/>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-2">
+                                            <label>จังหวัด</label>
+                                            <input type="text" class="form-control" value="{{ $member->benef_province }}" readonly/>
+                                        </div>
+                                        <div class="form-group col-4">
+                                            <label>อำเภอ/เขต</label>
+                                            <input type="text" class="form-control" value="{{ $member->benef_district }}" readonly/>
+                                        </div>
+                                        <div class="form-group col-4">
+                                            <label>ตำบล/แขวง</label>
+                                            <input type="text" class="form-control" value="{{ $member->benef_sub_district }}" readonly/>
+                                        </div>
+                                        <div class="form-group col-2">
+                                            <label>รหัสไปรษณีย์</label>
+                                            <input type="text" class="form-control" value="{{ $member->benef_postcode }}" readonly/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="v-pills-docs" role="tabpanel">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">รายการ</th>
+                                                <th scope="col">ไฟล์</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($member->documents as $doc)
+                                            <tr>
+                                                <td scope="row">{{ $loop->iteration }}</td>
+                                                <td>
+                                                    <input type="text" class="form-control" value={{ $doc->desc }} readonly/>
+                                                </td>
+                                                <td>
+                                                    @if ($doc->name != '')
+                                                    <a href="{{ url("/storage/uploads/$doc->name") }}" target="_blank">เปิดไฟล์</a>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>

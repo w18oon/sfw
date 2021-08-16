@@ -19,6 +19,7 @@ use App\Http\Controllers\UploadDocumentController;
 
 Route::post('/member', [MemberController::class, 'store']);
 Route::put('/member/{id}', [MemberController::class, 'update']);
+Route::put('/upd-member-status/{id}', [MemberController::class, 'update_status']);
 // Route::delete('/member/{id}', [MemberController::class, 'destroy']);
 
 Route::post('/upload-document', UploadDocumentController::class);

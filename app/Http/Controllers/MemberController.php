@@ -17,6 +17,7 @@ class MemberController extends Controller
         $receipt_province = $request->input('receipt_province')? $request->input('receipt_province'): '';
         $date_from = $request->input('date_from')? $request->input('date_from'): '';
         $date_to = $request->input('date_to')? $request->input('date_to'): '';
+        $q_status = $request->input('q_status')? $request->input('q_status'): '';
 
         $members = Member::where(function($query) use ($request) {
             if($request->input('no')) {
@@ -34,6 +35,9 @@ class MemberController extends Controller
             if($request->input('date_to')) {
                 $query->where('created_at', '<=', $request->input('date_to'))->get();
             }
+            if($request->input('q_status')) {
+                $query->where('status', '=', $request->input('q_status'))->get();
+            }
         })->paginate(20);
 
         // $members = Member::paginate(20);
@@ -45,6 +49,9 @@ class MemberController extends Controller
             'receipt_province' => $receipt_province,
             'date_from' => $date_from,
             'date_to' => $date_to,
+            'q_status' => $q_status,
+            'status_list' => ['รอดำเนินการ', 'ปกติ', 'พ้นสภาพ'],
+            'updated_by' => auth()->user()->name,
         ]);
     }
 
@@ -358,6 +365,17 @@ class MemberController extends Controller
             'updated_by'));
             // $member->updated_by = auth()->user()->name;
             // $member->save();
+            return response()->json(['member' => $member]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e]);
+        }
+    }
+
+    public function update_status(Request $request, $id)
+    {
+        $member = Member::find($id);
+        try {
+            $member->update($request->only('status', 'updated_by'));
             return response()->json(['member' => $member]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e]);

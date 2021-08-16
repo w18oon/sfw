@@ -37,6 +37,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('member') }}">ข้อมูลสมาชิก</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('report') }}">รายงาน</a>
+                        </li>
                         @else
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url('/') }}">หน้าแรก</a>

@@ -1,9 +1,14 @@
 <?php
 
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\ReportController;
 use App\Models\Postcode;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
+
+Route::get('/php-info', function() {
+    phpinfo();
+});
 
 Route::get('/register-form', function () {
     return view('register-form',[
@@ -28,6 +33,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/member/{id}', [MemberController::class, 'show'])->name('member.show');
     Route::get('/member/{id}/edit', [MemberController::class, 'edit'])->name('member.edit');
     Route::delete('/member/{id}/delete', [MemberController::class, 'destroy'])->name('member.delete');
+    Route::get('/report', [ReportController::class, 'index']);
 });
 
 Auth::routes(['register' => false]);
