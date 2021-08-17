@@ -70,7 +70,12 @@
                         </select>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary mb-3"><i class="fas fa-search"></i> ค้นหา</button>
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary mb-3"><i class="fas fa-search"></i> ค้นหา</button>
+                    @if ($report_type != '')
+                    <a href="{{ url("/storage/reports/$csv_file") }}" class="btn btn-secondary mb-3"><i class="fas fa-download"></i> ดาวน์โหลด</a>
+                    @endif
+                </div>
             </form>
             @if ($report_type != '')
             <div class="card">
@@ -121,7 +126,6 @@
                             <tbody>
                                 @forelse ($items as $item)
                                     <tr>
-                                        {{-- 'members.no', 'members.id_card_no', 'members.firstname', 'members.lastname', 'members.mobile', 'members.receipt_province', 'members.created_at', 'provinces.region_name_th', 'members.age', 'debts.type', 'debts.remaining_amount' --}}
                                         <td>{{ $item->no }}</td>
                                         <td>{{ $item->id_card_no }}</td>
                                         <td>{{ $item->firstname }}</td>
