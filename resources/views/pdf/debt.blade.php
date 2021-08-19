@@ -58,14 +58,14 @@
             </tr>
             <tr>
                 <td style="width: 10%; vertical-align: top;">
-                    <strong>{{ __('ผู้ยื่น'); }}</strong>
+                    <strong>{{ __('ผู้ยื่น') }}</strong>
                 </td>
                 <td colspan="2" style="width: 90%">
                     <div>{{ __('ชื่อและชื่อสกุล ') . Str::padBoth($member_name, $member_name_len, '.') }}</div>
                     <div>{{ __('ชื่อและชื่อสกุลเดิม (ถ้ามี) ') . Str::padBoth('', 135, '.') }}</div>
                     <div>{{ __('อายุ') . Str::padBoth($member->age, 16, '.') . __('ปี') }}</div>
                     <div>
-                        {{ __('สถานภาพ'); }}
+                        {{ __('สถานภาพ') }}
                         @foreach (['โสด', 'หย่า', 'สมรสจดทะเบียน', 'สมรสไม่จดทะเบียน','หม้าย'] as $status)
                             <input type="checkbox" {{ $status == $member->marital_status? 'checked' :'' }}/>
                             <label> {{ $status }}</label>
@@ -75,7 +75,7 @@
             </tr>
             <tr>
                 <td style="width: 10%; vertical-align: top;">
-                    <strong>{{ __('ที่อยู่'); }}</strong>
+                    <strong>{{ __('ที่อยู่') }}</strong>
                 </td>
                 <td colspan="2" style="width: 90%">
                     <div>
@@ -99,7 +99,7 @@
             </tr>
             <tr>
                 <td style="width: 10%; vertical-align: top;">
-                    <strong>{{ __('อาชีพ'); }}</strong>
+                    <strong>{{ __('อาชีพ') }}</strong>
                 </td>
                 <td colspan="2" style="width: 90%">
                     <table style="width: 99%">
@@ -143,7 +143,7 @@
             </tr>
             <tr>
                 <td style="width: 10%; vertical-align: top;">
-                    <strong>{{ __('การศึกษา'); }}</strong>
+                    <strong>{{ __('การศึกษา') }}</strong>
                 </td>
                 <td colspan="2" style="width: 90%">
                     @foreach (['ต่ำกว่ามัธยมศึกษาตอนปลาย', 'มัธยมศึกษาตอนปลาย', 'อนุปริญญา', 'ปวช./ปวส.', 'ปริญญาตรี', 'ปริญญาโท', 'ปริญญาเอก', 'อื่นๆ'] as $edu)
