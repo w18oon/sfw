@@ -36,7 +36,7 @@
     <table style="width: 100%; margin: 0;">
         <tbody>
             <tr>
-                <td colspan="3" style="text-align: center;"><strong>{{ __('บัญชีแสดงรายการหนี้สิน'); }}</strong></td>
+                <td colspan="3" style="text-align: center;"><strong>{{ __('บัญชีแสดงรายการหนี้สิน') }}</strong></td>
             </tr>
             <tr>
                 <td style="width: 10%"></td>
@@ -45,7 +45,7 @@
                     <table style="border-collapse: collapse;">
                         <tbody>
                             <tr>
-                                <td colspan="13" style="text-align: center;"><strong>{{ __('เลขที่บัตรประชาชน'); }}</strong></td>
+                                <td colspan="13" style="text-align: center;"><strong>{{ __('เลขที่บัตรประชาชน') }}</strong></td>
                             </tr>
                             <tr>
                                 @foreach (str_split($member->id_card_no) as $char)
