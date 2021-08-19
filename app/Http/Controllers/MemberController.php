@@ -248,8 +248,33 @@ class MemberController extends Controller
 
     public function show($id)
     {
+        $member = Member::find($id);
+        $debts = [];
+        foreach ($member->debts as $debt) {
+            $debts[$debt->type][] = [
+                'type' => $debt->type,
+                'bank_name' => $debt->bank_name,
+                'total_amount' => $debt->total_amount,
+                'remaining_amount' => $debt->remaining_amount,
+                'created_at' => $debt->created_at,
+                'updated_at' => $debt->updated_at,
+                'bank_branch' => $debt->bank_branch,
+                'contact' => $debt->contact,
+                'contract_no' => $debt->contract_no,
+                'contract_date' => $debt->contract_date,
+                'status' => $debt->status,
+                'other_status' => $debt->other_status,
+                'date_1' => $debt->date_1,
+                'date_2' => $debt->date_2,
+                'interest' => $debt->interest,
+            ];
+        }
+
+        // dd($debts);
+
         return view('members.show', [
-            'member' => Member::find($id),
+            'member' => $member,
+            'debts' => $debts,
         ]);
     }
 

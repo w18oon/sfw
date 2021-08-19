@@ -89,6 +89,7 @@
                                             <a class="dropdown-item" href="{{ route('member.show', $member->id) }}">ข้อมูลสมัคร</a>
                                             <a class="dropdown-item" href="{{ url("receipt/$member->id") }}" target="_blank">ใบเสร็จรับเงิน</a>
                                             <a class="dropdown-item" href="{{ url("contract/$member->id") }}" target="_blank">ใบสมัครสมาชิก/สัญญา</a>
+                                            <a class="dropdown-item" href="{{ url("debt/$member->id") }}" target="_blank">ใบแสดงรายการหนี้สิน</a>
                                         </div>
                                     </div>
                                     <a class="btn btn-outline-secondary" href="{{ route('member.edit', $member->id) }}">แก้ไขข้อมูล</a>
