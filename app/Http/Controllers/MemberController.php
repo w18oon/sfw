@@ -62,6 +62,9 @@ class MemberController extends Controller
 
     public function store(Request $request)
     {
+        $member_id = '';
+        $errors = [];
+
         try {
             $member = Member::create($request->only('title',
                 'other_title',
@@ -161,89 +164,52 @@ class MemberController extends Controller
                 'benef_fax')
             );
 
-            foreach($request->input('docs') as $doc) {
-                $member->document()->create([
-                    'name' => $doc['name'],
-                    'desc' => $doc['desc'],
-                ]);
+            $member_id = $member->id;
+
+            // insert documents 
+            try {
+                foreach($request->input('docs') as $doc) {
+                    $member->documents()->create([
+                        'name' => $doc['name'],
+                        'desc' => $doc['desc'],
+                    ]);
+                }
+            } catch (\Exception $e) {
+                $errors[] = $e;
             }
 
-            foreach($request->input('debt_type_1_dtl') as $dtl) {
-                $member->debt()->create([
-                    'type' => 1,
-                    'bank_name' => $dtl['bank_name'],
-                    'total_amount' => $dtl['total_amount'],
-                    'remaining_amount' => $dtl['remaining_amount'],
-                    'bank_branch' => $dtl['bank_branch'],
-                    'contact' => $dtl['contact'],
-                    'contract_no' => $dtl['contract_no'],
-                    'contract_date' => $dtl['contract_date'],
-                    'status' => $dtl['status'],
-                    'other_status' => $dtl['other_status'],
-                    'date_1' => $dtl['date_1'],
-                    'date_2' => $dtl['date_2'],
-                    'interest' => $dtl['interest'],
-                ]);
+            try {
+                foreach ([1, 2, 3, 4] as $i) {
+                    foreach ($request->input("debt_type_${i}_dtl") as $dtl) {
+                        $member->debts()->create([
+                            'type' => $i,
+                            'bank_name' => $dtl['bank_name'],
+                            'total_amount' => $dtl['total_amount'],
+                            'remaining_amount' => $dtl['remaining_amount'],
+                            'bank_branch' => $dtl['bank_branch'],
+                            'contact' => $dtl['contact'],
+                            'contract_no' => $dtl['contract_no'],
+                            'contract_date' => $dtl['contract_date'],
+                            'status' => $dtl['status'],
+                            'other_status' => $dtl['other_status'],
+                            'date_1' => $dtl['date_1'],
+                            'date_2' => $dtl['date_2'],
+                            'interest' => $dtl['interest'],
+                        ]);
+                    }
+                }
+            } catch (\Exception $e) {
+                $errors[] = $e;
             }
 
-            foreach($request->input('debt_type_2_dtl') as $dtl) {
-                $member->debt()->create([
-                    'type' => 2,
-                    'bank_name' => $dtl['bank_name'],
-                    'total_amount' => $dtl['total_amount'],
-                    'remaining_amount' => $dtl['remaining_amount'],
-                    'bank_branch' => $dtl['bank_branch'],
-                    'contact' => $dtl['contact'],
-                    'contract_no' => $dtl['contract_no'],
-                    'contract_date' => $dtl['contract_date'],
-                    'status' => $dtl['status'],
-                    'other_status' => $dtl['other_status'],
-                    'date_1' => $dtl['date_1'],
-                    'date_2' => $dtl['date_2'],
-                    'interest' => $dtl['interest'],
-                ]);
-            }
-
-            foreach($request->input('debt_type_3_dtl') as $dtl) {
-                $member->debt()->create([
-                    'type' => 3,
-                    'bank_name' => $dtl['bank_name'],
-                    'total_amount' => $dtl['total_amount'],
-                    'remaining_amount' => $dtl['remaining_amount'],
-                    'bank_branch' => $dtl['bank_branch'],
-                    'contact' => $dtl['contact'],
-                    'contract_no' => $dtl['contract_no'],
-                    'contract_date' => $dtl['contract_date'],
-                    'status' => $dtl['status'],
-                    'other_status' => $dtl['other_status'],
-                    'date_1' => $dtl['date_1'],
-                    'date_2' => $dtl['date_2'],
-                    'interest' => $dtl['interest'],
-                ]);
-            }
-
-            foreach($request->input('debt_type_4_dtl') as $dtl) {
-                $member->debt()->create([
-                    'type' => 4,
-                    'bank_name' => $dtl['bank_name'],
-                    'total_amount' => $dtl['total_amount'],
-                    'remaining_amount' => $dtl['remaining_amount'],
-                    'bank_branch' => $dtl['bank_branch'],
-                    'contact' => $dtl['contact'],
-                    'contract_no' => $dtl['contract_no'],
-                    'contract_date' => $dtl['contract_date'],
-                    'status' => $dtl['status'],
-                    'other_status' => $dtl['other_status'],
-                    'date_1' => $dtl['date_1'],
-                    'date_2' => $dtl['date_2'],
-                    'interest' => $dtl['interest'],
-                ]);
-            }
-
-            return response()->json(['member_id' => $member->id]);
         } catch (\Exception $e) {
-            return response()->json(['error' => $e]);
+            $errors[] = $e;
         }
+
+        return response()->json([
+            'member_id' => $member_id,
+            'errors' => $errors
+        ]);
     }
 
     public function show($id)

@@ -697,13 +697,13 @@ const RegisterForm = (props) => {
             }
         });
 
-        // if (numberOfErrors > 0) {
-        //     swal('เกิดข้อผิดพลาด', 'กรุณากรอกข้อมูลให้ครบถ้วน', 'error');
-        //     return;
-        // } else {
+        if (numberOfErrors > 0) {
+            swal('เกิดข้อผิดพลาด', 'กรุณากรอกข้อมูลให้ครบถ้วน', 'error');
+            return;
+        } else {
             // show modal for confirm save data
             setShowConfModal(true);
-        // }
+        }
     }
 
     const handleConfSave = (event) => {
@@ -721,8 +721,8 @@ const RegisterForm = (props) => {
             axios.post('/api/member', member).then(response => {
                 if (response.status == 200) {
                     console.log(response);
-                    if (response.data.error) {
-                        const errMsg = response.data.error.errorInfo;
+                    if (response.data.errors) {
+                        const errMsg = response.data.errors.errorInfo;
                         swal('เกิดข้อผิดพลาด', errMsg.toString(), 'error');
                     } else {
                         swal({
