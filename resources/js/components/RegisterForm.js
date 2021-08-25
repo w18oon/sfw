@@ -721,7 +721,7 @@ const RegisterForm = (props) => {
             axios.post('/api/member', member).then(response => {
                 if (response.status == 200) {
                     console.log(response);
-                    if (response.data.errors) {
+                    if (response.data.errors.length > 0) {
                         const errMsg = response.data.errors.errorInfo;
                         swal('เกิดข้อผิดพลาด', errMsg.toString(), 'error');
                     } else {
