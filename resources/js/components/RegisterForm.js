@@ -66,6 +66,13 @@ const RegisterForm = (props) => {
 
     const [provinces, setProvinces] = useState([]);
 
+    const [npl, setNpl] = useState({
+        type1: '',
+        type2: '',
+        type3: '',
+        type4: '',
+    });
+
     const debtStatusLst = ['ปกติ', 'ได้รับหมายศาล', 'ไกล่เกลี่ย', 'บังคับคดี', 'ขายทอดตลาด', 'ล้มละลาย', 'อื่นๆ'];
 
     const [districts, setDistricts] = useState({
@@ -514,12 +521,18 @@ const RegisterForm = (props) => {
         });
 
         let remainingAmount = newDebtDtl.reduce((acc, curr) => { return acc + parseFloat(curr.remaining_amount ? curr.remaining_amount: 0) }, 0);
-        let num = remainingAmount.toString().split('.');
-        num[0] = num[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
         setMember(prevState => {
             return {
                 ...prevState,
-                [`debt_type_${debtType}`]: num.join('.')
+                [`debt_type_${debtType}`]: remainingAmount
+            }
+        });
+
+        setNpl(prevState => {
+            return {
+                ...prevState,
+                [`type${debtType}`]: remainingAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
             }
         });
     }
@@ -569,12 +582,13 @@ const RegisterForm = (props) => {
 
         if (event.target.name === 'remaining_amount') {
             let remainingAmount = newDebtDtl.reduce((acc, curr) => { return acc + parseFloat(curr.remaining_amount ? curr.remaining_amount: 0) }, 0);
-            let num = remainingAmount.toString().split('.');
-            num[0] = num[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-            setMember(prevState => {
+
+            setMember(prevState => { return { ...prevState, [`debt_type_${debtType}`]: remainingAmount } });
+
+            setNpl(prevState => {
                 return {
                     ...prevState,
-                    [`debt_type_${debtType}`]: num.join('.')
+                    [`type${debtType}`]: remainingAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
                 }
             });
         }
@@ -1076,7 +1090,7 @@ const RegisterForm = (props) => {
                         <div className="form-group row">
                             <label className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
                             <div className="col-4">
-                                <input type="text" className="form-control" name="debt_type_1" value={member.debt_type_1 || ''} readOnly/>
+                                <input type="text" className="form-control" value={npl.type1} readOnly/>
                             </div>
                             <label className="col-2 col-form-label">บาท</label>
                         </div>
@@ -1142,7 +1156,7 @@ const RegisterForm = (props) => {
                         <div className="form-group row">
                             <label className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
                             <div className="col-4">
-                                <input type="number" className="form-control" value={member.debt_type_2 || 0} readOnly/>
+                                <input type="number" className="form-control" value={member.debt_type_2} readOnly/>
                             </div>
                             <label className="col-2 col-form-label">บาท</label>
                         </div>
@@ -1208,7 +1222,7 @@ const RegisterForm = (props) => {
                         <div className="form-group row">
                             <label className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
                             <div className="col-4">
-                                <input type="number" className="form-control" name="debt_type_3" value={member.debt_type_3 || 0} readOnly/>
+                                <input type="text" className="form-control" value={npl.type3} readOnly/>
                             </div>
                             <label className="col-2 col-form-label">บาท</label>
                         </div>
@@ -1270,7 +1284,7 @@ const RegisterForm = (props) => {
                         <div className="form-group row">
                             <label className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
                             <div className="col-4">
-                                <input type="number" className="form-control" value={member.debt_type_4 || 0} readOnly/>
+                                <input type="number" className="form-control" value={member.debt_type_4} readOnly/>
                             </div>
                             <label className="col-2 col-form-label">บาท</label>
                         </div>
@@ -2194,7 +2208,7 @@ const RegisterForm = (props) => {
             <div className="form-group row">
                 <label className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
                 <div className="col-4">
-                    <input type="text" className="form-control" name="debt_type_1" value={member.debt_type_1 || 0} readOnly/>
+                    <input type="text" className="form-control" value={npl.type1} readOnly/>
                 </div>
                 <label className="col-2 col-form-label">บาท</label>
             </div>
@@ -2272,7 +2286,7 @@ const RegisterForm = (props) => {
             <div className="form-group row">
                 <label className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
                 <div className="col-4">
-                    <input type="number" className="form-control" name="debt_type_2" value={member.debt_type_2 || 0} readOnly/>
+                    <input type="text" className="form-control" value={npl.type2} readOnly/>
                 </div>
                 <label className="col-2 col-form-label">บาท</label>
             </div>
@@ -2350,7 +2364,7 @@ const RegisterForm = (props) => {
             <div className="form-group row">
                 <label className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
                 <div className="col-4">
-                    <input type="number" className="form-control" name="debt_type_3" value={member.debt_type_3 || 0} readOnly/>
+                    <input type="text" className="form-control" value={npl.type3} readOnly/>
                 </div>
                 <label className="col-2 col-form-label">บาท</label>
             </div>
@@ -2424,7 +2438,7 @@ const RegisterForm = (props) => {
             <div className="form-group row">
                 <label className="col-2 col-form-label">เป็นหนี้คงเหลือ</label>
                 <div className="col-4">
-                    <input type="number" className="form-control" name="debt_type_4" value={member.debt_type_4 || 0} readOnly/>
+                    <input type="text" className="form-control" value={npl.type4} readOnly/>
                 </div>
                 <label className="col-2 col-form-label">บาท</label>
             </div>
