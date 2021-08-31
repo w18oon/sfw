@@ -115,7 +115,7 @@
     <br/>
     <span>{{__('บัตรประจำตัวประชาชนเลขที่').Str::padBoth($member->spouse_id_card_no, 30, '.').__('ที่อยู่ตามทะเบียนบ้านเลขที่').Str::padBoth($member->house_no, 20, '.').__('หมู่ที่').Str::padBoth($member->moo, 20, '.')}}</span>
     <br/>
-    <span>{{__('ตรอก/ซอย').Str::padBoth($member->soi, 50, '.').__('ถนน').Str::padBoth($member->street, 50, '.').__('ตำบล/แขวง').Str::padBoth($member->sub_district, 55, '.')}}</span>
+    <span>{{__('ตรอก/ซอย').Str::padBoth($member->soi, 50, '.').__('ถนน').Str::padBoth($member->street, 50, '.').__('ตำบล/แขวง').Str::padBoth($member->sub_district, 60 - floor(strlen($member->sub_district)/3), '.')}}</span>
     <br/>
     <span>{{__('อำเภอ').Str::padBoth($member->district, 60, '.').__('จังหวัด').Str::padBoth($member->province, 60, '.').__('รหัสไปรษณีย์').Str::padBoth($member->post_code, 11, '.')}}</span>
     <br/>
@@ -123,9 +123,9 @@
     <br/>
     <strong><u>{{__('ที่อยู่จัดส่งเอกสาร')}}</u></strong>
     <br/>
-    <span>{{__('บ้านเลขที่').Str::padBoth($member->ship_house_no, 12, '.').__('หมู่ที่').Str::padBoth($member->ship_house_no, 12, '.').__('ตรอก/ซอย').Str::padBoth($member->ship_soi, 24, '.').__('ถนน').Str::padBoth($member->ship_street, 36, '.').__('ตำบล/แขวง').Str::padBoth($member->ship_sub_district, 48, '.')}}</span>
+    <span>{{__('บ้านเลขที่').Str::padBoth($member->ship_house_no, strlen($member->ship_house_no) + 6, '.').__('หมู่ที่').Str::padBoth($member->ship_house_no, strlen($member->ship_house_no) + 6, '.').__('ตรอก/ซอย').Str::padBoth($member->ship_soi, strlen($member->ship_soi) + 10, '.').__('ถนน').Str::padBoth($member->ship_street, strlen($member->ship_street) + 10, '.').__('ตำบล/แขวง').Str::padBoth($member->ship_sub_district, 48, '.')}}</span>
     <br/>
-    <span>{{__('อำเภอ').Str::padBoth($member->ship_district, 48, '.').__('จังหวัด').Str::padBoth($member->ship_province, 48, '.').__('รหัสไปรษณีย์').Str::padBoth($member->ship_postcode, 24, '.').__('โทรศัพท์').Str::padBoth($member->ship_tel, 24, '.')}}</span>
+    <span>{{__('อำเภอ').Str::padBoth($member->ship_district, 48, '.').__('จังหวัด').Str::padBoth($member->ship_province, 48, '.').__('รหัสไปรษณีย์').Str::padBoth($member->ship_postcode, strlen($member->ship_postcode) + 6, '.').__('โทรศัพท์').Str::padBoth($member->ship_tel, 24, '.')}}</span>
     <br/>
     <span>{{__('Email').Str::padBoth($member->ship_mail, 50, '.').__('ID Line').Str::padBoth($member->ship_line, 50, '.').__('Facebook').Str::padBoth($member->ship_fb, 50, '.')}}</span>
     <br/>

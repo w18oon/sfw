@@ -163,6 +163,7 @@
                 <td colspan="3" style="text-align: center;"><strong>รายละเอียดหนี้สินแต่ละประเภทของผู้ยื่น</strong></td>
             </tr>
             @foreach (['หนี้สินในระบบแบบถูกกฏหมาย', 'หนี้สินนอกระบบแบบถูกกฏหมาย', 'หนี้สินนอกระบบแบบผิดกฏหมาย', 'หนี้สินแบบสหกรณ์'] as $debt_type)
+            @isset($debts[$loop->iteration])
             <tr>
                 <td style="width: 2%"><strong>{{ $loop->iteration }}</strong></td>
                 <td colspan="2"><strong>{{ $debt_type }}</strong></td>
@@ -187,6 +188,7 @@
                     <div><strong>{{ __('รวมยอดเงินหนี้สินคงเหลือ') . Str::padBoth(number_format($sum[$loop->iteration]['remaining'], 2), 30, '.') . __(' บาท') }}</strong></div>
                 </td>
             </tr>
+            @endisset
             @endforeach
             <tr>
                 <td colspan="3" style="padding: 1rem 0;">
@@ -250,93 +252,95 @@
             <tr>
                 <td colspan="3"><strong>{{ $loop->iteration . __('.รายละเอียด') . $debt_type }}</strong></td>
             </tr>
-            @foreach ($debts[$loop->iteration] as $debt)
-            @if ($debt['type'] != 3)
-            <tr>
-                <td colspan="3">
-                    <div>
-                        <span>{{ $loop->parent->iteration . '.' . $loop->iteration }}</span>
-                        <span>{{ ($debt['type'] != 4? 'สถาบันการเงิน': 'สหกรณ์') . Str::padBoth($debt['bank_name'], 60 - floor(strlen($debt['bank_name'])/3), '.') }}</span>
-                        <span>{{ __('สาขา') . Str::padBoth($debt['bank_branch'], 60 - floor(strlen($debt['bank_branch'])/3), '.') }}</span>
-                        <span>{{ __('เบอร์โทรศัพท์') . Str::padBoth($debt['contact'], 20 - strlen($debt['contact']), '.') }}</span>
-                    </div>
-                    <div>
-                        <span>&nbsp;&nbsp;&nbsp;&nbsp;{{ __('เลขที่สัญญา') . Str::padBoth($debt['contract_no'], 50 - strlen($debt['contract_no']), '.') }}</span>
-                        <span>{{ __('ลงวันที่ลงสัญญา') . Str::padBoth($debt['contract_date'], 30 - strlen($debt['contract_date']), '.') }}</span>
-                        <span>{{ __('ยอดหนี้คงเหลือ') . Str::padBoth(number_format($debt['remaining_amount'], 2), 30, '.') . __(' บาท') }}</span>
-                    </div>
-                </td>
-            </tr>
-            @else
-            <tr>
-                <td colspan="3">
-                    <div>
-                        <span>{{ $loop->parent->iteration . '.' . $loop->iteration }}</span>
-                        <span>{{ __('กู้ยืมเงินจาก') . Str::padBoth($debt['bank_name'], 100 - floor(strlen($debt['bank_name'])/3), '.') }}</span>
-                        <span>{{ __('เบอร์โทรศัพท์') . Str::padBoth($debt['contact'], 40 - strlen($debt['contact']), '.') }}</span>
-                    </div>
-                    <div>
-                        <span>&nbsp;&nbsp;&nbsp;&nbsp;{{ __('จำนวนเงินที่กู้ยืม') . Str::padBoth(number_format($debt['total_amount'], 2), 30, '.') . __(' บาท') }}</span>
-                        <span>{{ __('ดอกเบี้ยร้อยละ') . Str::padBoth($debt['interest'], 10, '.') }}</span>
-                        <span>{{ __('ยอดหนี้คงเหลือ') . Str::padBoth(number_format($debt['remaining_amount'], 2), 30, '.') . __(' บาท') }}</span>
-                    </div>
-                    <div>
-                        <span>&nbsp;&nbsp;&nbsp;&nbsp;{{ __('ตามหนังสือรับรองหนี้/กู้ยืมเงิน ลงวันที่') . Str::padBoth($debt['contract_date'], 30 - strlen($debt['contract_date']), '.') }}</span>
-                    </div>
-                </td>
-            </tr>
-            @endif
-            <tr>
-                <td colspan="3">สถานะหนี้</td>
-            </tr>
-            <tr>
-                <td style="width: 30%">
-                    <input type="checkbox" {{ $debt['status'] == 'ปกติ'? 'checked' :'' }}/>
-                    <label>ปกติ</label>
-                </td>
-                <td style="width: 30%">
-                    <input type="checkbox" {{ $debt['status'] == 'ขายทอดตลาด'? 'checked' :'' }}/>
-                    <label>ขายทอดตลาด</label>
-                </td>
-                <td rowspan="4" style="width: 40%; vertical-align: top;">
-                    <div>{{ __('วันที่ถูกฟ้องต่อศาล') . Str::padBoth($debt['date_1'], 40 - strlen($debt['date_1']), '.') }}</div>
-                    <div>{{ __('วันที่ถูกฟ้องต่อศาล') . Str::padBoth($debt['date_2'], 40 - strlen($debt['date_2']), '.') }}</div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="checkbox" {{ $debt['status'] == 'ได้รับหมายศาล'? 'checked' :'' }}/>
-                    <label>ได้รับหมายศาล</label>
-                </td>
-                <td>
-                    <input type="checkbox" {{ $debt['status'] == 'ล้มละลาย'? 'checked' :'' }}/>
-                    <label>ล้มละลาย</label>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="checkbox" {{ $debt['status'] == 'ไกล่เกลี่ย'? 'checked' :'' }}/>
-                    <label>ไกล่เกลี่ย</label>
-                </td>
-                <td>
-                    <input type="checkbox" {{ $debt['status'] == 'อื่นๆ'? 'checked' :'' }}/>
-                    <label>อื่นๆ {{ $debt['other_status']}}</label>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <input type="checkbox" {{ $debt['status'] == 'บังคับคดี'? 'checked' :'' }}/>
-                    <label>บังคับคดี</label>
-                </td>
-            </tr>
-            @endforeach
-            <tr>
-                <td colspan="3" style="padding: 2rem 0;">
-                    <div style="font-weight: bold; text-align: center;">{{ __('รวม') . $debt_type }}</div>
-                    <div><strong>{{ __('รวมยอดเงินที่กู้') . Str::padBoth(number_format($sum[$loop->iteration]['total'], 2), 30, '.') . __(' บาท') }}</strong></div>
-                    <div><strong>{{ __('รวมยอดเงินหนี้สินคงเหลือ') . Str::padBoth(number_format($sum[$loop->iteration]['remaining'], 2), 30, '.') . __(' บาท') }}</strong></div>
-                </td>
-            </tr>
+            @isset($debts[$loop->iteration])
+                @foreach ($debts[$loop->iteration] as $debt)
+                @if ($debt['type'] != 3)
+                <tr>
+                    <td colspan="3">
+                        <div>
+                            <span>{{ $loop->parent->iteration . '.' . $loop->iteration }}</span>
+                            <span>{{ ($debt['type'] != 4? 'สถาบันการเงิน': 'สหกรณ์') . Str::padBoth($debt['bank_name'], 60 - floor(strlen($debt['bank_name'])/3), '.') }}</span>
+                            <span>{{ __('สาขา') . Str::padBoth($debt['bank_branch'], 60 - floor(strlen($debt['bank_branch'])/3), '.') }}</span>
+                            <span>{{ __('เบอร์โทรศัพท์') . Str::padBoth($debt['contact'], 20 - strlen($debt['contact']), '.') }}</span>
+                        </div>
+                        <div>
+                            <span>&nbsp;&nbsp;&nbsp;&nbsp;{{ __('เลขที่สัญญา') . Str::padBoth($debt['contract_no'], 50 - strlen($debt['contract_no']), '.') }}</span>
+                            <span>{{ __('ลงวันที่ลงสัญญา') . Str::padBoth($debt['contract_date'], 30 - strlen($debt['contract_date']), '.') }}</span>
+                            <span>{{ __('ยอดหนี้คงเหลือ') . Str::padBoth(number_format($debt['remaining_amount'], 2), 30, '.') . __(' บาท') }}</span>
+                        </div>
+                    </td>
+                </tr>
+                @else
+                <tr>
+                    <td colspan="3">
+                        <div>
+                            <span>{{ $loop->parent->iteration . '.' . $loop->iteration }}</span>
+                            <span>{{ __('กู้ยืมเงินจาก') . Str::padBoth($debt['bank_name'], 100 - floor(strlen($debt['bank_name'])/3), '.') }}</span>
+                            <span>{{ __('เบอร์โทรศัพท์') . Str::padBoth($debt['contact'], 40 - strlen($debt['contact']), '.') }}</span>
+                        </div>
+                        <div>
+                            <span>&nbsp;&nbsp;&nbsp;&nbsp;{{ __('จำนวนเงินที่กู้ยืม') . Str::padBoth(number_format($debt['total_amount'], 2), 30, '.') . __(' บาท') }}</span>
+                            <span>{{ __('ดอกเบี้ยร้อยละ') . Str::padBoth($debt['interest'], 10, '.') }}</span>
+                            <span>{{ __('ยอดหนี้คงเหลือ') . Str::padBoth(number_format($debt['remaining_amount'], 2), 30, '.') . __(' บาท') }}</span>
+                        </div>
+                        <div>
+                            <span>&nbsp;&nbsp;&nbsp;&nbsp;{{ __('ตามหนังสือรับรองหนี้/กู้ยืมเงิน ลงวันที่') . Str::padBoth($debt['contract_date'], 30 - strlen($debt['contract_date']), '.') }}</span>
+                        </div>
+                    </td>
+                </tr>
+                @endif
+                <tr>
+                    <td colspan="3">สถานะหนี้</td>
+                </tr>
+                <tr>
+                    <td style="width: 30%">
+                        <input type="checkbox" {{ $debt['status'] == 'ปกติ'? 'checked' :'' }}/>
+                        <label>ปกติ</label>
+                    </td>
+                    <td style="width: 30%">
+                        <input type="checkbox" {{ $debt['status'] == 'ขายทอดตลาด'? 'checked' :'' }}/>
+                        <label>ขายทอดตลาด</label>
+                    </td>
+                    <td rowspan="4" style="width: 40%; vertical-align: top;">
+                        <div>{{ __('วันที่ถูกฟ้องต่อศาล') . Str::padBoth($debt['date_1'], 40 - strlen($debt['date_1']), '.') }}</div>
+                        <div>{{ __('วันที่ถูกฟ้องต่อศาล') . Str::padBoth($debt['date_2'], 40 - strlen($debt['date_2']), '.') }}</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" {{ $debt['status'] == 'ได้รับหมายศาล'? 'checked' :'' }}/>
+                        <label>ได้รับหมายศาล</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" {{ $debt['status'] == 'ล้มละลาย'? 'checked' :'' }}/>
+                        <label>ล้มละลาย</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="checkbox" {{ $debt['status'] == 'ไกล่เกลี่ย'? 'checked' :'' }}/>
+                        <label>ไกล่เกลี่ย</label>
+                    </td>
+                    <td>
+                        <input type="checkbox" {{ $debt['status'] == 'อื่นๆ'? 'checked' :'' }}/>
+                        <label>อื่นๆ {{ $debt['other_status']}}</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="checkbox" {{ $debt['status'] == 'บังคับคดี'? 'checked' :'' }}/>
+                        <label>บังคับคดี</label>
+                    </td>
+                </tr>
+                @endforeach
+                <tr>
+                    <td colspan="3" style="padding: 2rem 0;">
+                        <div style="font-weight: bold; text-align: center;">{{ __('รวม') . $debt_type }}</div>
+                        <div><strong>{{ __('รวมยอดเงินที่กู้') . Str::padBoth(number_format($sum[$loop->iteration]['total'], 2), 30, '.') . __(' บาท') }}</strong></div>
+                        <div><strong>{{ __('รวมยอดเงินหนี้สินคงเหลือ') . Str::padBoth(number_format($sum[$loop->iteration]['remaining'], 2), 30, '.') . __(' บาท') }}</strong></div>
+                    </td>
+                </tr>
+            @endisset
             @endforeach
             <tr>
                 <td colspan="3" style="padding: 2rem 0;">
