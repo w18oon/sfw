@@ -66,6 +66,11 @@ class ReceiptController extends Controller
             12 => 'ธันวาคม',
         ];
         $member = Member::find($id);
+
+        if ($member->status == 'รอดำเนินการ') {
+            abort(403);
+        }
+
         if(!$member->receipt) {
             $config = Config::where('type', 'receipt_no')->where('name', $member->receipt_province)->first();
 
@@ -101,7 +106,7 @@ class ReceiptController extends Controller
         // echo "Book " . $book;
         // echo "No " . $receipt_no;
 
-        $created_at = explode(' ', $member->receipt->created_at);
+        $created_at = explode(' ', $member->created_at);
         $receipt_date = explode('-', $created_at[0]);
 
         // $yy = date('Y');
