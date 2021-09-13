@@ -293,110 +293,112 @@
                                             </div>
                                             <label class="col-2 col-form-label">บาท</label>
                                         </div>
-                                        @foreach ($debts[$loop->iteration] as $debt)
-                                            <fieldset>
-                                                <div class="form-row">
-                                                    <div class="form-group col-6">
-                                                        <strong>{{ __('รายการที่ ') . $loop->parent->iteration . __('.') . $loop->iteration }}</strong>
+                                        @isset($debts[$loop->iteration])
+                                            @foreach ($debts[$loop->iteration] as $debt)
+                                                <fieldset>
+                                                    <div class="form-row">
+                                                        <div class="form-group col-6">
+                                                            <strong>{{ __('รายการที่ ') . $loop->parent->iteration . __('.') . $loop->iteration }}</strong>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                @if ($debt['type'] == 3)
-                                                <div class="form-row">
-                                                    <div class="form-group col-2">
-                                                        <label>กู้ยืมเงินจาก</label>
-                                                        <input type="text" class="form-control" value="{{ $debt['bank_name'] }}" readonly/>
+                                                    @if ($debt['type'] == 3)
+                                                    <div class="form-row">
+                                                        <div class="form-group col-2">
+                                                            <label>กู้ยืมเงินจาก</label>
+                                                            <input type="text" class="form-control" value="{{ $debt['bank_name'] }}" readonly/>
+                                                        </div>
+                                                        <div class="form-group col-2">
+                                                            <label>เบอร์โทรศัพท์</label>
+                                                            <input type="text" class="form-control" value="{{ $debt['contact'] }}" readonly/>
+                                                        </div>
+                                                        <div class="form-group col-2">
+                                                            <label>วันที่ลงสัญญา</label>
+                                                            <input type="text" class="form-control" value="{{ $debt['contract_date'] }}" readonly/>
+                                                        </div>
+                                                        <div class="form-group col-2">
+                                                            <label>จำนวนเงินที่กู้</label>
+                                                            <input type="text" class="form-control" value="{{ $debt['total_amount'] }}" readonly/>
+                                                        </div>
+                                                        <div class="form-group col-2">
+                                                            <label>ดอกเบี้ยร้อยละ</label>
+                                                            <input type="text" class="form-control" value="{{ $debt['interest'] }}" readonly/>
+                                                        </div>
+                                                        <div class="form-group col-2">
+                                                            <label>จำนวนหนี้คงเหลือ</label>
+                                                            <input type="text" class="form-control" value="{{ $debt['remaining_amount'] }}" readonly/>
+                                                        </div>
                                                     </div>
-                                                    <div class="form-group col-2">
-                                                        <label>เบอร์โทรศัพท์</label>
-                                                        <input type="text" class="form-control" value="{{ $debt['contact'] }}" readonly/>
+                                                    <div class="form-row">
+                                                        <div class="form-group col-2">
+                                                            <label>สถานะหนี้</label>
+                                                            <input type="text" class="form-control" value="{{ $debt['status'] }}" readonly/>
+                                                        </div>
+                                                        <div class="form-group col-2">
+                                                            <label>อื่นๆ (โปรดระบุ)</label>
+                                                            <input type="text" class="form-control" value="{{ $debt['other_status'] }}" readonly/>
+                                                        </div>
+                                                        <div class="form-group col-2">
+                                                            <label>วันที่ถูกฟ้องต่อศาล</label>
+                                                            <input type="text" class="form-control" value="{{ $debt['date_1'] }}" readonly/>
+                                                        </div>
+                                                        <div class="form-group col-2">
+                                                            <label>วันที่ถูกบังคับคดี</label>
+                                                            <input type="text" class="form-control" value="{{ $debt['date_2'] }}" readonly/>
+                                                        </div>
                                                     </div>
-                                                    <div class="form-group col-2">
-                                                        <label>วันที่ลงสัญญา</label>
-                                                        <input type="text" class="form-control" value="{{ $debt['contract_date'] }}" readonly/>
+                                                    @else
+                                                    <div class="form-row">
+                                                        <div class="form-group col-3"> 
+                                                            <label>{{ $debt['type'] == 4 ? 'สหกรณ์': 'สถาบันการเงิน' }}</label>
+                                                            <input type="text" class="form-control" value="{{ $debt['bank_name'] }}" readonly/>
+                                                        </div>
+                                                        <div class="form-group col-3">
+                                                            <label>สาขา</label>
+                                                            <input type="text" class="form-control" value="{{ $debt['bank_branch'] }}" readonly/>
+                                                        </div>
+                                                        <div class="form-group col-2">
+                                                            <label>เบอร์โทรศัพท์</label>
+                                                            <input type="text" class="form-control" value="{{ $debt['contact'] }}" readonly/>
+                                                        </div>
+                                                        <div class="form-group col-2">
+                                                            <label>เลขที่สัญญา</label>
+                                                            <input type="text" class="form-control" value="{{ $debt['contract_no'] }}" readonly/>
+                                                        </div>
+                                                        <div class="form-group col-2">
+                                                            <label>วันที่ลงสัญญา</label>
+                                                            <input type="text" class="form-control" value="{{ $debt['contract_date'] }}" readonly/>
+                                                        </div>
                                                     </div>
-                                                    <div class="form-group col-2">
-                                                        <label>จำนวนเงินที่กู้</label>
-                                                        <input type="text" class="form-control" value="{{ $debt['total_amount'] }}" readonly/>
+                                                    <div class="form-row">
+                                                        <div class="form-group col-2">
+                                                            <label>จำนวนเงินที่กู้</label>
+                                                            <input type="text" class="form-control" value="{{ $debt['total_amount'] }}" readonly/>
+                                                        </div>
+                                                        <div class="form-group col-2">
+                                                            <label>จำนวนหนี้คงเหลือ</label>
+                                                            <input type="text" class="form-control" value="{{ $debt['remaining_amount'] }}" readonly/>
+                                                        </div>
+                                                        <div class="form-group col-2">
+                                                            <label>สถานะหนี้</label>
+                                                            <input type="text" class="form-control" value="{{ $debt['status'] }}" readonly/>
+                                                        </div>
+                                                        <div class="form-group col-2">
+                                                            <label>อื่นๆ (โปรดระบุ)</label>
+                                                            <input type="text" class="form-control" value="{{ $debt['other_status'] }}" readonly/>
+                                                        </div>
+                                                        <div class="form-group col-2">
+                                                            <label>วันที่ถูกฟ้องต่อศาล</label>
+                                                            <input type="text" class="form-control" value="{{ $debt['date_1'] }}" readonly/>
+                                                        </div>
+                                                        <div class="form-group col-2">
+                                                            <label>วันที่ถูกบังคับคดี</label>
+                                                            <input type="text" class="form-control" value="{{ $debt['date_2'] }}" readonly/>
+                                                        </div>
                                                     </div>
-                                                    <div class="form-group col-2">
-                                                        <label>ดอกเบี้ยร้อยละ</label>
-                                                        <input type="text" class="form-control" value="{{ $debt['interest'] }}" readonly/>
-                                                    </div>
-                                                    <div class="form-group col-2">
-                                                        <label>จำนวนหนี้คงเหลือ</label>
-                                                        <input type="text" class="form-control" value="{{ $debt['remaining_amount'] }}" readonly/>
-                                                    </div>
-                                                </div>
-                                                <div class="form-row">
-                                                    <div class="form-group col-2">
-                                                        <label>สถานะหนี้</label>
-                                                        <input type="text" class="form-control" value="{{ $debt['status'] }}" readonly/>
-                                                    </div>
-                                                    <div class="form-group col-2">
-                                                        <label>อื่นๆ (โปรดระบุ)</label>
-                                                        <input type="text" class="form-control" value="{{ $debt['other_status'] }}" readonly/>
-                                                    </div>
-                                                    <div class="form-group col-2">
-                                                        <label>วันที่ถูกฟ้องต่อศาล</label>
-                                                        <input type="text" class="form-control" value="{{ $debt['date_1'] }}" readonly/>
-                                                    </div>
-                                                    <div class="form-group col-2">
-                                                        <label>วันที่ถูกบังคับคดี</label>
-                                                        <input type="text" class="form-control" value="{{ $debt['date_2'] }}" readonly/>
-                                                    </div>
-                                                </div>
-                                                @else
-                                                <div class="form-row">
-                                                    <div class="form-group col-3"> 
-                                                        <label>{{ $debt['type'] == 4 ? 'สหกรณ์': 'สถาบันการเงิน' }}</label>
-                                                        <input type="text" class="form-control" value="{{ $debt['bank_name'] }}" readonly/>
-                                                    </div>
-                                                    <div class="form-group col-3">
-                                                        <label>สาขา</label>
-                                                        <input type="text" class="form-control" value="{{ $debt['bank_branch'] }}" readonly/>
-                                                    </div>
-                                                    <div class="form-group col-2">
-                                                        <label>เบอร์โทรศัพท์</label>
-                                                        <input type="text" class="form-control" value="{{ $debt['contact'] }}" readonly/>
-                                                    </div>
-                                                    <div class="form-group col-2">
-                                                        <label>เลขที่สัญญา</label>
-                                                        <input type="text" class="form-control" value="{{ $debt['contract_no'] }}" readonly/>
-                                                    </div>
-                                                    <div class="form-group col-2">
-                                                        <label>วันที่ลงสัญญา</label>
-                                                        <input type="text" class="form-control" value="{{ $debt['contract_date'] }}" readonly/>
-                                                    </div>
-                                                </div>
-                                                <div class="form-row">
-                                                    <div class="form-group col-2">
-                                                        <label>จำนวนเงินที่กู้</label>
-                                                        <input type="text" class="form-control" value="{{ $debt['total_amount'] }}" readonly/>
-                                                    </div>
-                                                    <div class="form-group col-2">
-                                                        <label>จำนวนหนี้คงเหลือ</label>
-                                                        <input type="text" class="form-control" value="{{ $debt['remaining_amount'] }}" readonly/>
-                                                    </div>
-                                                    <div class="form-group col-2">
-                                                        <label>สถานะหนี้</label>
-                                                        <input type="text" class="form-control" value="{{ $debt['status'] }}" readonly/>
-                                                    </div>
-                                                    <div class="form-group col-2">
-                                                        <label>อื่นๆ (โปรดระบุ)</label>
-                                                        <input type="text" class="form-control" value="{{ $debt['other_status'] }}" readonly/>
-                                                    </div>
-                                                    <div class="form-group col-2">
-                                                        <label>วันที่ถูกฟ้องต่อศาล</label>
-                                                        <input type="text" class="form-control" value="{{ $debt['date_1'] }}" readonly/>
-                                                    </div>
-                                                    <div class="form-group col-2">
-                                                        <label>วันที่ถูกบังคับคดี</label>
-                                                        <input type="text" class="form-control" value="{{ $debt['date_2'] }}" readonly/>
-                                                    </div>
-                                                </div>
-                                                @endif
-                                            </fieldset>
-                                        @endforeach
+                                                    @endif
+                                                </fieldset>
+                                            @endforeach
+                                        @endisset
                                     @endforeach
                                 </div>
                                 <div class="tab-pane fade" id="v-pills-work" role="tabpanel">

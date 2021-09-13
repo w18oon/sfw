@@ -3,8 +3,19 @@
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\ReportController;
 use App\Models\Postcode;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
+
+// use Illuminate\Support\Facades\Hash;
+
+// Route::get('/create-user', function () {
+//     return User::create([
+//         'name' => 'banksonicmsr',
+//         'email' => 'banksonicmsr@gmail.com',
+//         'password' => Hash::make('$eP#2021'),
+//     ]);
+// });
 
 Route::get('/register-form', function () {
     return view('register-form',[
