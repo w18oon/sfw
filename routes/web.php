@@ -17,11 +17,11 @@ use Illuminate\Support\Facades\Artisan;
 //     ]);
 // });
 
-Route::get('/register-form', function () {
-    return view('register-form',[
-        'postcodes' => Postcode::orderBy('province')->get(),
-    ]);
-});
+// Route::get('/register-form', function () {
+//     return view('register-form',[
+//         'postcodes' => Postcode::orderBy('province')->get(),
+//     ]);
+// });
 
 Route::get('/', function() {
     return view('home',[]);
